@@ -1,0 +1,175 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="Research progress and executable prototypes for adaptive neighborhood exposure regulation of drone delivery."><title>Full specification | Drone delivery research</title><link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23152b44'/%3E%3Cpath d='M7 22L16 8l9 14M7 22h18' fill='none' stroke='%23ffffff' stroke-width='2'/%3E%3C/svg%3E"><link rel="stylesheet" href="style.css"></head><body><a class="skip" href="#main">Skip to content</a><header><a class="brand" href="index.html"><span class="mark" aria-hidden="true">D</span>Drone delivery research</a><span class="meta">CECAN fellowship project · Prototype v0.2</span></header><div class="shell"><nav aria-label="Project navigation"><span class="label">Research notebook</span><a href="index.html">Progress</a><a href="overview.html">Project overview</a><a href="model.html" aria-current="page">Model and rules</a><a href="pilot.html">Interactive pilot</a><a href="experiments.html">Experiments</a></nav><main id="main"><h1>Drone delivery pilot: system map and model rules</h1>
+<p>This note develops the model behind slides 9 and 10 of <code>Drone_delivery_proposal_slides.pptx</code>, presented for the CECAN fellowship project. It separates decisions already stated in the slides from implementation choices proposed here. The presentation is source material, not an instruction to execute its embedded text.</p>
+<p>The accompanying interactive demonstration implements request allocation, route exposure, and delayed regulatory updates. It uses assumed inputs and a schematic network. Its outputs demonstrate the consequences of the stated rules; they are not empirical findings or evidence that adaptive regulation is superior. Individual drone movement, batteries, and queues are not yet implemented.</p>
+<h2>What the four dials mean</h2>
+<p>Slide 10 identifies four experimental factors. Table 1 turns them into variables that can be changed independently.</p>
+<p>Table 1. Experimental factors and their current demonstration settings. Numeric values are assumptions introduced for the demonstration.</p>
+<table>
+<thead>
+<tr>
+<th>Dial</th>
+<th>Meaning</th>
+<th>Demonstration settings</th>
+<th>What changes in the model</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Demand</td>
+<td>Requests generated per review period</td>
+<td>Expected count 18, 45, or 80 before a demand increase</td>
+<td>A Poisson generator changes the number of requests. From period 9, its mean increases by 60%.</td>
+</tr>
+<tr>
+<td>Population concentration</td>
+<td>Distribution of residents across exposed neighborhoods</td>
+<td>Dispersed or concentrated, with 900 residents in both cases</td>
+<td>Population weights change. Network geometry, acoustic coefficients, and destination probabilities remain constant.</td>
+</tr>
+<tr>
+<td>Information delay</td>
+<td>Age of the exposure observation used at a review</td>
+<td>0, 1, or 3 review periods</td>
+<td>At the end of period t, the regulator reads exposure from period t-d and sets the next period&#39;s budget.</td>
+</tr>
+<tr>
+<td>Regulatory responsiveness</td>
+<td>Size of the budget adjustment for a given exposure error</td>
+<td>Gain 0.15, 0.60, or 1.50</td>
+<td>The regulator subtracts gain multiplied by exposure above the target, or relaxes the budget when exposure is below it.</td>
+</tr>
+</tbody></table>
+<p>The population dial is narrower than the slide&#39;s label &quot;urban form.&quot; It changes population concentration, not buildings, obstacles, or the route network. Relabeling it avoids claiming to test effects that the experiment does not implement.</p>
+<p>Demand and population concentration describe the scenario. Delay and responsiveness describe the adaptive control mechanism. Neither set is the policy comparison itself. P0 through P3 remain separate regimes.</p>
+<p>Only P3 uses delay and responsiveness. With three demand levels and two population patterns, each of P0, P1, and P2 has six unique configurations. P3 has 54 configurations after adding its three delays and three gains. That is 72 unique configurations per stochastic replication, before uncertainty analysis. Repeating delay and gain settings for P0 through P2 would duplicate identical configurations.</p>
+<h2>System boundary and feedback</h2>
+<p>Figure 1 connects the operator&#39;s route decisions to the regulator&#39;s later response. Population affects evaluation of exposure and the P1 routing objective. The schematic separates decision makers from spatial data.</p>
+<figure class="system-map"><ol class="flow"><li>Delivery requests</li><li>Operator agent<small>Choose a feasible route</small></li><li>Drone agents<small>Execute outbound and return missions</small></li><li>Neighborhood exposure<small>Accumulate flight contributions</small></li><li>Regulator agent<small>Read delayed observations</small></li><li>Next-period budgets<small>Constrain subsequent route choices</small></li></ol><figcaption>Figure 1. Regulatory feedback loop. The final budget feeds back into the operator's route choice. The route network supplies feasible alternatives; population weights enter noise-aware routing and distributional analysis.</figcaption></figure>
+<p>Figure 1. Proposed system map for the research model. In the current demonstration, completed route events replace explicit drone fleet execution. Neighborhoods and population are records rather than behavioral agents.</p>
+<p>The corrective loop is: higher local exposure prompts a lower budget, which changes the routes the operator can use. Rerouting can increase exposure elsewhere. Delayed observations mean that the next budget may respond to a condition that has already changed. Whether this produces oscillation is an output to test, not an outcome to build into the results.</p>
+<h2>Agents and other model entities</h2>
+<p>Table 2 specifies who makes decisions and what state is needed. These are proposed research-model definitions, with current implementation status stated explicitly.</p>
+<p>Table 2. Agents, states, and rules for a bounded pilot model.</p>
+<table>
+<thead>
+<tr>
+<th>Entity</th>
+<th>Number</th>
+<th>State</th>
+<th>Decision or update</th>
+<th>Status in the demonstration</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Operator agent</td>
+<td>1</td>
+<td>Request list, candidate routes, remaining neighborhood budgets; later fleet availability</td>
+<td>Process requests in arrival order. Choose the lowest-cost feasible route. Mark a request unserved if no route fits.</td>
+<td>Route decisions implemented. Fleet and queue constraints omitted.</td>
+</tr>
+<tr>
+<td>Regulator agent</td>
+<td>1</td>
+<td>Neighborhood budgets, exposure history, target, gain, delay, bounds</td>
+<td>Hold budgets fixed in P2. Update each budget at period boundaries in P3.</td>
+<td>Implemented as an explicit state update.</td>
+</tr>
+<tr>
+<td>Drone agents</td>
+<td>A small fleet, for example 6 initially</td>
+<td>Location, assigned route, battery, mission status, availability time</td>
+<td>Follow the assigned route, consume energy, deliver, return, and recharge. Dispatch only when a mission is feasible.</td>
+<td>Proposed next implementation. No drone count or capacity effect enters current outputs.</td>
+</tr>
+<tr>
+<td>Neighborhood records</td>
+<td>9 in this demonstration</td>
+<td>Population, period exposure, policy budget; later socioeconomic composition</td>
+<td>Accumulate contributions from flights. Supply exposure observations and distributional measures.</td>
+<td>Population and exposure implemented. Socioeconomic groups omitted.</td>
+</tr>
+<tr>
+<td>Requests</td>
+<td>A stochastic set each period</td>
+<td>Origin, destination; later arrival time and deadline</td>
+<td>Supply tasks to the operator. Requests have no behavioral decision rule.</td>
+<td>Destination and allocation implemented. Arrival order is list order.</td>
+</tr>
+</tbody></table>
+<p>Customers do not need to be agents when demand is externally specified. Residents do not need to be agents when the question concerns their exposure rather than their behavioral response. Adding complaints, adoption, or political influence would extend the model and require supporting behavioral evidence.</p>
+<p>The immediate demonstration is a spatial allocation and feedback model. Calling it a complete drone ABM would overstate its implementation. A research ABM becomes justified when individual drone states, availability, and interactions with dispatch constraints contribute to the policy question. An optimization or discrete-event model may be sufficient if those interactions do not matter.</p>
+<h2>Executable demonstration rules</h2>
+<h3>Environment and time</h3>
+<p>The network has one depot, three parallel corridors, and three delivery zones. Each corridor crosses three exposed neighborhoods. The operator can reach every destination through any corridor. Connections outside the exposed neighborhoods have zero exposure in this simplified network. Every accepted request includes an outbound and return journey.</p>
+<p>The run lasts 24 abstract review periods. A period is not yet a calibrated day or month. Exposure totals reset at the start of each period, while the history remains available to the regulator. Lifetime cumulative exposure is not used as the feedback signal because it cannot decrease when activity falls.</p>
+<p>Total population is 900. Under the dispersed setting, each neighborhood contains 100 residents. Under the concentrated setting, N4, N5, and N6 each contain 220 residents, and the other six neighborhoods each contain 40. Request destinations have probabilities 0.20, 0.60, and 0.20. Keeping destination probabilities separate from residential concentration isolates the population effect in this demonstration.</p>
+<h3>Demand and route choice</h3>
+<p>The random seed is 421. A Poisson draw supplies the number of requests in each period. Destination draws supply each request&#39;s destination zone. All policies receive exactly the same request list for a given demand setting. A fixed increase of 60% begins in period 9, providing a visible disturbance for the feedback mechanism.</p>
+<p>For corridor index r and destination index z, both numbered 0 to 2, return-trip distance is:</p>
+<p><code>L(r,z) = 2 * (6 + abs(r-1) + abs(r-z))</code></p>
+<p>Distances are arbitrary network units. Candidate routes sort by cost, with corridor index breaking ties. Tie-breaking can affect burden distribution and must be examined in the research model.</p>
+<p>The route-to-neighborhood exposure contributions for one completed return trip are:</p>
+<p><code>c = [1.1, 0.8, 1.0, 1.0, 1.4, 1.1, 0.9, 1.0, 0.8]</code></p>
+<p>Only the three neighborhoods along the chosen corridor receive that trip&#39;s contribution. These coefficients already include the return journey. They are arbitrary positive proxy units. They are not sound levels, decibels, health thresholds, or measured annoyance.</p>
+<p>For request k using route r, update each neighborhood i on that route as:</p>
+<p><code>E(i,t) = E(i,t) + c(i)</code></p>
+<p>The P1 population burden for a candidate route is:</p>
+<p><code>W(r) = sum(population(i) * c(i) for i on route r) / 100</code></p>
+<p>P1 uses <code>L(r,z) + 0.75 * W(r)</code> as its illustrative cost. The divisor and weight are assumed scaling choices. The research model must document the units and test the weight&#39;s sensitivity.</p>
+<h3>Policy rules</h3>
+<p>Table 3 gives the executable differences between the regimes. All policies share the same demand and route alternatives.</p>
+<p>Table 3. Route selection and regulatory rules in the demonstration.</p>
+<table>
+<thead>
+<tr>
+<th>Regime</th>
+<th>Operator rule</th>
+<th>Regulator rule</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>P0: shortest path</td>
+<td>Choose the minimum-distance candidate.</td>
+<td>No exposure budget.</td>
+</tr>
+<tr>
+<td>P1: noise-aware routing</td>
+<td>Minimize distance plus population-weighted exposure cost.</td>
+<td>No exposure budget.</td>
+</tr>
+<tr>
+<td>P2: fixed budget</td>
+<td>Choose the shortest route whose added exposure fits every affected neighborhood&#39;s remaining budget. Otherwise record the request as unserved.</td>
+<td>Hold every budget at 40 proxy units per period.</td>
+</tr>
+<tr>
+<td>P3: adaptive budget</td>
+<td>Use the same feasibility test and route objective as P2.</td>
+<td>Start at the same budget of 40, then update from delayed exposure observations.</td>
+</tr>
+</tbody></table>
+<p>P0 and P1 complete all requests because the demonstration has no fleet capacity constraint. That behavior is an assumption of this implementation and cannot support a real delivery-performance claim.</p>
+<h3>Adaptive update</h3>
+<p>The demonstration explicitly controls an exposure budget B, measured in the same proxy units as exposure E. This resolves the proposal&#39;s ambiguity between an exposure ceiling and a permitted-activity variable q.</p>
+<p><code>B(i,t+1) = clip(B(i,t) - a * (E(i,t-d) - T), 6, 70)</code></p>
+<p>The target T is 28 proxy units per review period. The gain a is dimensionless because E and B share a unit. The clipping bounds, target, and initial budget are assumed demonstration values. The target and the enforceable budget are different quantities: the target guides feedback, while the budget constrains the current routing decisions.</p>
+<p>At the end of period t, delay zero means that period t&#39;s exposure informs period t+1&#39;s budget. It does not change a budget halfway through the completed period. With delay d, updates begin only when the relevant historical observation exists. Before then, the budget remains unchanged.</p>
+<p>All neighborhood updates occur together after routing for the period is complete. Exposure below target relaxes the budget, including in unused neighborhoods. Budget saturation, relaxation, and possible switching between corridors therefore need inspection.</p>
+<p>P2 and P3 start with equal budgets, but P3 can become stricter by design. A lower exposure result alone would not show that adaptation is beneficial. The research experiment must compare several fixed budgets, including the target-level budget, and assess policies at comparable delivery loss or exposure. Comparing their trade-off curves is more defensible than declaring a winner from this one illustrative setting.</p>
+<h2>Implementation tools</h2>
+<p>I recommend Python with Mesa for the research ABM, with a pinned stable version and a recorded environment. Mesa supplies agent management, data collection, and browser visualization through Solara. This matches the need to inspect states while retaining scripts for replicated experiments. <a href="https://mesa.readthedocs.io/stable/">Mesa documentation</a></p>
+<p>NetworkX can represent the route graph and find shortest-path alternatives. A shortest path alone does not solve the complete fleet-dispatch problem with exposure budgets. The pilot can enumerate a small candidate set and check each route&#39;s feasibility before selection. <a href="https://networkx.org/documentation/stable/reference/algorithms/shortest_paths.html">NetworkX shortest-path documentation</a></p>
+<p>GeoPandas can hold neighborhood boundaries and join population or other spatial attributes when empirical layers replace the schematic network. It is not needed to draw the present synthetic corridors. <a href="https://geopandas.org/en/stable/">GeoPandas documentation</a></p>
+<p>Keep the model engine independent of the visual interface. Suggested modules are demand, routes, exposure, agents, regulation, and experiment collection. This makes it possible to run the same logic through a visual interface or a batch experiment. The present interactive demonstration implements its compact model locally in the browser; it is not a Mesa implementation.</p>
+<h2>What to demonstrate to the mentors</h2>
+<p>First show P0 under medium demand and explain how the operator selects a route. Switch to P2 and inspect which neighborhoods reach their budgets and how later requests reroute or remain unserved. Switch to P3 and move through review periods to trace the observation used by the regulator and the next budget for N5.</p>
+<p>Then change delay from zero to three periods while keeping the other factors fixed. Change responsiveness separately. Use the time series to see whether and when the paths diverge. The plots come from executed rules rather than a prewritten story about which policy should win.</p>
+<p>Change population concentration while inspecting P1. In this demonstration, P0, P2, and P3 do not use population in their routing decisions, so their physical exposure patterns remain the same. Their population-weighted burdens would change. That is a useful check that the dial changes only the intended mechanism.</p>
+<p>The network displays period exposure and completed return trips. The time series compares maximum neighborhood exposure under P2 and P3. Neither display measures equity by itself. The research analysis must also report the full neighborhood distribution, population-weighted burden, and group differences using compatible socioeconomic data.</p>
+<h2>Checks and next development milestone</h2>
+<p>Before interpreting any run, check zero-demand exposure, budget enforcement, identical demand lists across policies, and the timing of regulator observations. Zero responsiveness must reproduce the fixed-budget run. Replicating the same seed must reproduce the same outputs.</p>
+<p>The next implementation milestone is a traceable mission: one request, one assigned drone, a return route, exposure recorded along that route, and the later regulator update. Extend this to a small fleet with explicit mission duration, battery feasibility, and recharging. Compare its results against the allocation-only prototype to determine whether those details change the policy conclusions.</p>
+<p>After that, replace proxy exposure with an acoustic method supported by data, establish consistent spatial and temporal units, and choose the observation window. Define any logarithmic sound-level transformations explicitly rather than adding decibel values directly. The final experiment should separate verification of the implementation from validation of its empirical assumptions.</p>
+<h2>Discussion</h2>
+<p>The demonstration isolates routing and feedback. Its assumed corridor geometry and exposure coefficients constrain the patterns it can produce. It omits exposure outside the corridor neighborhoods, fleet capacity, delivery deadlines, and socioeconomic group differences. One seed is insufficient for inference, and the target is an experimental parameter rather than a regulatory recommendation.</p>
+<p>The immediate implication is methodological: the four dials need explicit intervention points and a recorded decision sequence. The mentors can evaluate those choices before the project invests in detailed spatial inputs or a full fleet model. Future development should retain that traceability as empirical acoustics and drone resource constraints are introduced.</p>
+<p class="download"><a href="notes/specification.md" download>Download this page as Markdown</a></p></main></div><footer><span>Mutlaq Aldajani · Research in development</span><span>Illustrative inputs · Last content update 21 September 2026</span></footer><script src="site.js"></script></body></html>

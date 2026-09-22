@@ -1,0 +1,177 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Policy experiment</title><link rel="stylesheet" href="demo.css"></head><body><div id="drone-pilot">
+  <h2>Drone delivery pilot</h2>
+  <div class="text-small text-muted">Illustrative simulation · Assumed inputs · Exposure in proxy units</div>
+  <div class="viz-controls">
+    <label class="form-label">1. Demand
+      <select class="form-select" id="dp-demand"><option value="18">Low: 18 requests / period</option><option value="45" selected>Medium: 45 requests / period</option><option value="80">High: 80 requests / period</option></select>
+    </label>
+    <label class="form-label">2. Population concentration
+      <select class="form-select" id="dp-form"><option value="dispersed">Dispersed</option><option value="concentrated" selected>Concentrated</option></select>
+    </label>
+    <label class="form-label">3. Information delay
+      <select class="form-select" id="dp-delay"><option value="0">0 review periods</option><option value="1" selected>1 review period</option><option value="3">3 review periods</option></select>
+    </label>
+    <label class="form-label">4. Regulatory responsiveness
+      <select class="form-select" id="dp-gain"><option value="0.15">Slow: 0.15</option><option value="0.6" selected>Moderate: 0.60</option><option value="1.5">Aggressive: 1.50</option></select>
+    </label>
+  </div>
+  <div class="viz-controls">
+    <label class="form-label">Policy on the network
+      <select class="form-select" id="dp-policy"><option value="0">P0: shortest path</option><option value="1">P1: noise-aware routing</option><option value="2">P2: fixed exposure budget</option><option value="3" selected>P3: adaptive exposure budget</option></select>
+    </label>
+    <label class="form-label">Review period: <span id="dp-period-value" class="tabular-nums">12 / 24</span>
+      <input class="form-range" id="dp-period" type="range" min="1" max="24" value="12" step="1">
+    </label>
+  </div>
+  <div class="viz-row dp-metrics" aria-live="polite"><span id="dp-deliveries"></span><span id="dp-exposure"></span></div>
+  <svg id="dp-network" class="dp-svg" role="img" aria-label="Synthetic route network with nine exposed neighborhoods, one depot, and three delivery zones"></svg>
+  <div class="text-small text-muted">Synthetic network · Circle size: residents · Fill: exposure · Route width: return trips</div>
+  <div id="dp-observation" class="text-small" aria-live="polite"></div>
+  <h3>Peak neighborhood exposure</h3>
+  <div class="viz-row" id="dp-legend"><button type="button" aria-pressed="true" data-series="2"><span class="dp-swatch dp-fixed"></span>Fixed</button><button type="button" aria-pressed="true" data-series="3"><span class="dp-swatch dp-adaptive"></span>Adaptive</button><span class="text-small text-muted">Dotted reference: target 28 units</span></div>
+  <div class="dp-chart-wrap"><svg id="dp-trend" class="dp-svg" role="img" aria-label="Fixed and adaptive peak neighborhood exposure over 24 review periods"></svg><div class="tooltip" role="tooltip" id="dp-tooltip" hidden></div></div>
+  <div class="text-small text-muted">Common demand seed: 421 · Demand increases by 60% from period 9</div>
+</div>
+<style>
+  #drone-pilot { color:var(--foreground); }
+  #drone-pilot .dp-metrics { justify-content:space-between; margin:12px 0 0; }
+  #drone-pilot .dp-svg { display:block; width:100%; overflow:visible; }
+  #drone-pilot .dp-svg text { fill:var(--foreground); font-size:12px; }
+  #drone-pilot #dp-observation { margin-top:12px; min-height:2.5em; }
+  #drone-pilot .dp-chart-wrap { position:relative; }
+  #drone-pilot #dp-legend button { display:inline-flex; gap:6px; align-items:center; background:transparent; border:0; border-radius:0; padding:6px 0; color:var(--foreground); font:inherit; cursor:pointer; }
+  #drone-pilot #dp-legend button[aria-pressed="false"] { opacity:0.5; }
+  #drone-pilot .dp-swatch { width:20px; height:3px; display:inline-block; }
+  #drone-pilot .dp-fixed { background:var(--viz-series-2); }
+  #drone-pilot .dp-adaptive { background:var(--viz-series-1); }
+  #drone-pilot #dp-tooltip { pointer-events:none; position:absolute; background:var(--popover); color:var(--popover-foreground); padding:8px; }
+</style>
+<script src="https://cdn.jsdelivr.net/npm/d3@7.9.0/dist/d3.min.js"></script>
+<script>
+(() => {
+  const root=document.getElementById('drone-pilot');
+  const get=id=>root.querySelector('#dp-'+id);
+  const coefficient=[1.1,0.8,1.0,1.0,1.4,1.1,0.9,1.0,0.8];
+  const totalPeriods=24, target=28, initialBudget=40, budgetMin=6, budgetMax=70;
+  const visible=new Set([2,3]);
+  let results, population, config, extentMax, tooltipPinned=false;
+  function random(seed) { return () => {seed|=0;seed=seed+0x6D2B79F5|0;let t=Math.imul(seed^seed>>>15,1|seed);t=t+Math.imul(t^t>>>7,61|t)^t;return ((t^t>>>14)>>>0)/4294967296;}; }
+  function makeDemand(mean) {
+    const rng=random(421), periods=[];
+    for(let t=0;t<totalPeriods;t++) {
+      const rate=mean*(t>=8?1.6:1), requests=[], threshold=Math.exp(-rate);
+      let product=1,n=0;
+      do {n++;product*=rng();} while(product>threshold);
+      for(let j=0;j<n-1;j++) {const u=rng(); requests.push(u<0.2?0:u<0.8?1:2);}
+      periods.push(requests);
+    }
+    return periods;
+  }
+  function run(policy,cfg,demand,pop) {
+    let budgets=Array(9).fill(initialBudget), history=[];
+    for(let t=0;t<totalPeriods;t++) {
+      const exposure=Array(9).fill(0), trips=[0,0,0];let served=0,distance=0;
+      for(const destination of demand[t]) {
+        const candidates=[0,1,2].map(row=>{
+          const length=2*(6+Math.abs(row-1)+Math.abs(row-destination));
+          const burden=coefficient.slice(row*3,row*3+3).reduce((s,c,j)=>s+c*pop[row*3+j],0)/100;
+          return {row,length,cost:length+(policy===1?0.75*burden:0)};
+        }).sort((a,b)=>a.cost-b.cost||a.row-b.row);
+        const route=candidates.find(r=>policy<2||[0,1,2].every(j=>exposure[r.row*3+j]+coefficient[r.row*3+j]<=budgets[r.row*3+j]+1e-9));
+        if(!route) continue;
+        served++;distance+=route.length;trips[route.row]++;
+        for(let j=0;j<3;j++) exposure[route.row*3+j]+=coefficient[route.row*3+j];
+      }
+      const observation=t-cfg.delay;
+      const next=policy===3&&observation>=0?budgets.map((b,i)=>Math.max(budgetMin,Math.min(budgetMax,b-cfg.gain*((observation===t?exposure:history[observation].exposure)[i]-target)))):budgets.slice();
+      history.push({period:t+1,requested:demand[t].length,served,unserved:demand[t].length-served,distance,exposure,trips,budgets:budgets.slice(),next,observation:policy===3&&observation>=0?observation+1:null,max:Math.max(...exposure)});
+      budgets=next;
+    }
+    return history;
+  }
+  function recalculate() {
+    config={mean:+get('demand').value,delay:+get('delay').value,gain:+get('gain').value};
+    population=get('form').value==='concentrated'?[40,40,40,220,220,220,40,40,40]:Array(9).fill(100);
+    const demand=makeDemand(config.mean);
+    results=[0,1,2,3].map(policy=>run(policy,config,demand,population));
+    extentMax=Math.max(target,...results.flat().map(s=>s.max));
+    draw();
+  }
+  function svgText(svg,x,y,text,anchor='middle') {return svg.append('text').attr('x',x).attr('y',y).attr('text-anchor',anchor).text(text);}
+  function drawNetwork(state,policy) {
+    const svg=d3.select(get('network')), w=get('network').clientWidth, h=330;
+    svg.attr('viewBox',`0 0 ${w} ${h}`).attr('height',h);svg.selectAll('*').remove();
+    svg.append('title').text(`Period ${state.period}: ${state.served} deliveries, maximum exposure ${state.max.toFixed(1)} proxy units.`);
+    const left=24,right=w-24,ys=[53,153,253],xs=[w*0.28,w*0.50,w*0.72];
+    svg.append('path').attr('d',`M${right},${ys[0]}V${ys[2]}`).attr('stroke','var(--border)').attr('fill','none');
+    for(let row=0;row<3;row++) {
+      const y=ys[row];
+      svg.append('path').attr('d',`M${left},153 L${w*0.16},${y} H${right}`).attr('stroke','var(--border)').attr('stroke-width',1).attr('fill','none');
+      if(state.trips[row]) svg.append('path').attr('d',`M${left},153 L${w*0.16},${y} H${right}`).attr('stroke','var(--viz-series-1)').attr('stroke-opacity',0.45).attr('stroke-width',1+state.trips[row]*0.10).attr('fill','none');
+      for(let col=0;col<3;col++) {
+        const i=row*3+col,x=xs[col],r=9+Math.sqrt(population[i]/220)*12;
+        svg.append('circle').attr('cx',x).attr('cy',y).attr('r',r).attr('fill','var(--background)');
+        svg.append('circle').attr('cx',x).attr('cy',y).attr('r',r).attr('fill','var(--viz-series-1)').attr('fill-opacity',0.12+0.78*state.exposure[i]/extentMax).attr('stroke','var(--border)').attr('data-tooltip',`N${i+1}: ${population[i]} residents; exposure ${state.exposure[i].toFixed(1)}; budget ${policy<2?'none':state.budgets[i].toFixed(1)} proxy units`).attr('aria-label',`Neighborhood ${i+1}, ${population[i]} residents, exposure ${state.exposure[i].toFixed(1)} units`);
+        svgText(svg,x,y-27,`N${i+1}`);
+        svgText(svg,x,y+38,`${state.exposure[i].toFixed(1)} u`);
+      }
+      svg.append('rect').attr('x',right-5).attr('y',y-5).attr('width',10).attr('height',10).attr('fill','var(--foreground)');
+      svgText(svg,right,y-15,`Z${row+1}`);
+      svgText(svg,w/2,y+57,`${state.trips[row]} return trips`);
+    }
+    svg.append('rect').attr('x',left-6).attr('y',147).attr('width',12).attr('height',12).attr('fill','var(--foreground)');
+    svgText(svg,left,177,'Depot');
+    svgText(svg,w-5,325,'Z1 to Z3: delivery zones','end');
+  }
+  function drawTrend() {
+    tooltipPinned=false;get('tooltip').hidden=true;
+    const el=get('trend'),svg=d3.select(el),w=el.clientWidth,h=225,m={left:64,right:14,top:24,bottom:48};
+    svg.attr('viewBox',`0 0 ${w} ${h}`).attr('height',h);svg.selectAll('*').remove();
+    const observations=results.slice(2).flat().map(d=>d.max),[lo,hi]=d3.extent([0,target,...observations]);
+    const x=d3.scaleLinear().domain([1,24]).range([m.left+4,w-m.right-4]);
+    const y=d3.scaleLinear().domain([lo,hi+(hi-lo)*0.10]).nice().range([h-m.bottom-4,m.top+4]);
+    svg.append('rect').attr('data-chart-frame','').attr('x',m.left).attr('y',m.top).attr('width',w-m.left-m.right).attr('height',h-m.top-m.bottom).attr('fill','none').attr('stroke','var(--border)');
+    const axisColor=g=>{g.selectAll('path,line').attr('stroke','var(--border)');};
+    const xt=w<450?[1,8,16,24]:[1,4,8,12,16,20,24];
+    svg.append('g').attr('transform',`translate(0,${h-m.bottom})`).call(d3.axisBottom(x).tickValues(xt).tickFormat(d3.format('d'))).call(axisColor);
+    svg.append('g').attr('transform',`translate(${m.left},0)`).call(d3.axisLeft(y).ticks(4)).call(axisColor);
+    svgText(svg,(m.left+w-m.right)/2,h-7,'Review period').attr('class','axis-title').attr('data-axis','x');
+    svgText(svg,14,(m.top+h-m.bottom)/2,'Exposure (proxy units)').attr('transform',`rotate(-90,14,${(m.top+h-m.bottom)/2})`).attr('class','axis-title').attr('data-axis','y');
+    svg.append('line').attr('x1',m.left).attr('x2',w-m.right).attr('y1',y(target)).attr('y2',y(target)).attr('stroke','var(--foreground)').attr('stroke-dasharray','2 4').attr('opacity',0.6);
+    const colors={2:'var(--viz-series-2)',3:'var(--viz-series-1)'};
+    for(const policy of visible) svg.append('path').datum(results[policy]).attr('d',d3.line().x(d=>x(d.period)).y(d=>y(d.max))).attr('stroke',colors[policy]).attr('stroke-width',2).attr('fill','none');
+    svg.append('line').attr('x1',x(+get('period').value)).attr('x2',x(+get('period').value)).attr('y1',m.top).attr('y2',h-m.bottom).attr('stroke','var(--border)').attr('stroke-width',1);
+    const guide=svg.append('line').attr('data-chart-hover-guide','').attr('y1',m.top).attr('y2',h-m.bottom).attr('stroke','var(--foreground)').attr('opacity',0);
+    const markers=[2,3].map(p=>svg.append('circle').attr('data-chart-hover-marker',p).attr('r',4).attr('fill',colors[p]).attr('opacity',0));
+    function inspect(event) {
+      const [px]=d3.pointer(event,el),cx=Math.max(x(1),Math.min(x(24),px)),period=x.invert(cx);
+      guide.attr('x1',cx).attr('x2',cx).attr('opacity',0.4);
+      const values=[];
+      for(const p of [2,3]) {
+        const a=Math.floor(period)-1,b=Math.min(23,a+1),v=results[p][a].max+(results[p][b].max-results[p][a].max)*(period-Math.floor(period));
+        markers[p-2].attr('cx',cx).attr('cy',y(v)).attr('opacity',visible.has(p)?1:0);
+        if(visible.has(p)) values.push(`${p===2?'Fixed':'Adaptive'}: ${v.toFixed(1)} u`);
+      }
+      const tip=get('tooltip');tip.hidden=false;tip.textContent=`Period ${period.toFixed(1)} · ${values.join(' · ')}`;
+      tip.style.left=Math.max(0,Math.min(w-tip.offsetWidth,cx-90))+'px';tip.style.top='0px';
+    }
+    svg.append('rect').attr('data-chart-hit','').attr('data-chart-hover-overlay','cross-series').attr('x',m.left).attr('y',m.top).attr('width',w-m.left-m.right).attr('height',h-m.top-m.bottom).attr('fill','transparent').on('pointermove',e=>{if(!tooltipPinned)inspect(e);}).on('pointerleave',()=>{if(!tooltipPinned){get('tooltip').hidden=true;guide.attr('opacity',0);markers.forEach(m=>m.attr('opacity',0));}}).on('click',e=>{tooltipPinned=!tooltipPinned;inspect(e);});
+  }
+  function draw() {
+    if(!results) return;
+    const policy=+get('policy').value, t=+get('period').value-1,s=results[policy][t];
+    get('period-value').textContent=`${t+1} / 24`;
+    get('deliveries').textContent=`Delivered: ${s.served} / ${s.requested}`;
+    get('exposure').textContent=`Peak exposure: ${s.max.toFixed(1)} units`;
+    get('observation').textContent=policy===3?`N5 budget: ${s.budgets[4].toFixed(1)} now, ${s.next[4].toFixed(1)} next. ${s.observation===null?'No observation available yet.':`Regulator uses period ${s.observation} exposure.`}`:policy===2?'Neighborhood budgets stay at 40 units per review period.':'Exposure budgets do not constrain this policy.';
+    drawNetwork(s,policy);drawTrend();
+    root.dataset.ready='true';
+  }
+  ['demand','form','delay','gain'].forEach(id=>get(id).addEventListener('change',recalculate));
+  get('policy').addEventListener('change',draw);get('period').addEventListener('input',draw);
+  get('legend').querySelectorAll('button').forEach(b=>b.addEventListener('click',()=>{const p=+b.dataset.series;visible.has(p)?visible.delete(p):visible.add(p);b.setAttribute('aria-pressed',String(visible.has(p)));drawTrend();}));
+  window.dronePilot={makeDemand,run,coefficient,target,initialBudget,getResults:()=>results};
+  recalculate();new ResizeObserver(draw).observe(root);
+})();
+</script>
+<script>new ResizeObserver(()=>{if(parent!==window)parent.postMessage({type:'demo-height',height:document.body.scrollHeight},location.origin);}).observe(document.body);</script></body></html>

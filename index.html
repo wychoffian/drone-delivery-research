@@ -1,0 +1,63 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="Research progress and executable prototypes for adaptive neighborhood exposure regulation of drone delivery."><title>Progress | Drone delivery research</title><link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23152b44'/%3E%3Cpath d='M7 22L16 8l9 14M7 22h18' fill='none' stroke='%23ffffff' stroke-width='2'/%3E%3C/svg%3E"><link rel="stylesheet" href="style.css"></head><body><a class="skip" href="#main">Skip to content</a><header><a class="brand" href="index.html"><span class="mark" aria-hidden="true">D</span>Drone delivery research</a><span class="meta">CECAN fellowship project · Prototype v0.2</span></header><div class="shell"><nav aria-label="Project navigation"><span class="label">Research notebook</span><a href="index.html" aria-current="page">Progress</a><a href="overview.html">Project overview</a><a href="model.html">Model and rules</a><a href="pilot.html">Interactive pilot</a><a href="experiments.html">Experiments</a></nav><main id="main"><h1>Research progress</h1>
+<p>Adaptive neighborhood exposure regulation for urban drone delivery.</p>
+<div class="release"><span>Current stage</span><span>Executable prototype</span><span>Updated 21 September 2026</span></div>
+
+<h2>Ready to inspect</h2>
+<div class="feature-grid"><a class="feature" href="mission.html"><span class="number">01</span><h3>Follow one delivery</h3><p>Inspect route choice, battery use, and the exposure recorded before a regulatory update.</p><span class="link-label">Open mission walkthrough</span></a><a class="feature" href="policy.html"><span class="number">02</span><h3>Explore the four dials</h3><p>Change demand and population concentration, then inspect the effect of regulatory delay and responsiveness.</p><span class="link-label">Open policy experiment</span></a></div>
+
+<p>These demonstrations use assumed inputs and proxy exposure units. They test model logic; they do not establish empirical policy findings.</p>
+<h2>Development milestones</h2>
+<p>The milestones below distinguish completed prototypes from research work that remains.</p>
+<table>
+<thead>
+<tr>
+<th>Milestone</th>
+<th>Status</th>
+<th>Evidence or next step</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Research question and bounded model</td>
+<td>Drafted</td>
+<td><a href="model.html">Model and rules</a></td>
+</tr>
+<tr>
+<td>Route allocation and regulatory feedback</td>
+<td>Demonstrated</td>
+<td><a href="policy.html">Four-dial experiment</a></td>
+</tr>
+<tr>
+<td>One drone with mission state and timing</td>
+<td>Demonstrated</td>
+<td><a href="mission.html">Delivery walkthrough</a></td>
+</tr>
+<tr>
+<td>Multiple requests and fleet constraints</td>
+<td>Planned</td>
+<td>Test dispatch while a drone is busy</td>
+</tr>
+<tr>
+<td>Empirical acoustic exposure</td>
+<td>Planned</td>
+<td>Audit sources and define the exposure measure</td>
+</tr>
+<tr>
+<td>Replicated policy comparisons</td>
+<td>Planned</td>
+<td>Compare fixed budgets at matched service levels</td>
+</tr>
+</tbody></table>
+<p>Table 1. Development status for the current research prototype. &quot;Demonstrated&quot; means that the stated mechanism runs with illustrative inputs.</p>
+<h2>Development record</h2>
+<h3>21 September 2026: traceable drone mission</h3>
+<p>Added mission timing and battery consumption to a single delivery. The operator reserves exposure for the return journey before departure. Checks cover chronological crossings, battery reserve, and the timing of the regulatory update. <a href="mission-notes.html">Read the walkthrough</a>.</p>
+<h3>20 September 2026: regulatory prototype</h3>
+<p>Implemented the four experimental factors and policy regimes P0 through P3. Verification covered budget enforcement and delayed updates across 384 policy runs, including zero-demand and zero-responsiveness cases. These were code checks, not research replications.</p>
+<h2>Decisions for the next mentor meeting</h2>
+<ul>
+<li>Which acoustic measure and observation window should replace the exposure proxy?</li>
+<li>Which fleet interactions are necessary to answer the regulatory question?</li>
+</ul>
+<p>The next development milestone is a second request arriving during an active mission. Its purpose is to test availability and exposure reservations before adding more drones.</p>
+<p>Progress entries are maintained with the project code. They change when a new version of the website is published.</p>
+<p class="download"><a href="notes/index.md" download>Download this page as Markdown</a></p></main></div><footer><span>Mutlaq Aldajani · Research in development</span><span>Illustrative inputs · Last content update 21 September 2026</span></footer><script src="site.js"></script></body></html>

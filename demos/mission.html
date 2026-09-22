@@ -1,0 +1,101 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Drone mission</title><link rel="stylesheet" href="demo.css"></head><body><div id="drone-mission">
+ <h2>One delivery, one regulatory update</h2>
+ <div class="text-small text-muted">Synthetic network · Assumed starting exposure · Proxy units, not decibels</div>
+ <div class="viz-row mission-controls"><button type="button" class="btn" id="dm-back">Previous event</button><button type="button" class="btn btn-primary" id="dm-next">Next event</button><span id="dm-count" class="tabular-nums"></span></div>
+ <div class="viz-row mission-state" aria-live="polite"><span id="dm-clock"></span><span id="dm-state"></span><span id="dm-battery"></span></div>
+ <svg id="dm-map" role="img" aria-label="Drone mission across nine neighborhoods"></svg>
+ <div id="dm-event" aria-live="polite"></div>
+ <div class="text-small text-muted">Circles: neighborhoods · Diamond: drone D1 · Squares: depot and customer</div>
+</div>
+<style>
+ #drone-mission {color:var(--foreground)}
+ #drone-mission .mission-controls {margin:16px 0 12px}
+ #drone-mission .mission-state {justify-content:space-between}
+ #drone-mission #dm-map {display:block;width:100%;overflow:visible}
+ #drone-mission #dm-map text {fill:var(--foreground);font-size:12px}
+ #drone-mission #dm-event {margin:4px 0 10px;min-height:3em}
+</style>
+<script>
+(()=>{
+ const root=document.getElementById('drone-mission'), $=id=>root.querySelector('#dm-'+id);
+ const C=[1.1,.8,1,1,1.4,1.1,.9,1,.8];
+ class Mission {
+  constructor(){this.time=0;this.stage='request';this.battery=100;this.status='Idle';this.delivered=false;this.route=null;this.point=0;this.exposure=[27,26,25,24,39.2,24,22,23,24];this.budgets=Array(9).fill(40);this.reserved=Array(9).fill(0);this.nextBudgets=null;this.message='Request R1 arrives for the customer in Z2.';this.observation=null;this.distance=0;this.ledger=[];}
+  step(){
+   if(this.stage==='done')return;
+   if(this.stage==='request'){
+    const routes=[0,1,2].map(r=>({row:r,length:2*(6+2*Math.abs(r-1))})).sort((a,b)=>a.length-b.length||a.row-b.row);
+    const feasible=routes.find(r=>this.battery-r.length*2>=20&&[0,1,2].every(j=>this.exposure[r.row*3+j]+C[r.row*3+j]<=this.budgets[r.row*3+j]+1e-9));
+    if(!feasible){this.status='Unserved';this.stage='done';this.message='No route meets the exposure budget and battery reserve.';return;}
+    this.route=feasible;this.stage='outbound';this.status='Assigned';
+    for(let j=0;j<3;j++)this.reserved[feasible.row*3+j]=C[feasible.row*3+j];
+    this.message='Central route rejected: N5 would reach 40.6 > 40. Upper route assigned.';
+    return;
+   }
+   if(this.stage==='outbound'||this.stage==='returning'){
+    const returning=this.stage==='returning',segment=this.route.length/8;
+    this.time+=segment/2;this.battery-=segment*2;this.distance+=segment;
+    this.point+=returning?-1:1;this.status=returning?'Returning':'Outbound';
+    const j=this.point-1;
+    if(j>=0&&j<3){const i=this.route.row*3+j,increment=C[i]/2;this.exposure[i]+=increment;this.reserved[i]=Math.max(0,this.reserved[i]-increment);this.ledger.push({time:this.time,neighborhood:i,increment});this.message=`${returning?'Return':'Outbound'} crossing N${i+1}: +${increment.toFixed(2)} exposure units.`;}
+    else this.message=returning?'Drone D1 returns to the depot. Mission complete.':'Drone D1 reaches the customer.';
+    if(this.point===4&&!returning){this.stage='delivery';this.status='At customer';}
+    if(this.point===0&&returning){this.stage='review';this.status='Available';}
+    return;
+   }
+   if(this.stage==='delivery'){this.time+=1;this.delivered=true;this.stage='returning';this.status='Delivered';this.message='Parcel R1 delivered. The return flight still contributes exposure.';return;}
+   if(this.stage==='review'){
+    this.time=10;this.observation=this.exposure.slice();this.nextBudgets=this.budgets.map((b,i)=>Math.max(6,Math.min(70,b-.6*(this.observation[i]-28))));this.stage='done';
+    this.message='Review closes period 1. Its measured exposure sets period 2 budgets.';
+   }
+  }
+ }
+ const model=new Mission(),states=[JSON.parse(JSON.stringify(model))];
+ while(model.stage!=='done'){model.step();states.push(JSON.parse(JSON.stringify(model)));if(states.length>30)throw Error('Mission did not terminate');}
+ let index=0;
+ const readState=state=>{const n=state?.privateContent?.event;if(state?.modelContent?.visual==='drone-mission-v1'&&Number.isInteger(n))index=Math.max(0,Math.min(states.length-1,n));};
+ readState(window.researchState?.widgetState);
+ const ns='http://www.w3.org/2000/svg';
+ function node(tag,attrs,text){const n=document.createElementNS(ns,tag);for(const [k,v] of Object.entries(attrs))n.setAttribute(k,String(v));if(text!==undefined)n.textContent=text;return n;}
+ function render(){
+  const s=states[index],svg=$('map'),w=svg.clientWidth,h=356,narrow=w<480;
+  svg.setAttribute('viewBox',`0 0 ${w} ${h}`);svg.setAttribute('height',h);svg.replaceChildren();
+  const ys=[58,160,262],xs=[w*.28,w*.50,w*.72],start=[24,160],finish=[w-24,160];
+  svg.append(node('title',{},`${s.status}. ${s.message} Battery ${s.battery} percent.`));
+  for(let r=0;r<3;r++){
+   const path=`M24,160 L${w*.16},${ys[r]} H${w*.84} L${w-24},160`;
+   svg.append(node('path',{d:path,fill:'none',stroke:'var(--border)','stroke-width':1.5}));
+   if(s.route?.row===r)svg.append(node('path',{d:path,fill:'none',stroke:'var(--viz-series-1)','stroke-width':3}));
+   for(let j=0;j<3;j++){
+    const i=r*3+j,x=xs[j],y=ys[r];
+    svg.append(node('circle',{cx:x,cy:y,r:15,fill:'var(--background)'}));
+    svg.append(node('circle',{cx:x,cy:y,r:15,fill:'var(--viz-series-1)','fill-opacity':s.exposure[i]/50,stroke:'var(--border)'}));
+    svg.append(node('text',{x,y:y-24,'text-anchor':'middle'},`N${i+1}`));
+    svg.append(node('text',{x,y:y+31,'text-anchor':'middle'},`${s.exposure[i].toFixed(2)} u`));
+    svg.append(node('text',{x,y:y+48,'text-anchor':'middle'},s.nextBudgets?`${narrow?'Next':'Next cap'} ${s.nextBudgets[i].toFixed(2)}`:'Cap 40'));
+   }
+  }
+  [start,finish].forEach(([x,y])=>svg.append(node('rect',{x:x-5,y:y-5,width:10,height:10,fill:'var(--foreground)'})));
+  svg.append(node('text',{x:8,y:195,'text-anchor':'start'},'Depot'));
+  svg.append(node('text',{x:w-8,y:195,'text-anchor':'end'},'Z2'));
+  const location=s.point===0?start:s.point===4?finish:[xs[s.point-1],ys[s.route.row]];
+  const group=node('g',{'aria-label':'Drone D1'}),[dx,dy]=location;
+  group.append(node('path',{d:`M${dx},${dy-11} l9,11 -9,11 -9,-11 Z`,fill:'var(--viz-series-2)',stroke:'var(--foreground)','stroke-width':1}));
+  svg.append(group);
+  svg.append(node('text',{x:8,y:346,'text-anchor':'start'},s.delivered?'Request R1: delivered':'Request R1: pending'));
+  svg.append(node('text',{x:w-8,y:346,'text-anchor':'end'},`D1: ${s.distance} distance units`));
+  $('count').textContent=`Event ${index+1} / ${states.length}`;
+  $('clock').textContent=`Time: ${s.time.toFixed(0)} min`;
+  $('state').textContent=`D1: ${s.status}`;
+  $('battery').textContent=`Battery: ${s.battery.toFixed(0)}%`;
+  $('event').textContent=s.message;
+  $('back').disabled=index===0;$('next').disabled=index===states.length-1;
+  root.dataset.ready='true';root.dataset.event=index;
+ }
+ function move(amount){index=Math.max(0,Math.min(states.length-1,index+amount));render();if(window.researchState?.setWidgetState)window.researchState.setWidgetState({modelContent:{visual:'drone-mission-v1',event:index+1,state:states[index].status},privateContent:{event:index}}).catch(()=>{});}
+ $('back').addEventListener('click',()=>move(-1));$('next').addEventListener('click',()=>move(1));
+ window.addEventListener('openai:set_globals',e=>{if(e.detail?.globals?.widgetState){readState(e.detail.globals.widgetState);render();}});
+ window.droneMission={Mission,states};render();new ResizeObserver(render).observe(root);
+})();
+</script>
+<script>new ResizeObserver(()=>{if(parent!==window)parent.postMessage({type:'demo-height',height:document.body.scrollHeight},location.origin);}).observe(document.body);</script></body></html>

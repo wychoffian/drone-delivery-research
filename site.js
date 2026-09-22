@@ -1,0 +1,1 @@
+window.addEventListener('message',event=>{const frame=document.getElementById('demo');if(frame&&event.origin===location.origin&&event.source===frame.contentWindow&&event.data?.type==='demo-height'&&Number.isFinite(event.data.height)){frame.style.height=Math.max(400,Math.min(4000,event.data.height+24))+'px';}});

@@ -1,0 +1,60 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="Research progress and executable prototypes for adaptive neighborhood exposure regulation of drone delivery."><title>Model and rules | Drone delivery research</title><link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23152b44'/%3E%3Cpath d='M7 22L16 8l9 14M7 22h18' fill='none' stroke='%23ffffff' stroke-width='2'/%3E%3C/svg%3E"><link rel="stylesheet" href="style.css"></head><body><a class="skip" href="#main">Skip to content</a><header><a class="brand" href="index.html"><span class="mark" aria-hidden="true">D</span>Drone delivery research</a><span class="meta">CECAN fellowship project · Prototype v0.2</span></header><div class="shell"><nav aria-label="Project navigation"><span class="label">Research notebook</span><a href="index.html">Progress</a><a href="overview.html">Project overview</a><a href="model.html" aria-current="page">Model and rules</a><a href="pilot.html">Interactive pilot</a><a href="experiments.html">Experiments</a></nav><main id="main"><h1>Model and rules</h1>
+<p>The operator chooses routes. Drone missions generate exposure, and the regulator uses delayed observations to change the next period&#39;s budgets.</p>
+<h2>System map</h2>
+<p>Figure 1 shows the operational sequence and its feedback loop.</p>
+<figure class="system-map"><ol class="flow"><li>Delivery requests</li><li>Operator agent<small>Choose a feasible route</small></li><li>Drone agents<small>Execute outbound and return missions</small></li><li>Neighborhood exposure<small>Accumulate flight contributions</small></li><li>Regulator agent<small>Read delayed observations</small></li><li>Next-period budgets<small>Constrain subsequent route choices</small></li></ol><figcaption>Figure 1. Regulatory feedback loop. The final budget feeds back into the operator's route choice. The route network supplies feasible alternatives; population weights enter noise-aware routing and distributional analysis.</figcaption></figure>
+
+<h2>Agents and records</h2>
+<p>Table 2 distinguishes decision makers from the information they use.</p>
+<table>
+<thead>
+<tr>
+<th>Entity</th>
+<th>Role</th>
+<th>Current implementation</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Operator</td>
+<td>Select the cheapest feasible route</td>
+<td>Implemented in both demonstrations</td>
+</tr>
+<tr>
+<td>Regulator</td>
+<td>Set fixed or adaptive exposure budgets</td>
+<td>Implemented in both demonstrations</td>
+</tr>
+<tr>
+<td>Drone</td>
+<td>Execute missions and track its state</td>
+<td>One drone in the mission walkthrough</td>
+</tr>
+<tr>
+<td>Neighborhood</td>
+<td>Hold population and exposure records</td>
+<td>A spatial record, not a behavioral agent</td>
+</tr>
+<tr>
+<td>Request</td>
+<td>Specify a delivery task</td>
+<td>An input record</td>
+</tr>
+</tbody></table>
+<p>Table 2. Entity roles and implementation status. The demonstrations are separate prototypes, not an integrated fleet model.</p>
+<h2>Four experimental factors</h2>
+<ul>
+<li>Demand changes the number of requests.</li>
+<li>Population concentration changes residential distribution while holding total population constant.</li>
+<li>Information delay changes the age of the observation available to the regulator.</li>
+<li>Responsiveness changes the magnitude of a budget adjustment.</li>
+</ul>
+<p>The population factor does not currently change building geometry or the route network. Delay and responsiveness apply only to the adaptive policy.</p>
+<h2>Regulatory rule</h2>
+<p>The adaptive rule adjusts an exposure budget measured in the same units as exposure:</p>
+<pre><code class="language-text">next budget = current budget - gain × (observed exposure - target)
+</code></pre>
+<p>Lower and upper bounds constrain the result. Updates occur after a period closes and apply to the next period. The target guides the update; the current budget determines which missions can be accepted.</p>
+<h2>Implementation direction</h2>
+<p>The present prototypes execute in the browser. The proposed research implementation uses Python with Mesa for agent states, NetworkX for routes, and GeoPandas for spatial data. This remains a proposed stack, not an implemented Python model.</p>
+<p><a href="specification.html">Read the complete specification and sources</a></p>
+<p class="download"><a href="notes/model.md" download>Download this page as Markdown</a></p></main></div><footer><span>Mutlaq Aldajani · Research in development</span><span>Illustrative inputs · Last content update 21 September 2026</span></footer><script src="site.js"></script></body></html>
