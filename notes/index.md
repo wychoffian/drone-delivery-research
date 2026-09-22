@@ -30,7 +30,7 @@ Table 1. Development status for the current research prototype. "Demonstrated" m
 
 ### 22 September 2026: literature scoping and gap revision
 
-Reviewed representative work on agent-based logistics, drone acoustics, noise-aware routing, and distributional equity. The first pass shows that noise-aware routing and equitable allocation already exist. The candidate contribution is therefore narrowed to delayed adaptive neighborhood budgets interacting with individual drone operations and changing demand. [Read the evidence map](literature.html).
+Reviewed representative work on agent-based logistics, drone acoustics, noise-aware routing, distributional equity, aviation noise quotas, and transport feedback control. Noise-aware routing, equitable allocation, operating quotas, and feedback controllers already exist. The candidate contribution is therefore narrowed to evaluating delayed neighborhood exposure budgets within individual drone operations under changing demand. [Read the evidence map](literature.html).
 
 ### 21 September 2026: traceable drone mission
 

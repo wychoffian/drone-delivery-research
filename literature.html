@@ -72,6 +72,58 @@
 </ul>
 <p>Research on drone delivery has developed methods for noise-aware routing, infrastructure placement, spatial exposure assessment, and equitable traffic allocation. However, the studies identified in this initial review mainly treat noise controls as fixed objectives, penalties, thresholds, or centrally optimized constraints. Less attention has been given to a regulatory feedback system in which neighborhood exposure budgets change in response to delayed observations while demand, drone availability, and route choices evolve.</p>
 <p>This is a provisional gap. It must be checked against adjacent research on adaptive environmental limits, congestion control, quotas, and dynamic resource allocation.</p>
+<h2>Adjacent regulation and control</h2>
+<p>The second scoping pass found two relevant precedents. Conventional aviation uses noise-weighted operating quotas, while transport-control research uses feedback signals to alter route choices.</p>
+<table>
+<thead>
+<tr>
+<th>Precedent</th>
+<th>Existing mechanism</th>
+<th>Consequence for this model</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><a href="https://www.caa.co.uk/commercial-industry/aircraft/airworthiness/type-certificate-and-type-approval-data-sheets/part-21/noise-certificates/aircraft-noise-certificate/">UK CAA Quota Count system</a></td>
+<td>Aircraft movements debit seasonal airport quotas according to certified noise classifications.</td>
+<td>Separate source-noise classes, movement limits, and neighborhood received exposure.</td>
+</tr>
+<tr>
+<td><a href="https://assets.publishing.service.gov.uk/media/6752c47114973821ce2a6c90/decision-night-flight-restrictions-heathrow-gatwick-stansted-from-oct-25.pdf">UK night-flight decision for 2025 to 2028</a></td>
+<td>Movement limits and noise quotas operate together within a defined policy period.</td>
+<td>Report operation counts and exposure budgets as different controls and outcomes.</td>
+</tr>
+<tr>
+<td><a href="https://www.easa.europa.eu/en/domains/environment/drones-and-vertical-take-and-landing-capable-aircraft-vca">EASA drone-noise guidance</a></td>
+<td>Harmonized measurements cover level flight and hover.</td>
+<td>Use measured vehicle data before replacing the current proxy units.</td>
+</tr>
+<tr>
+<td><a href="https://doi.org/10.1109/TAC.2021.3065193">Como and Maggistro (2022)</a></td>
+<td>Flow-dependent feedback tolls influence route choice and stabilize a transport network.</td>
+<td>Treat stability as an output and make the controller timing explicit.</td>
+</tr>
+<tr>
+<td><a href="https://doi.org/10.1016/j.trb.2017.02.007">Han et al. (2017)</a></td>
+<td>Dynamic assignment and emissions are connected to environmental pricing.</td>
+<td>Evaluate regulation and route response as one endogenous system.</td>
+</tr>
+</tbody></table>
+<p>Table 2. Adjacent mechanisms that inform, but do not duplicate, the proposed adaptive neighborhood budget.</p>
+<p>The proposed mechanism is therefore not the first noise quota and not the first transport feedback controller. Its candidate contribution is the evaluation of a delayed, neighborhood-specific quantity controller within individual drone-delivery operations.</p>
+<h2>Refined research question</h2>
+<blockquote>
+<p>Under what combinations of demand, population distribution, observation delay, and controller responsiveness do adaptive neighborhood exposure budgets reduce repeated local drone exposure without producing unacceptable service loss, oscillation, or burden transfer?</p>
+</blockquote>
+<h2>Requirements for the regulator model</h2>
+<ul>
+<li>Missions reserve their complete outbound and return exposure before departure.</li>
+<li>Each affected neighborhood has a separate account.</li>
+<li>Updates occur only at documented review boundaries.</li>
+<li>The observation delay, controller gain, bounds, and saturation are recorded.</li>
+<li>Fixed, proportional, and damped budget rules are compared.</li>
+<li>Evaluation includes budget oscillation, route switching, unmet demand, and burden transfer.</li>
+<li>The controller is described as experimental rather than current law.</li>
+</ul>
 <h2>Proposed contribution</h2>
 <p>The project will develop a transparent simulation sandbox for evaluating adaptive neighborhood exposure regulation in urban drone delivery. It will connect operational agents and request queues to spatial exposure accounts and a regulator with explicit observation delay and responsiveness. Matched demand sequences will support comparisons among unrestricted, noise-aware, fixed-budget, and adaptive-budget regimes.</p>
 <p>The evaluation will report delivery service, spatial burden, equity, and feedback stability. Reduced exposure alone will not be treated as evidence that a policy is better.</p>
@@ -85,7 +137,7 @@
 </thead>
 <tbody><tr>
 <td>Dynamic regulation</td>
-<td>Which feedback, quota, or adaptive-cap mechanisms have already been tested in other environmental and transport systems?</td>
+<td>Which further environmental quota systems provide useful comparisons with the proposed quantity controller?</td>
 </tr>
 <tr>
 <td>Exposure metric</td>
@@ -110,5 +162,5 @@
 </tbody></table>
 <p>Table 2. Questions that must be resolved before the gap and empirical model are finalized.</p>
 <h2>Next review action</h2>
-<p>The next pass will search adjacent regulation and control literatures and trace citations from the closest noise, equity, and routing studies. Each retained source will then receive a quality and relevance assessment before the thematic literature review is written.</p>
+<p>The next pass will trace citations from the closest noise, equity, and routing studies and assess source quality and relevance. The refined regulator requirements can now be transferred into the ODD specification.</p>
 <p class="download"><a href="notes/literature.md" download>Download this page as Markdown</a></p></main></div><footer><span>Mutlaq Aldajani · Research in development</span><span>Illustrative inputs · Last content update 22 September 2026</span></footer><script src="site.js"></script></body></html>

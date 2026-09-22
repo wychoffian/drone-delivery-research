@@ -42,6 +42,36 @@ Research on drone delivery has developed methods for noise-aware routing, infras
 
 This is a provisional gap. It must be checked against adjacent research on adaptive environmental limits, congestion control, quotas, and dynamic resource allocation.
 
+## Adjacent regulation and control
+
+The second scoping pass found two relevant precedents. Conventional aviation uses noise-weighted operating quotas, while transport-control research uses feedback signals to alter route choices.
+
+| Precedent | Existing mechanism | Consequence for this model |
+| --- | --- | --- |
+| [UK CAA Quota Count system](https://www.caa.co.uk/commercial-industry/aircraft/airworthiness/type-certificate-and-type-approval-data-sheets/part-21/noise-certificates/aircraft-noise-certificate/) | Aircraft movements debit seasonal airport quotas according to certified noise classifications. | Separate source-noise classes, movement limits, and neighborhood received exposure. |
+| [UK night-flight decision for 2025 to 2028](https://assets.publishing.service.gov.uk/media/6752c47114973821ce2a6c90/decision-night-flight-restrictions-heathrow-gatwick-stansted-from-oct-25.pdf) | Movement limits and noise quotas operate together within a defined policy period. | Report operation counts and exposure budgets as different controls and outcomes. |
+| [EASA drone-noise guidance](https://www.easa.europa.eu/en/domains/environment/drones-and-vertical-take-and-landing-capable-aircraft-vca) | Harmonized measurements cover level flight and hover. | Use measured vehicle data before replacing the current proxy units. |
+| [Como and Maggistro (2022)](https://doi.org/10.1109/TAC.2021.3065193) | Flow-dependent feedback tolls influence route choice and stabilize a transport network. | Treat stability as an output and make the controller timing explicit. |
+| [Han et al. (2017)](https://doi.org/10.1016/j.trb.2017.02.007) | Dynamic assignment and emissions are connected to environmental pricing. | Evaluate regulation and route response as one endogenous system. |
+
+Table 2. Adjacent mechanisms that inform, but do not duplicate, the proposed adaptive neighborhood budget.
+
+The proposed mechanism is therefore not the first noise quota and not the first transport feedback controller. Its candidate contribution is the evaluation of a delayed, neighborhood-specific quantity controller within individual drone-delivery operations.
+
+## Refined research question
+
+> Under what combinations of demand, population distribution, observation delay, and controller responsiveness do adaptive neighborhood exposure budgets reduce repeated local drone exposure without producing unacceptable service loss, oscillation, or burden transfer?
+
+## Requirements for the regulator model
+
+- Missions reserve their complete outbound and return exposure before departure.
+- Each affected neighborhood has a separate account.
+- Updates occur only at documented review boundaries.
+- The observation delay, controller gain, bounds, and saturation are recorded.
+- Fixed, proportional, and damped budget rules are compared.
+- Evaluation includes budget oscillation, route switching, unmet demand, and burden transfer.
+- The controller is described as experimental rather than current law.
+
 ## Proposed contribution
 
 The project will develop a transparent simulation sandbox for evaluating adaptive neighborhood exposure regulation in urban drone delivery. It will connect operational agents and request queues to spatial exposure accounts and a regulator with explicit observation delay and responsiveness. Matched demand sequences will support comparisons among unrestricted, noise-aware, fixed-budget, and adaptive-budget regimes.
@@ -52,7 +82,7 @@ The evaluation will report delivery service, spatial burden, equity, and feedbac
 
 | Area | Question |
 | --- | --- |
-| Dynamic regulation | Which feedback, quota, or adaptive-cap mechanisms have already been tested in other environmental and transport systems? |
+| Dynamic regulation | Which further environmental quota systems provide useful comparisons with the proposed quantity controller? |
 | Exposure metric | Which physical metric and observation period can validly accumulate repeated drone events? |
 | Regulatory authority | Which institution could impose neighborhood-level operating constraints in the intended jurisdiction? |
 | Operational data | Which sources can estimate arrivals, payloads, mission times, fleet size, and charging? |
@@ -63,4 +93,4 @@ Table 2. Questions that must be resolved before the gap and empirical model are 
 
 ## Next review action
 
-The next pass will search adjacent regulation and control literatures and trace citations from the closest noise, equity, and routing studies. Each retained source will then receive a quality and relevance assessment before the thematic literature review is written.
+The next pass will trace citations from the closest noise, equity, and routing studies and assess source quality and relevance. The refined regulator requirements can now be transferred into the ODD specification.
