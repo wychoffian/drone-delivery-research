@@ -18,6 +18,7 @@ The milestones below distinguish completed prototypes from research work that re
 | --- | --- | --- |
 | Research question and bounded model | Drafted | [Model and rules](model.html) |
 | Literature evidence and candidate gap | First scoping pass | [Literature and gap](literature.html) |
+| ODD model specification | Drafted | [ODD specification](odd.html) |
 | Route allocation and regulatory feedback | Demonstrated | [Four-dial experiment](policy.html) |
 | One drone with mission state and timing | Demonstrated | [Delivery walkthrough](mission.html) |
 | Multiple requests and fleet constraints | Planned | Test dispatch while a drone is busy |
@@ -27,6 +28,10 @@ The milestones below distinguish completed prototypes from research work that re
 Table 1. Development status for the current research prototype. "Demonstrated" means that the stated mechanism runs with illustrative inputs.
 
 ## Development record
+
+### 22 September 2026: ODD model specification
+
+Converted the conceptual model into the ODD 2020 structure. The specification separates implemented prototypes from the target integrated model and defines entities, scheduling, design concepts, submodels, inputs, outputs, and fitness-for-purpose checks. [Read the ODD specification](odd.html).
 
 ### 22 September 2026: literature scoping and gap revision
 

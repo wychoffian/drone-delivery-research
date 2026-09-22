@@ -1,0 +1,352 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="Research progress and executable prototypes for adaptive neighborhood exposure regulation of drone delivery."><title>ODD specification | Drone delivery research</title><link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23152b44'/%3E%3Cpath d='M7 22L16 8l9 14M7 22h18' fill='none' stroke='%23ffffff' stroke-width='2'/%3E%3C/svg%3E"><link rel="stylesheet" href="style.css"></head><body><a class="skip" href="#main">Skip to content</a><header><a class="brand" href="index.html"><span class="mark" aria-hidden="true">D</span>Drone delivery research</a><span class="meta">CECAN fellowship project · Prototype v0.2</span></header><div class="shell"><nav aria-label="Project navigation"><span class="label">Research notebook</span><a href="index.html">Progress</a><a href="overview.html">Project overview</a><a href="literature.html">Literature and gap</a><a href="model.html">Model and rules</a><a href="odd.html" aria-current="page">ODD specification</a><a href="pilot.html">Interactive pilot</a><a href="experiments.html">Experiments</a></nav><main id="main"><h1>ODD model specification</h1>
+<h2>Adaptive neighborhood exposure regulation for urban drone delivery</h2>
+<p>Version 0.1, 22 September 2026</p>
+<p>This model description follows the Overview, Design concepts, and Details protocol described by <a href="https://doi.org/10.18564/jasss.4259">Grimm et al. (2020)</a>. It specifies the target integrated research model. The current browser prototypes implement parts of this specification but do not yet constitute the complete agent-based model.</p>
+<h2>Model status</h2>
+<p>Table 1 distinguishes executable behavior from planned model components.</p>
+<table>
+<thead>
+<tr>
+<th>Component</th>
+<th>Status</th>
+<th>Evidence</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Demand generation and route allocation</td>
+<td>Implemented</td>
+<td>Four-policy browser prototype with 24 review periods</td>
+</tr>
+<tr>
+<td>Fixed and proportional exposure budgets</td>
+<td>Implemented</td>
+<td>Policy prototype and 384 deterministic checks across factor combinations</td>
+</tr>
+<tr>
+<td>One drone mission, battery, timing, and return exposure</td>
+<td>Implemented separately</td>
+<td>Twelve-event mission walkthrough</td>
+</tr>
+<tr>
+<td>Integrated request queue and drone availability</td>
+<td>Planned</td>
+<td>First target for model version 0.3</td>
+</tr>
+<tr>
+<td>Multiple drones, charging, and fleet interaction</td>
+<td>Planned</td>
+<td>Added after the two-request availability test</td>
+</tr>
+<tr>
+<td>Damped adaptive controller</td>
+<td>Specified, not implemented</td>
+<td>Added following the regulation and control literature review</td>
+</tr>
+<tr>
+<td>Empirical acoustic exposure</td>
+<td>Planned</td>
+<td>Current exposure values are proxy units</td>
+</tr>
+<tr>
+<td>Socioeconomic equity attributes</td>
+<td>Planned</td>
+<td>Current population patterns are synthetic</td>
+</tr>
+</tbody></table>
+<p>Table 1. Implementation status of the ODD components. &quot;Implemented separately&quot; means that the behavior runs in a prototype but has not been integrated with the multi-period policy model.</p>
+<h1>Overview</h1>
+<h2>Purpose and patterns</h2>
+<p>The model will examine when adaptive neighborhood exposure budgets can control repeated local exposure from urban drone deliveries while maintaining delivery service. It is designed to answer the following question:</p>
+<blockquote>
+<p>Under what combinations of demand, population distribution, observation delay, and controller responsiveness do adaptive neighborhood exposure budgets reduce repeated local drone exposure without producing unacceptable service loss, oscillation, or burden transfer?</p>
+</blockquote>
+<p>The model is explanatory and comparative. It is not intended to forecast commercial drone activity or recommend a legal exposure threshold in its current form.</p>
+<p>The target patterns are outcomes that the model should be able to generate and explain rather than results that are assumed in advance:</p>
+<ul>
+<li>concentration of flights and exposure on short routes under an unrestricted policy;</li>
+<li>rerouting or rejected requests when local budgets become binding;</li>
+<li>transfer of exposure from constrained neighborhoods to alternatives;</li>
+<li>delayed or oscillating budget responses under high gain or long observation delay;</li>
+<li>queue growth or service loss when exposure and fleet constraints interact;</li>
+<li>differences between physical exposure, population-weighted burden, and distributional equity.</li>
+</ul>
+<p>The model will compare four policy regimes. P0 uses shortest feasible paths without exposure regulation. P1 adds a population-weighted exposure term to route cost. P2 enforces fixed neighborhood exposure budgets. P3 updates those budgets using delayed exposure observations. A damped P3 variant will be included to test whether smoothing reduces oscillation.</p>
+<h2>Entities, state variables, and scales</h2>
+<p>The model contains agents, passive entities, an environment, and an institutional controller. Table 2 defines their minimum state.</p>
+<table>
+<thead>
+<tr>
+<th>Entity</th>
+<th>Type</th>
+<th>State variables</th>
+<th>Main action</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Delivery operator</td>
+<td>Decision-making agent</td>
+<td>Pending requests, available drones, candidate routes, route costs, current neighborhood budgets, exposure reservations</td>
+<td>Select a request, drone, and feasible route or defer the request</td>
+</tr>
+<tr>
+<td>Drone</td>
+<td>Individual agent</td>
+<td>Identifier, location, battery, payload state, mission state, assigned request, route, route position, availability time</td>
+<td>Execute outbound, delivery, return, and charging events</td>
+</tr>
+<tr>
+<td>Regulator</td>
+<td>Institutional controller</td>
+<td>Policy regime, neighborhood budgets, targets, observation history, delay, gain, damping, bounds, review clock</td>
+<td>Calculate budgets for the next review period</td>
+</tr>
+<tr>
+<td>Request</td>
+<td>Passive task entity</td>
+<td>Arrival time, origin, destination, payload, deadline, status, assigned drone, completion time</td>
+<td>Enter a queue and record service outcomes</td>
+</tr>
+<tr>
+<td>Neighborhood</td>
+<td>Spatial record</td>
+<td>Geometry or network association, population, baseline sound, socioeconomic attributes, measured exposure, reserved exposure, current budget</td>
+<td>Accumulate exposure and provide attributes for routing and evaluation</td>
+</tr>
+<tr>
+<td>Route network</td>
+<td>Environment</td>
+<td>Nodes, edges, distances, permitted directions, corridor labels, neighborhood intersections</td>
+<td>Supply candidate paths and movement distances</td>
+</tr>
+</tbody></table>
+<p>Table 2. Entities, state variables, and actions in the target model. Residents are represented through neighborhood attributes unless behavioral responses are added later.</p>
+<p>The synthetic environment contains one depot, three delivery zones, three alternative corridors, and nine exposed neighborhoods. Each corridor crosses three neighborhoods. The research version may replace this network with an empirical spatial graph, but the synthetic network remains the verification case.</p>
+<p>The model uses two time scales. Operational time advances through request arrivals, drone movement, delivery, return, and charging events. Regulatory time advances at review boundaries. Operational time is represented in minutes. The duration of a review period, <code>H_review</code>, remains a calibration parameter. The ten-minute boundary in the single-mission walkthrough is an illustrative test value, not a proposed policy interval.</p>
+<p>The current synthetic network uses abstract distance units. The mission walkthrough uses flight speed of two distance units per minute, battery consumption of two percentage points per distance unit, and a 20 percent battery reserve. These values are verification assumptions that will be replaced or bounded using evidence.</p>
+<h2>Process overview and scheduling</h2>
+<p>Figure 1 gives the target schedule. Processes at the same timestamp are executed in the listed order to prevent inconsistent reservations or updates.</p>
+<pre><code class="language-text">Initialize scenario, policy, network, neighborhoods, and drones
+For each operational event time:
+  1. complete scheduled drone movements and record received exposure
+  2. complete deliveries, returns, and charging transitions
+  3. release or reconcile exposure reservations
+  4. add newly arrived requests to the queue
+  5. dispatch queued requests in the documented queue order
+  6. reserve complete outbound and return exposure for accepted missions
+At each regulatory review boundary:
+  7. close the exposure account for the completed period
+  8. record service, exposure, burden, and stability outputs
+  9. read the exposure observation specified by the information delay
+  10. calculate budgets for the next period
+  11. reset current-period measured exposure while retaining history
+Stop after the specified number of review periods
+</code></pre>
+<p>Figure 1. Process order for the integrated model. Dispatch occurs after state completion at the same timestamp so a returned drone can become available before the next queued request is considered.</p>
+<p>Requests arriving at the same timestamp are ordered by a reproducible rule, initially request identifier. Candidate routes are ordered by policy cost and then corridor identifier. These tie-breaking rules are recorded because they can affect exposure distribution.</p>
+<h1>Design concepts</h1>
+<h2>Basic principles</h2>
+<p>The model combines four ideas. Delivery requests create demand for a limited fleet. Route decisions create spatial externalities. Neighborhood budgets impose local quantity constraints. A regulator changes future budgets using delayed information. The combined system can produce feedback, displacement, saturation, and service trade-offs that are difficult to infer from a static route optimization.</p>
+<p>Conventional aviation noise quotas show that operations can consume noise-weighted allowances. Transport-control studies show that feedback signals can change route choices and network stability. The model tests a different mechanism: received-exposure accounts for multiple neighborhoods along a drone route, revised at discrete review boundaries.</p>
+<h2>Emergence</h2>
+<p>Route concentration, neighborhood burden, unmet demand, budget oscillation, and queue length emerge from individual request and mission events. They are not assigned as model targets. Spatial equity emerges from the interaction of population attributes, network structure, route choices, and budget constraints.</p>
+<h2>Adaptation</h2>
+<p>The operator adapts route and dispatch decisions to current fleet availability and remaining neighborhood budgets. The P3 regulator adapts future budgets to observed exposure. Drones do not learn; they follow mission rules. Requests and neighborhoods have no behavioral adaptation.</p>
+<h2>Objectives</h2>
+<p>The operator minimizes a policy-specific route cost subject to battery, payload, fleet, and exposure feasibility. P0, P2, and P3 initially rank feasible routes by distance. P1 ranks routes by distance plus a population-weighted exposure term.</p>
+<p>The regulator seeks to keep exposure near a target without directly optimizing a global welfare function. Its proportional rule is a bounded controller, not an optimal policy. Evaluation therefore compares its outcomes with fixed-budget baselines and, if feasible, an optimized benchmark.</p>
+<h2>Learning</h2>
+<p>No behavioral learning is included in the bounded model. Budget updating is adaptation through a specified controller rather than machine learning or belief revision. Later work should not introduce operator or resident learning without a behavioral theory and supporting evidence.</p>
+<h2>Prediction</h2>
+<p>The operator evaluates the full outbound and return mission before departure. It predicts distance, battery use, and exposure debit using known route coefficients. It does not predict future requests. The regulator uses recorded exposure from period <code>t-d</code> and does not forecast future demand in the initial model.</p>
+<h2>Sensing</h2>
+<p>The operator observes queued requests, drone state, route alternatives, current budgets, measured exposure, and active reservations. The regulator observes period exposure after the stated delay. Perfect sensing is assumed initially. Measurement error and missing observations are later uncertainty scenarios.</p>
+<h2>Interaction</h2>
+<p>Drones interact indirectly by competing for operator attention, charging capacity, and exposure capacity. Missions interact through shared neighborhood accounts. The regulator influences later operator choices through budgets. Population affects P1 route costs and evaluation, but residents do not directly interact with drones.</p>
+<h2>Stochasticity</h2>
+<p>Request counts are currently generated by a Poisson process, and destinations are sampled from documented probabilities. All policies receive matched request sequences for a given seed. Route selection and controller updates are otherwise deterministic. Empirical work may replace the Poisson assumption if arrivals are overdispersed, time-varying, or spatially correlated.</p>
+<h2>Collectives</h2>
+<p>The drone fleet is a collection of individual drone agents managed by one operator. Neighborhoods may later be grouped by deprivation or baseline environmental burden for analysis. Such groups are analytical categories and do not act as collective agents.</p>
+<h2>Observation</h2>
+<p>The model records operational, environmental, distributional, and stability outcomes. Table 3 defines the minimum output set.</p>
+<table>
+<thead>
+<tr>
+<th>Outcome family</th>
+<th>Measures</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Service</td>
+<td>Requests received, delivered, deferred, rejected, mean and percentile delay, queue length</td>
+</tr>
+<tr>
+<td>Operations</td>
+<td>Flights, distance, energy use, drone utilization, charging time, route shares</td>
+</tr>
+<tr>
+<td>Exposure</td>
+<td>Period exposure by neighborhood, maximum exposure, exceedance count, cumulative received exposure</td>
+</tr>
+<tr>
+<td>Distribution</td>
+<td>Population-weighted burden, between-neighborhood dispersion, group burden where data permit</td>
+</tr>
+<tr>
+<td>Regulation</td>
+<td>Budget by neighborhood and period, time at bounds, adjustment magnitude, delayed observation used</td>
+</tr>
+<tr>
+<td>Stability</td>
+<td>Budget oscillation, route switching frequency, exposure variance, persistent queue growth</td>
+</tr>
+</tbody></table>
+<p>Table 3. Minimum outputs for evaluating service, exposure, distribution, and feedback behavior. No single indicator is sufficient to rank policies.</p>
+<h1>Details</h1>
+<h2>Initialization</h2>
+<p>Each run records the model version, policy, random seed, network version, parameters, and input-data versions. The synthetic verification case uses seed 421, 24 review periods, and a 60 percent demand increase beginning in period 9.</p>
+<p>The current policy prototype initializes neighborhood budgets at 40 proxy units, target exposure at 28, lower and upper budget bounds at 6 and 70, and gains of 0.15, 0.60, or 1.50. Information delay is 0, 1, or 3 review periods. These values are experimental settings rather than measured regulatory values.</p>
+<p>The dispersed population pattern assigns 100 residents to each of nine neighborhoods. The concentrated pattern assigns 220 residents to each central-corridor neighborhood and 40 residents to each remaining neighborhood, keeping the total at 900.</p>
+<p>Every drone begins at the depot with a documented battery state and is available unless the scenario specifies an active mission. Requests begin empty and arrive according to the demand submodel. Exposure and reservations begin at zero for a standard run. Verification cases may initialize exposure near a budget to test route rejection.</p>
+<h2>Input data</h2>
+<p>Table 4 separates current synthetic inputs from evidence needed for an empirical case.</p>
+<table>
+<thead>
+<tr>
+<th>Input</th>
+<th>Current source</th>
+<th>Required empirical replacement or justification</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Network and neighborhoods</td>
+<td>Synthetic three-corridor graph</td>
+<td>Permitted air routes, buildings, sensitive locations, and neighborhood boundaries</td>
+</tr>
+<tr>
+<td>Demand</td>
+<td>Poisson counts and fixed destination probabilities</td>
+<td>Time-stamped orders or a calibrated demand model</td>
+</tr>
+<tr>
+<td>Drone performance</td>
+<td>Illustrative speed, battery rate, and reserve</td>
+<td>Vehicle specifications and operational tests</td>
+</tr>
+<tr>
+<td>Source noise</td>
+<td>Route-specific proxy coefficients</td>
+<td>Measurements following a documented level-flight and hover procedure</td>
+</tr>
+<tr>
+<td>Propagation</td>
+<td>Embedded in proxy coefficients</td>
+<td>Acoustic propagation appropriate to altitude, buildings, ground, and weather</td>
+</tr>
+<tr>
+<td>Population</td>
+<td>Two synthetic patterns</td>
+<td>Population grid and selected socioeconomic variables</td>
+</tr>
+<tr>
+<td>Baseline sound</td>
+<td>Omitted</td>
+<td>Observed or modelled ambient sound by location and time</td>
+</tr>
+<tr>
+<td>Regulatory target</td>
+<td>Illustrative value of 28</td>
+<td>Explicit policy rationale and compatible exposure units</td>
+</tr>
+</tbody></table>
+<p>Table 4. Input-data status. Proxy exposure cannot be interpreted as decibels, annoyance, or health risk.</p>
+<h2>Submodels</h2>
+<h3>Demand generation</h3>
+<p>For review period <code>t</code>, the prototype draws request count <code>N_t</code> from a Poisson distribution with mean <code>mu_t</code>. Before period 9, <code>mu_t</code> is 18, 45, or 80. From period 9, it increases by 60 percent. Destination probabilities are 0.20, 0.60, and 0.20 for zones Z1 to Z3.</p>
+<p>The integrated model will assign operational arrival times within each period. A homogeneous Poisson process is the initial assumption. The implementation must permit replacement with empirical or time-varying arrivals.</p>
+<h3>Candidate routes and cost</h3>
+<p>For corridor <code>r</code> and destination <code>z</code>, the synthetic return-trip distance is:</p>
+<p><code>L(r,z) = 2 * (6 + abs(r - 1) + abs(r - z))</code></p>
+<p>P0, P2, and P3 rank candidates by <code>L</code>. P1 uses:</p>
+<p><code>C(r,z) = L(r,z) + w * sum(population(i) * c(i) for i on r) / 100</code></p>
+<p>where <code>w = 0.75</code> in the demonstration and <code>c(i)</code> is the route contribution for neighborhood <code>i</code>. The scaling and weight require sensitivity analysis.</p>
+<h3>Dispatch and feasibility</h3>
+<p>A request is dispatchable when at least one drone is available and at least one route passes payload, battery, and policy checks. Required battery includes the complete outbound and return distance plus reserve. Under P2 and P3, a route is exposure-feasible only when:</p>
+<p><code>measured(i,t) + reserved(i,t) + mission_contribution(i) &lt;= budget(i,t)</code></p>
+<p>for every affected neighborhood <code>i</code>.</p>
+<p>Once assigned, the complete mission contribution is added to reserved exposure. If no route is feasible, the request is deferred until its deadline or recorded as rejected according to the scenario rule. The model must distinguish fleet deferral from exposure rejection.</p>
+<h3>Mission execution</h3>
+<p>A drone transitions through <code>available</code>, <code>outbound</code>, <code>delivering</code>, <code>returning</code>, <code>charging</code>, and back to <code>available</code>. Movement consumes battery and advances route position. Delivery changes the request status, but the drone remains occupied until it returns. Recharging time is included only after empirical or bounded assumptions are defined.</p>
+<p>When the drone crosses an exposed neighborhood, that portion of the mission contribution moves from reserved to measured exposure. At mission completion, its reservation must equal zero. A failed or diverted mission requires an explicit reservation-reconciliation rule before such failures are introduced.</p>
+<h3>Exposure accounting</h3>
+<p>The synthetic complete return-trip contributions for N1 to N9 are:</p>
+<p><code>c = [1.1, 0.8, 1.0, 1.0, 1.4, 1.1, 0.9, 1.0, 0.8]</code></p>
+<p>Only neighborhoods on the selected corridor receive contributions. The mission walkthrough assigns half at the outbound crossing and half at the return crossing. These values are additive proxy units. Decibel values must not be added directly when the acoustic model replaces the proxy.</p>
+<h3>Regulatory update</h3>
+<p>P2 keeps every budget fixed. The unsmoothed P3 rule is:</p>
+<p><code>B(i,t+1) = clip(B(i,t) - a * (E(i,t-d) - T(i)), Bmin, Bmax)</code></p>
+<p>The damped variant is:</p>
+<p><code>B(i,t+1) = clip(B(i,t) - lambda * a * (E(i,t-d) - T(i)), Bmin, Bmax)</code></p>
+<p>where <code>a</code> is controller gain, <code>d</code> is observation delay, and <code>lambda</code> is a smoothing factor between zero and one. Updates occur after period <code>t</code> closes and affect period <code>t+1</code>. Delay zero therefore means that exposure from the completed current period informs the next budget. It never changes authorization for a completed mission.</p>
+<p>The symmetric rule relaxes budgets when exposure is below target. An asymmetric variant will test slower relaxation than tightening. Saturation at the lower or upper bound is recorded as an output.</p>
+<h3>Data collection</h3>
+<p>Event-level logs record request, dispatch, drone transition, neighborhood crossing, reservation, exposure, and regulatory-update events. Period summaries are derived from these logs rather than maintained independently. Every output row includes run identifier, seed, policy, scenario, and time.</p>
+<h1>Evaluation and fitness for purpose</h1>
+<p>The model is fit for its initial purpose if another researcher can reproduce the synthetic runs and if the implementation passes the checks in Table 5.</p>
+<table>
+<thead>
+<tr>
+<th>Check</th>
+<th>Expected result</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Zero demand</td>
+<td>No missions or added exposure</td>
+</tr>
+<tr>
+<td>Same seed across policies</td>
+<td>Identical request sequence</td>
+</tr>
+<tr>
+<td>Zero responsiveness</td>
+<td>Adaptive rule reproduces the corresponding fixed budget</td>
+</tr>
+<tr>
+<td>Budget feasibility</td>
+<td>No accepted mission exceeds a current budget after including reservations</td>
+</tr>
+<tr>
+<td>Return accounting</td>
+<td>Every accepted mission reserves and records both flight legs</td>
+</tr>
+<tr>
+<td>Battery feasibility</td>
+<td>No mission returns below the specified reserve</td>
+</tr>
+<tr>
+<td>Delay timing</td>
+<td>The recorded historical period matches <code>t-d</code> and updates only <code>t+1</code></td>
+</tr>
+<tr>
+<td>Reservation conservation</td>
+<td>Reserved exposure returns to zero when all missions finish</td>
+</tr>
+<tr>
+<td>Controller bounds</td>
+<td>Every budget remains within <code>Bmin</code> and <code>Bmax</code></td>
+</tr>
+<tr>
+<td>Replication</td>
+<td>Same version, inputs, and seed produce identical outputs</td>
+</tr>
+</tbody></table>
+<p>Table 5. Verification checks required before model outputs are interpreted.</p>
+<p>Empirical validation is separate. It requires evidence for arrival patterns, mission performance, source noise, propagation, baseline sound, population exposure, and regulatory interpretation. Sensitivity analysis cannot substitute for those data.</p>
+<h2>Model rationale and alternatives</h2>
+<p>An agent-based model is justified only if individual drone availability, queues, reservations, and asynchronous missions change policy outcomes. If the integrated implementation produces the same conclusions as the allocation-only model, a discrete-event or optimization model may be sufficient and easier to validate.</p>
+<p>The operator and regulator are retained as explicit decision components for traceability. The regulator is an institutional controller rather than a human-like agent. Neighborhoods and requests remain passive records. Resident agents should be added only if behavior such as complaints, adoption, or political response becomes part of the research question.</p>
+<h2>Limitations, implications, and next development</h2>
+<p>The synthetic graph predetermines a small set of exposure-transfer options. Proxy units omit physical acoustics, ambient sound, and perception. The controller target and bounds are experimental. Legal authority for neighborhood budgets has not been established. These limitations prevent policy recommendations from the current prototype.</p>
+<p>The specification makes the next implementation test precise: introduce a second request while the first drone remains on mission. The second request must encounter drone unavailability and active exposure reservations. Passing that test will connect operational time with the regulatory model before the fleet is expanded.</p>
+<p>The result will determine whether individual agents add explanatory value. Later versions can then add multiple drones, charging, empirical exposure, socioeconomic attributes, and replicated policy experiments.</p>
+<p class="download"><a href="notes/odd.md" download>Download this page as Markdown</a></p></main></div><footer><span>Mutlaq Aldajani · Research in development</span><span>Illustrative inputs · Last content update 22 September 2026</span></footer><script src="site.js"></script></body></html>

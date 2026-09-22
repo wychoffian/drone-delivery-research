@@ -46,3 +46,5 @@ Lower and upper bounds constrain the result. Updates occur after a period closes
 The present prototypes execute in the browser. The proposed research implementation uses Python with Mesa for agent states, NetworkX for routes, and GeoPandas for spatial data. This remains a proposed stack, not an implemented Python model.
 
 [Read the complete specification and sources](specification.html)
+
+[Read the formal ODD 2020 model specification](odd.html)
