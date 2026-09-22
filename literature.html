@@ -1,0 +1,114 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="Research progress and executable prototypes for adaptive neighborhood exposure regulation of drone delivery."><title>Literature and gap | Drone delivery research</title><link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23152b44'/%3E%3Cpath d='M7 22L16 8l9 14M7 22h18' fill='none' stroke='%23ffffff' stroke-width='2'/%3E%3C/svg%3E"><link rel="stylesheet" href="style.css"></head><body><a class="skip" href="#main">Skip to content</a><header><a class="brand" href="index.html"><span class="mark" aria-hidden="true">D</span>Drone delivery research</a><span class="meta">CECAN fellowship project · Prototype v0.2</span></header><div class="shell"><nav aria-label="Project navigation"><span class="label">Research notebook</span><a href="index.html">Progress</a><a href="overview.html">Project overview</a><a href="literature.html" aria-current="page">Literature and gap</a><a href="model.html">Model and rules</a><a href="pilot.html">Interactive pilot</a><a href="experiments.html">Experiments</a></nav><main id="main"><h1>Literature and research gap</h1>
+<p>The first scoping review tests whether the proposed contribution is distinct from existing work. It is an evidence map, not yet a systematic review.</p>
+<h2>Review question</h2>
+<p>What modelling approaches connect urban drone delivery operations with community noise exposure, distributional equity, and adaptive regulation, and what remains unresolved when demand and operations change over time?</p>
+<h2>Evidence reviewed</h2>
+<p>The first pass covers model reporting, urban logistics, drone acoustics, noise-aware routing, and distributional equity. Table 1 records representative studies that most directly affect the model design.</p>
+<table>
+<thead>
+<tr>
+<th>Study</th>
+<th>Existing contribution</th>
+<th>Consequence for this project</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><a href="https://doi.org/10.18564/jasss.4259">Grimm et al. (2020)</a></td>
+<td>Updated ODD protocol for transparent simulation descriptions</td>
+<td>Use ODD for the model specification and a separate protocol for experiments and evaluation.</td>
+</tr>
+<tr>
+<td><a href="https://doi.org/10.1145/3284038.3284039">Wise et al. (2018)</a></td>
+<td>Agent-based representation of individual last-mile delivery operations</td>
+<td>Call drones or operators agents only when their state and decisions influence outcomes.</td>
+</tr>
+<tr>
+<td><a href="https://doi.org/10.1016/j.trd.2023.103686">Tan et al. (2023)</a></td>
+<td>Virtual flight and acoustic propagation model for residential drone noise</td>
+<td>Replace proxy exposure with a physical measure informed by vehicle state and propagation.</td>
+</tr>
+<tr>
+<td><a href="https://doi.org/10.3390/ijerph18178893">Hui et al. (2021)</a></td>
+<td>Psychoacoustic experiment relating UAV sound metrics to annoyance</td>
+<td>Keep physical exposure, perceived annoyance, and health effects conceptually separate.</td>
+</tr>
+<tr>
+<td><a href="https://doi.org/10.1016/j.trd.2024.104306">Tan et al. (2024)</a></td>
+<td>Noise-conscious drone-station placement and truck-drone operations</td>
+<td>Do not claim that integrating noise and drone logistics is new.</td>
+</tr>
+<tr>
+<td><a href="https://doi.org/10.1016/j.tre.2024.103661">Farazi and Zou (2024)</a></td>
+<td>Population-exposure measure and cost-noise optimization with fleet constraints</td>
+<td>Report service and exposure outcomes together.</td>
+</tr>
+<tr>
+<td><a href="https://doi.org/10.1016/j.trc.2024.104740">Gao et al. (2024)</a></td>
+<td>Noise-aware and equitable air-traffic optimization</td>
+<td>Compare adaptive regulation with fixed and optimized baselines using explicit equity measures.</td>
+</tr>
+<tr>
+<td><a href="https://kclpure.kcl.ac.uk/portal/en/publications/noise-and-environmental-justice-in-drone-fleet-delivery-paths-a-s/">Zhou and Brandao (2023)</a></td>
+<td>Simulation audit of unequal drone-fleet noise and fairer route allocation</td>
+<td>Test whether rerouting transfers exposure to different neighborhoods or groups.</td>
+</tr>
+<tr>
+<td><a href="https://doi.org/10.1016/j.urbmob.2026.100231">Noise-aware urban drone delivery (2026)</a></td>
+<td>Integrates demand, spatial noise, population weighting, and noise-aware routes</td>
+<td>Distinguish the proposed delayed regulatory feedback and dynamic fleet consequences.</td>
+</tr>
+</tbody></table>
+<p>Table 1. Representative evidence from the first scoping pass and its effect on the research design.</p>
+<h2>What is already established</h2>
+<p>Existing studies address noise-aware routes, acoustic propagation, population exposure, environmental justice, equitable air-traffic allocation, and agent-based logistics. The project should not claim that drone noise, equity, population weighting, or agent-based modelling is new.</p>
+<h2>Candidate research gap</h2>
+<p>The initial review has not identified a model that combines all of the following:</p>
+<ul>
+<li>individual drone availability, mission duration, battery state, and request queues;</li>
+<li>neighborhood exposure accounts that constrain route allocation;</li>
+<li>budgets revised through delayed feedback from observed exposure;</li>
+<li>demand disturbances and different population distributions;</li>
+<li>joint evaluation of service loss, burden distribution, and feedback stability.</li>
+</ul>
+<p>Research on drone delivery has developed methods for noise-aware routing, infrastructure placement, spatial exposure assessment, and equitable traffic allocation. However, the studies identified in this initial review mainly treat noise controls as fixed objectives, penalties, thresholds, or centrally optimized constraints. Less attention has been given to a regulatory feedback system in which neighborhood exposure budgets change in response to delayed observations while demand, drone availability, and route choices evolve.</p>
+<p>This is a provisional gap. It must be checked against adjacent research on adaptive environmental limits, congestion control, quotas, and dynamic resource allocation.</p>
+<h2>Proposed contribution</h2>
+<p>The project will develop a transparent simulation sandbox for evaluating adaptive neighborhood exposure regulation in urban drone delivery. It will connect operational agents and request queues to spatial exposure accounts and a regulator with explicit observation delay and responsiveness. Matched demand sequences will support comparisons among unrestricted, noise-aware, fixed-budget, and adaptive-budget regimes.</p>
+<p>The evaluation will report delivery service, spatial burden, equity, and feedback stability. Reduced exposure alone will not be treated as evidence that a policy is better.</p>
+<h2>Evidence still needed</h2>
+<table>
+<thead>
+<tr>
+<th>Area</th>
+<th>Question</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Dynamic regulation</td>
+<td>Which feedback, quota, or adaptive-cap mechanisms have already been tested in other environmental and transport systems?</td>
+</tr>
+<tr>
+<td>Exposure metric</td>
+<td>Which physical metric and observation period can validly accumulate repeated drone events?</td>
+</tr>
+<tr>
+<td>Regulatory authority</td>
+<td>Which institution could impose neighborhood-level operating constraints in the intended jurisdiction?</td>
+</tr>
+<tr>
+<td>Operational data</td>
+<td>Which sources can estimate arrivals, payloads, mission times, fleet size, and charging?</td>
+</tr>
+<tr>
+<td>Equity</td>
+<td>Which population groups and existing environmental burdens should be represented?</td>
+</tr>
+<tr>
+<td>Validation</td>
+<td>Which observed patterns should the completed model reproduce?</td>
+</tr>
+</tbody></table>
+<p>Table 2. Questions that must be resolved before the gap and empirical model are finalized.</p>
+<h2>Next review action</h2>
+<p>The next pass will search adjacent regulation and control literatures and trace citations from the closest noise, equity, and routing studies. Each retained source will then receive a quality and relevance assessment before the thematic literature review is written.</p>
+<p class="download"><a href="notes/literature.md" download>Download this page as Markdown</a></p></main></div><footer><span>Mutlaq Aldajani · Research in development</span><span>Illustrative inputs · Last content update 22 September 2026</span></footer><script src="site.js"></script></body></html>

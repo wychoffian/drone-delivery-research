@@ -2,7 +2,7 @@
 
 Adaptive neighborhood exposure regulation for urban drone delivery.
 
-<div class="release"><span>Current stage</span><span>Executable prototype</span><span>Updated 21 September 2026</span></div>
+<div class="release"><span>Current stage</span><span>Literature scoping and executable prototype</span><span>Updated 22 September 2026</span></div>
 
 ## Ready to inspect
 
@@ -17,6 +17,7 @@ The milestones below distinguish completed prototypes from research work that re
 | Milestone | Status | Evidence or next step |
 | --- | --- | --- |
 | Research question and bounded model | Drafted | [Model and rules](model.html) |
+| Literature evidence and candidate gap | First scoping pass | [Literature and gap](literature.html) |
 | Route allocation and regulatory feedback | Demonstrated | [Four-dial experiment](policy.html) |
 | One drone with mission state and timing | Demonstrated | [Delivery walkthrough](mission.html) |
 | Multiple requests and fleet constraints | Planned | Test dispatch while a drone is busy |
@@ -26,6 +27,10 @@ The milestones below distinguish completed prototypes from research work that re
 Table 1. Development status for the current research prototype. "Demonstrated" means that the stated mechanism runs with illustrative inputs.
 
 ## Development record
+
+### 22 September 2026: literature scoping and gap revision
+
+Reviewed representative work on agent-based logistics, drone acoustics, noise-aware routing, and distributional equity. The first pass shows that noise-aware routing and equitable allocation already exist. The candidate contribution is therefore narrowed to delayed adaptive neighborhood budgets interacting with individual drone operations and changing demand. [Read the evidence map](literature.html).
 
 ### 21 September 2026: traceable drone mission
 
