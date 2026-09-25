@@ -2,7 +2,7 @@
 
 ## Adaptive neighborhood exposure regulation for urban drone delivery
 
-Version 0.1, 22 September 2026
+Version 0.2, 26 September 2026
 
 This model description follows the Overview, Design concepts, and Details protocol described by [Grimm et al. (2020)](https://doi.org/10.18564/jasss.4259). It specifies the target integrated research model. The current browser prototypes implement parts of this specification but do not yet constitute the complete agent-based model.
 
@@ -14,9 +14,9 @@ Table 1 distinguishes executable behavior from planned model components.
 | --- | --- | --- |
 | Demand generation and route allocation | Implemented | Four-policy browser prototype with 24 review periods |
 | Fixed and proportional exposure budgets | Implemented | Policy prototype and 384 deterministic checks across factor combinations |
-| One drone mission, battery, timing, and return exposure | Implemented separately | Twelve-event mission walkthrough |
-| Integrated request queue and drone availability | Planned | First target for model version 0.3 |
-| Multiple drones, charging, and fleet interaction | Planned | Added after the two-request availability test |
+| One drone mission, battery, timing, and return exposure | Implemented separately | Event-based mission walkthrough |
+| Two-request queue and drone availability | Implemented separately | Controlled Phase B event sequence |
+| Multiple drones, charging, and fleet interaction | Planned | Next operational implementation |
 | Damped adaptive controller | Specified, not implemented | Added following the regulation and control literature review |
 | Empirical acoustic exposure | Planned | Current exposure values are proxy units |
 | Socioeconomic equity attributes | Planned | Current population patterns are synthetic |
@@ -274,8 +274,8 @@ The operator and regulator are retained as explicit decision components for trac
 
 The synthetic graph predetermines a small set of exposure-transfer options. Proxy units omit physical acoustics, ambient sound, and perception. The controller target and bounds are experimental. Legal authority for neighborhood budgets has not been established. These limitations prevent policy recommendations from the current prototype.
 
-The specification makes the next implementation test precise: introduce a second request while the first drone remains on mission. The second request must encounter drone unavailability and active exposure reservations. Passing that test will connect operational time with the regulatory model before the fleet is expanded.
+The two-request implementation now shows a request encountering drone unavailability and active exposure reservations. It passes the controlled Phase B event sequence and connects queueing with operational time.
 
-The result will determine whether individual agents add explanatory value. Later versions can then add multiple drones, charging, empirical exposure, socioeconomic attributes, and replicated policy experiments.
+The next test adds a small fleet and charging, then connects those events to the multi-period policy model. That comparison will determine whether individual agents add explanatory value. Later versions can add empirical exposure, socioeconomic attributes, and replicated policy experiments.
 
 [Read the simulation sandbox protocol](sandbox.html)

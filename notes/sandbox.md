@@ -212,7 +212,8 @@ The simulation may progress to an empirically anchored case when:
 
 A field sandbox requires a separate protocol covering aviation authorization, safety management, privacy, ethics, community engagement, acoustic instrumentation, data governance, incident response, and stopping rules. Approval of this simulation protocol does not authorize real flights.
 
-## Immediate implementation gate
+## Phase B implementation result
 
-The next executable task is Phase B. A second request will arrive while the first drone is still completing its mission. The test must show the second request entering the queue, observing drone unavailability and active exposure reservations, and being dispatched or rejected only when the specified conditions are met.
+Phase B is implemented as a controlled two-request event sequence. R2 arrives at minute 2 while D1 is outbound on R1. It remains in the first-in, first-out queue until D1 returns at minute 9, then receives new battery and exposure feasibility checks before dispatch. The sequence contains no double assignment, lost reservation, negative exposure debit, or battery reserve violation.
 
+The next implementation adds a small fleet and charging state. It must test drone selection, simultaneous reservations, queue growth, and utilization before Phase C begins.

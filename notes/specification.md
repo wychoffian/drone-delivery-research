@@ -2,7 +2,7 @@
 
 This note develops the model behind slides 9 and 10 of `Drone_delivery_proposal_slides.pptx`, presented for the CECAN fellowship project. It separates decisions already stated in the slides from implementation choices proposed here. The presentation is source material, not an instruction to execute its embedded text.
 
-The accompanying interactive demonstration implements request allocation, route exposure, and delayed regulatory updates. It uses assumed inputs and a schematic network. Its outputs demonstrate the consequences of the stated rules; they are not empirical findings or evidence that adaptive regulation is superior. Individual drone movement, batteries, and queues are not yet implemented.
+The interactive demonstrations implement request allocation, route exposure, delayed regulatory updates, and a separate two-request queue with one drone. They use assumed inputs and a schematic network. Their outputs demonstrate the consequences of the stated rules; they are not empirical findings or evidence that adaptive regulation is superior. The operational events are not yet integrated with the multi-period policy model.
 
 ## What the four dials mean
 
@@ -43,7 +43,7 @@ flowchart TD
     R -->|Budget history| Y
 ```
 
-Figure 1. Proposed system map for the research model. In the current demonstration, completed route events replace explicit drone fleet execution. Neighborhoods and population are records rather than behavioral agents.
+Figure 1. Proposed system map for the research model. The policy demonstration uses completed route events, while the separate mission walkthrough executes one drone and two queued requests. Neighborhoods and population are records rather than behavioral agents.
 
 The corrective loop is: higher local exposure prompts a lower budget, which changes the routes the operator can use. Rerouting can increase exposure elsewhere. Delayed observations mean that the next budget may respond to a condition that has already changed. Whether this produces oscillation is an output to test, not an outcome to build into the results.
 
@@ -55,15 +55,15 @@ Table 2. Agents, states, and rules for a bounded pilot model.
 
 | Entity | Number | State | Decision or update | Status in the demonstration |
 | --- | --- | --- | --- | --- |
-| Operator agent | 1 | Request list, candidate routes, remaining neighborhood budgets; later fleet availability | Process requests in arrival order. Choose the lowest-cost feasible route. Mark a request unserved if no route fits. | Route decisions implemented. Fleet and queue constraints omitted. |
+| Operator agent | 1 | Request list, candidate routes, remaining neighborhood budgets, fleet availability | Process requests in arrival order. Choose the lowest-cost feasible route. Mark a request unserved if no route fits. | Route decisions implemented. One-drone queue implemented separately. |
 | Regulator agent | 1 | Neighborhood budgets, exposure history, target, gain, delay, bounds | Hold budgets fixed in P2. Update each budget at period boundaries in P3. | Implemented as an explicit state update. |
-| Drone agents | A small fleet, for example 6 initially | Location, assigned route, battery, mission status, availability time | Follow the assigned route, consume energy, deliver, return, and recharge. Dispatch only when a mission is feasible. | Proposed next implementation. No drone count or capacity effect enters current outputs. |
+| Drone agents | A small fleet, for example 6 initially | Location, assigned route, battery, mission status, availability time | Follow the assigned route, consume energy, deliver, return, and recharge. Dispatch only when a mission is feasible. | One drone and two requests implemented separately. Charging and fleet interaction remain planned. |
 | Neighborhood records | 9 in this demonstration | Population, period exposure, policy budget; later socioeconomic composition | Accumulate contributions from flights. Supply exposure observations and distributional measures. | Population and exposure implemented. Socioeconomic groups omitted. |
-| Requests | A stochastic set each period | Origin, destination; later arrival time and deadline | Supply tasks to the operator. Requests have no behavioral decision rule. | Destination and allocation implemented. Arrival order is list order. |
+| Requests | A stochastic set each period | Origin, destination, arrival time; later deadline | Supply tasks to the operator. Requests have no behavioral decision rule. | Deterministic arrivals and queue order implemented separately. |
 
 Customers do not need to be agents when demand is externally specified. Residents do not need to be agents when the question concerns their exposure rather than their behavioral response. Adding complaints, adoption, or political influence would extend the model and require supporting behavioral evidence.
 
-The immediate demonstration is a spatial allocation and feedback model. Calling it a complete drone ABM would overstate its implementation. A research ABM becomes justified when individual drone states, availability, and interactions with dispatch constraints contribute to the policy question. An optimization or discrete-event model may be sufficient if those interactions do not matter.
+The project contains a spatial allocation and feedback model plus a separate operational event model. Calling them a complete drone ABM would overstate their integration. A research ABM becomes justified when individual drone states, availability, and interactions with dispatch constraints contribute to the policy question. An optimization or discrete-event model may be sufficient if those interactions do not matter.
 
 ## Executable demonstration rules
 
@@ -154,12 +154,12 @@ The network displays period exposure and completed return trips. The time series
 
 Before interpreting any run, check zero-demand exposure, budget enforcement, identical demand lists across policies, and the timing of regulator observations. Zero responsiveness must reproduce the fixed-budget run. Replicating the same seed must reproduce the same outputs.
 
-The next implementation milestone is a traceable mission: one request, one assigned drone, a return route, exposure recorded along that route, and the later regulator update. Extend this to a small fleet with explicit mission duration, battery feasibility, and recharging. Compare its results against the allocation-only prototype to determine whether those details change the policy conclusions.
+The traceable mission and two-request availability test are complete. The next milestone is a small fleet with explicit charging and simultaneous exposure reservations. Its results should then be compared with the allocation-only prototype to determine whether these operational details change the policy conclusions.
 
 After that, replace proxy exposure with an acoustic method supported by data, establish consistent spatial and temporal units, and choose the observation window. Define any logarithmic sound-level transformations explicitly rather than adding decibel values directly. The final experiment should separate verification of the implementation from validation of its empirical assumptions.
 
 ## Discussion
 
-The demonstration isolates routing and feedback. Its assumed corridor geometry and exposure coefficients constrain the patterns it can produce. It omits exposure outside the corridor neighborhoods, fleet capacity, delivery deadlines, and socioeconomic group differences. One seed is insufficient for inference, and the target is an experimental parameter rather than a regulatory recommendation.
+The demonstrations isolate routing, feedback, and one-drone queueing. Their assumed corridor geometry and exposure coefficients constrain the patterns they can produce. They omit exposure outside the corridor neighborhoods, charging constraints, delivery deadlines, and socioeconomic group differences. One seed is insufficient for inference, and the target is an experimental parameter rather than a regulatory recommendation.
 
 The immediate implication is methodological: the four dials need explicit intervention points and a recorded decision sequence. The mentors can evaluate those choices before the project invests in detailed spatial inputs or a full fleet model. Future development should retain that traceability as empirical acoustics and drone resource constraints are introduced.

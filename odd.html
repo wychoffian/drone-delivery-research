@@ -1,6 +1,6 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="Research progress and executable prototypes for adaptive neighborhood exposure regulation of drone delivery."><title>ODD specification | Drone delivery research</title><link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23152b44'/%3E%3Cpath d='M7 22L16 8l9 14M7 22h18' fill='none' stroke='%23ffffff' stroke-width='2'/%3E%3C/svg%3E"><link rel="stylesheet" href="style.css"></head><body><a class="skip" href="#main">Skip to content</a><header><a class="brand" href="index.html"><span class="mark" aria-hidden="true">D</span>Drone delivery research</a><span class="meta">CECAN fellowship project · Prototype v0.2</span></header><div class="shell"><nav aria-label="Project navigation"><span class="label">Research notebook</span><a href="index.html">Progress</a><a href="overview.html">Project overview</a><a href="literature.html">Literature and gap</a><a href="model.html">Model and rules</a><a href="odd.html" aria-current="page">ODD specification</a><a href="sandbox.html">Sandbox protocol</a><a href="pilot.html">Interactive pilot</a><a href="experiments.html">Experiments</a></nav><main id="main"><h1>ODD model specification</h1>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="Research progress and executable prototypes for adaptive neighborhood exposure regulation of drone delivery."><title>ODD specification | Drone delivery research</title><link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23152b44'/%3E%3Cpath d='M7 22L16 8l9 14M7 22h18' fill='none' stroke='%23ffffff' stroke-width='2'/%3E%3C/svg%3E"><link rel="stylesheet" href="style.css"></head><body><a class="skip" href="#main">Skip to content</a><header><a class="brand" href="index.html"><span class="mark" aria-hidden="true">D</span>Drone delivery research</a><span class="meta">CECAN fellowship project · Prototype v0.3</span></header><div class="shell"><nav aria-label="Project navigation"><span class="label">Research notebook</span><a href="index.html">Progress</a><a href="overview.html">Project overview</a><a href="literature.html">Literature and gap</a><a href="model.html">Model and rules</a><a href="odd.html" aria-current="page">ODD specification</a><a href="sandbox.html">Sandbox protocol</a><a href="pilot.html">Interactive pilot</a><a href="experiments.html">Experiments</a></nav><main id="main"><h1>ODD model specification</h1>
 <h2>Adaptive neighborhood exposure regulation for urban drone delivery</h2>
-<p>Version 0.1, 22 September 2026</p>
+<p>Version 0.2, 26 September 2026</p>
 <p>This model description follows the Overview, Design concepts, and Details protocol described by <a href="https://doi.org/10.18564/jasss.4259">Grimm et al. (2020)</a>. It specifies the target integrated research model. The current browser prototypes implement parts of this specification but do not yet constitute the complete agent-based model.</p>
 <h2>Model status</h2>
 <p>Table 1 distinguishes executable behavior from planned model components.</p>
@@ -25,17 +25,17 @@
 <tr>
 <td>One drone mission, battery, timing, and return exposure</td>
 <td>Implemented separately</td>
-<td>Twelve-event mission walkthrough</td>
+<td>Event-based mission walkthrough</td>
 </tr>
 <tr>
-<td>Integrated request queue and drone availability</td>
-<td>Planned</td>
-<td>First target for model version 0.3</td>
+<td>Two-request queue and drone availability</td>
+<td>Implemented separately</td>
+<td>Controlled Phase B event sequence</td>
 </tr>
 <tr>
 <td>Multiple drones, charging, and fleet interaction</td>
 <td>Planned</td>
-<td>Added after the two-request availability test</td>
+<td>Next operational implementation</td>
 </tr>
 <tr>
 <td>Damped adaptive controller</td>
@@ -347,7 +347,7 @@ Stop after the specified number of review periods
 <p>The operator and regulator are retained as explicit decision components for traceability. The regulator is an institutional controller rather than a human-like agent. Neighborhoods and requests remain passive records. Resident agents should be added only if behavior such as complaints, adoption, or political response becomes part of the research question.</p>
 <h2>Limitations, implications, and next development</h2>
 <p>The synthetic graph predetermines a small set of exposure-transfer options. Proxy units omit physical acoustics, ambient sound, and perception. The controller target and bounds are experimental. Legal authority for neighborhood budgets has not been established. These limitations prevent policy recommendations from the current prototype.</p>
-<p>The specification makes the next implementation test precise: introduce a second request while the first drone remains on mission. The second request must encounter drone unavailability and active exposure reservations. Passing that test will connect operational time with the regulatory model before the fleet is expanded.</p>
-<p>The result will determine whether individual agents add explanatory value. Later versions can then add multiple drones, charging, empirical exposure, socioeconomic attributes, and replicated policy experiments.</p>
+<p>The two-request implementation now shows a request encountering drone unavailability and active exposure reservations. It passes the controlled Phase B event sequence and connects queueing with operational time.</p>
+<p>The next test adds a small fleet and charging, then connects those events to the multi-period policy model. That comparison will determine whether individual agents add explanatory value. Later versions can add empirical exposure, socioeconomic attributes, and replicated policy experiments.</p>
 <p><a href="sandbox.html">Read the simulation sandbox protocol</a></p>
 <p class="download"><a href="notes/odd.md" download>Download this page as Markdown</a></p></main></div><footer><span>Mutlaq Aldajani · Research in development</span><span>Illustrative inputs · Last content update 26 September 2026</span></footer><script src="site.js"></script></body></html>

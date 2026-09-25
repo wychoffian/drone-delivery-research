@@ -1,9 +1,9 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="Research progress and executable prototypes for adaptive neighborhood exposure regulation of drone delivery."><title>Progress | Drone delivery research</title><link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23152b44'/%3E%3Cpath d='M7 22L16 8l9 14M7 22h18' fill='none' stroke='%23ffffff' stroke-width='2'/%3E%3C/svg%3E"><link rel="stylesheet" href="style.css"></head><body><a class="skip" href="#main">Skip to content</a><header><a class="brand" href="index.html"><span class="mark" aria-hidden="true">D</span>Drone delivery research</a><span class="meta">CECAN fellowship project · Prototype v0.2</span></header><div class="shell"><nav aria-label="Project navigation"><span class="label">Research notebook</span><a href="index.html" aria-current="page">Progress</a><a href="overview.html">Project overview</a><a href="literature.html">Literature and gap</a><a href="model.html">Model and rules</a><a href="odd.html">ODD specification</a><a href="sandbox.html">Sandbox protocol</a><a href="pilot.html">Interactive pilot</a><a href="experiments.html">Experiments</a></nav><main id="main"><h1>Research progress</h1>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="Research progress and executable prototypes for adaptive neighborhood exposure regulation of drone delivery."><title>Progress | Drone delivery research</title><link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23152b44'/%3E%3Cpath d='M7 22L16 8l9 14M7 22h18' fill='none' stroke='%23ffffff' stroke-width='2'/%3E%3C/svg%3E"><link rel="stylesheet" href="style.css"></head><body><a class="skip" href="#main">Skip to content</a><header><a class="brand" href="index.html"><span class="mark" aria-hidden="true">D</span>Drone delivery research</a><span class="meta">CECAN fellowship project · Prototype v0.3</span></header><div class="shell"><nav aria-label="Project navigation"><span class="label">Research notebook</span><a href="index.html" aria-current="page">Progress</a><a href="overview.html">Project overview</a><a href="literature.html">Literature and gap</a><a href="model.html">Model and rules</a><a href="odd.html">ODD specification</a><a href="sandbox.html">Sandbox protocol</a><a href="pilot.html">Interactive pilot</a><a href="experiments.html">Experiments</a></nav><main id="main"><h1>Research progress</h1>
 <p>Adaptive neighborhood exposure regulation for urban drone delivery.</p>
-<div class="release"><span>Current stage</span><span>Sandbox protocol and executable prototype</span><span>Updated 26 September 2026</span></div>
+<div class="release"><span>Current stage</span><span>Phase B queue integration complete</span><span>Updated 26 September 2026</span></div>
 
 <h2>Ready to inspect</h2>
-<div class="feature-grid"><a class="feature" href="mission.html"><span class="number">01</span><h3>Follow one delivery</h3><p>Inspect route choice, battery use, and the exposure recorded before a regulatory update.</p><span class="link-label">Open mission walkthrough</span></a><a class="feature" href="policy.html"><span class="number">02</span><h3>Explore the four dials</h3><p>Change demand and population concentration, then inspect the effect of regulatory delay and responsiveness.</p><span class="link-label">Open policy experiment</span></a></div>
+<div class="feature-grid"><a class="feature" href="mission.html"><span class="number">01</span><h3>Follow two requests</h3><p>Inspect queueing, drone availability, battery use, and exposure reservations.</p><span class="link-label">Open mission walkthrough</span></a><a class="feature" href="policy.html"><span class="number">02</span><h3>Explore the four dials</h3><p>Change demand and population concentration, then inspect the effect of regulatory delay and responsiveness.</p><span class="link-label">Open policy experiment</span></a></div>
 
 <p>These demonstrations use assumed inputs and proxy exposure units. They test model logic; they do not establish empirical policy findings.</p>
 <h2>Development milestones</h2>
@@ -47,9 +47,14 @@
 <td><a href="mission.html">Delivery walkthrough</a></td>
 </tr>
 <tr>
-<td>Multiple requests and fleet constraints</td>
+<td>Two-request queue and drone availability</td>
+<td>Demonstrated</td>
+<td><a href="mission.html">Queue and availability walkthrough</a></td>
+</tr>
+<tr>
+<td>Small fleet and charging constraints</td>
 <td>Planned</td>
-<td>Test dispatch while a drone is busy</td>
+<td>Add two drones and explicit charging state</td>
 </tr>
 <tr>
 <td>Empirical acoustic exposure</td>
@@ -64,8 +69,10 @@
 </tbody></table>
 <p>Table 1. Development status for the current research prototype. &quot;Demonstrated&quot; means that the stated mechanism runs with illustrative inputs.</p>
 <h2>Development record</h2>
+<h3>26 September 2026: two-request integration</h3>
+<p>Implemented the Phase B event sequence. R2 arrives while D1 is active, waits seven minutes in a first-in, first-out queue, and is dispatched only after D1 returns and passes new battery and exposure checks. Verification covers double assignment, queue order, complete reservations, exposure debits, and the return battery reserve. <a href="mission.html">Inspect the event sequence</a>.</p>
 <h3>26 September 2026: simulation sandbox protocol</h3>
-<p>Defined the sandbox boundary, approved factors, policy regimes, 4,140-run screening design, common-random-number rule, outcome measures, failure conditions, and progression gates. The immediate implementation gate is a second request arriving during an active mission. <a href="sandbox.html">Read the sandbox protocol</a>.</p>
+<p>Defined the sandbox boundary, approved factors, policy regimes, 4,140-run screening design, common-random-number rule, outcome measures, failure conditions, and progression gates. This protocol established the two-request Phase B gate that the current mission walkthrough now implements. <a href="sandbox.html">Read the sandbox protocol</a>.</p>
 <h3>22 September 2026: ODD model specification</h3>
 <p>Converted the conceptual model into the ODD 2020 structure. The specification separates implemented prototypes from the target integrated model and defines entities, scheduling, design concepts, submodels, inputs, outputs, and fitness-for-purpose checks. <a href="odd.html">Read the ODD specification</a>.</p>
 <h3>22 September 2026: literature scoping and gap revision</h3>
@@ -79,6 +86,6 @@
 <li>Which acoustic measure and observation window should replace the exposure proxy?</li>
 <li>Which fleet interactions are necessary to answer the regulatory question?</li>
 </ul>
-<p>The next development milestone is a second request arriving during an active mission. Its purpose is to test availability and exposure reservations before adding more drones.</p>
+<p>The next development milestone is a small fleet with explicit charging. Its purpose is to test drone selection, simultaneous reservations, utilization, and queue growth before the operational model is connected to the multi-period policy experiment.</p>
 <p>Progress entries are maintained with the project code. They change when a new version of the website is published.</p>
 <p class="download"><a href="notes/index.md" download>Download this page as Markdown</a></p></main></div><footer><span>Mutlaq Aldajani · Research in development</span><span>Illustrative inputs · Last content update 26 September 2026</span></footer><script src="site.js"></script></body></html>

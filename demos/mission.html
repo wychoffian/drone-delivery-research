@@ -1,5 +1,5 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Drone mission</title><link rel="stylesheet" href="demo.css"></head><body><div id="drone-mission">
- <h2>One delivery, one regulatory update</h2>
+ <h2>Two requests, one available drone</h2>
  <div class="text-small text-muted">Synthetic network · Assumed starting exposure · Proxy units, not decibels</div>
  <div class="viz-row mission-controls"><button type="button" class="btn" id="dm-back">Previous event</button><button type="button" class="btn btn-primary" id="dm-next">Next event</button><span id="dm-count" class="tabular-nums"></span></div>
  <div class="viz-row mission-state" aria-live="polite"><span id="dm-clock"></span><span id="dm-state"></span><span id="dm-battery"></span></div>
@@ -20,33 +20,47 @@
  const root=document.getElementById('drone-mission'), $=id=>root.querySelector('#dm-'+id);
  const C=[1.1,.8,1,1,1.4,1.1,.9,1,.8];
  class Mission {
-  constructor(){this.time=0;this.stage='request';this.battery=100;this.status='Idle';this.delivered=false;this.route=null;this.point=0;this.exposure=[27,26,25,24,39.2,24,22,23,24];this.budgets=Array(9).fill(40);this.reserved=Array(9).fill(0);this.nextBudgets=null;this.message='Request R1 arrives for the customer in Z2.';this.observation=null;this.distance=0;this.ledger=[];}
+  constructor(){this.time=0;this.stage='request';this.battery=100;this.status='Idle';this.route=null;this.point=0;this.exposure=[27,26,25,24,39.2,24,22,23,24];this.budgets=Array(9).fill(40);this.reserved=Array(9).fill(0);this.nextBudgets=null;this.message='Request R1 arrives for the customer in Z2.';this.observation=null;this.distance=0;this.ledger=[];this.queue=[];this.active=null;this.requests=[{id:'R1',arrival:0,status:'new',wait:null,delivered:null},{id:'R2',arrival:2,status:'scheduled',wait:null,delivered:null}];}
+  chooseRoute(){
+   const routes=[0,1,2].map(r=>({row:r,length:2*(6+2*Math.abs(r-1))})).sort((a,b)=>a.length-b.length||a.row-b.row);
+   return routes.find(r=>this.battery-r.length*2>=20&&[0,1,2].every(j=>this.exposure[r.row*3+j]+this.reserved[r.row*3+j]+C[r.row*3+j]<=this.budgets[r.row*3+j]+1e-9));
+  }
+  dispatch(){
+   if(this.active||!this.queue.length)return false;
+   const request=this.requests.find(r=>r.id===this.queue[0]),route=this.chooseRoute();
+   if(!route){request.status='unserved';this.queue.shift();this.status='Unserved';this.stage=this.queue.length?'dispatch':'review';this.message=`${request.id} cannot be dispatched: no route meets the exposure budget and battery reserve.`;return false;}
+   this.queue.shift();this.active=request.id;request.status='active';request.wait=this.time-request.arrival;this.route=route;this.point=0;this.stage='outbound';this.status='Outbound';
+   for(let j=0;j<3;j++)this.reserved[route.row*3+j]+=C[route.row*3+j];
+   this.message=request.id==='R1'?'Central route rejected: N5 would reach 40.6 > 40. Upper route assigned to R1.':`D1 is available. R2 leaves the queue after ${request.wait} minutes and is assigned the upper route.`;
+   return true;
+  }
   step(){
    if(this.stage==='done')return;
    if(this.stage==='request'){
-    const routes=[0,1,2].map(r=>({row:r,length:2*(6+2*Math.abs(r-1))})).sort((a,b)=>a.length-b.length||a.row-b.row);
-    const feasible=routes.find(r=>this.battery-r.length*2>=20&&[0,1,2].every(j=>this.exposure[r.row*3+j]+C[r.row*3+j]<=this.budgets[r.row*3+j]+1e-9));
-    if(!feasible){this.status='Unserved';this.stage='done';this.message='No route meets the exposure budget and battery reserve.';return;}
-    this.route=feasible;this.stage='outbound';this.status='Assigned';
-    for(let j=0;j<3;j++)this.reserved[feasible.row*3+j]=C[feasible.row*3+j];
-    this.message='Central route rejected: N5 would reach 40.6 > 40. Upper route assigned.';
-    return;
+    this.requests[0].status='queued';this.queue.push('R1');this.dispatch();return;
+   }
+   if(this.stage==='arrival2'){
+    this.requests[1].status='queued';this.queue.push('R2');this.stage='outbound';this.status='Outbound';this.message='R2 arrives at minute 2. D1 is active, so R2 joins the first-in, first-out queue.';return;
    }
    if(this.stage==='outbound'||this.stage==='returning'){
     const returning=this.stage==='returning',segment=this.route.length/8;
     this.time+=segment/2;this.battery-=segment*2;this.distance+=segment;
     this.point+=returning?-1:1;this.status=returning?'Returning':'Outbound';
     const j=this.point-1;
-    if(j>=0&&j<3){const i=this.route.row*3+j,increment=C[i]/2;this.exposure[i]+=increment;this.reserved[i]=Math.max(0,this.reserved[i]-increment);this.ledger.push({time:this.time,neighborhood:i,increment});this.message=`${returning?'Return':'Outbound'} crossing N${i+1}: +${increment.toFixed(2)} exposure units.`;}
+    if(j>=0&&j<3){const i=this.route.row*3+j,increment=C[i]/2;this.exposure[i]+=increment;this.reserved[i]=Math.max(0,this.reserved[i]-increment);this.ledger.push({time:this.time,request:this.active,neighborhood:i,increment});this.message=`${this.active} ${returning?'return':'outbound'} crossing N${i+1}: +${increment.toFixed(2)} exposure units.`;}
     else this.message=returning?'Drone D1 returns to the depot. Mission complete.':'Drone D1 reaches the customer.';
     if(this.point===4&&!returning){this.stage='delivery';this.status='At customer';}
-    if(this.point===0&&returning){this.stage='review';this.status='Available';}
+    if(this.point===0&&returning){
+     const completed=this.requests.find(r=>r.id===this.active);completed.status='complete';this.active=null;this.route=null;this.status='Available';
+     if(this.queue.length){this.stage='dispatch';this.message='D1 returns to the depot. R2 remains first in the queue.';}else this.stage='review';
+    }else if(!returning&&this.time===2&&this.requests[1].status==='scheduled')this.stage='arrival2';
     return;
    }
-   if(this.stage==='delivery'){this.time+=1;this.delivered=true;this.stage='returning';this.status='Delivered';this.message='Parcel R1 delivered. The return flight still contributes exposure.';return;}
+   if(this.stage==='delivery'){this.time+=1;const request=this.requests.find(r=>r.id===this.active);request.delivered=this.time;request.status='delivered';this.stage='returning';this.status='Delivered';this.message=`Parcel ${this.active} delivered. The return flight still contributes exposure.`;return;}
+   if(this.stage==='dispatch'){this.dispatch();return;}
    if(this.stage==='review'){
-    this.time=10;this.observation=this.exposure.slice();this.nextBudgets=this.budgets.map((b,i)=>Math.max(6,Math.min(70,b-.6*(this.observation[i]-28))));this.stage='done';
-    this.message='Review closes period 1. Its measured exposure sets period 2 budgets.';
+    this.time=20;this.observation=this.exposure.slice();this.nextBudgets=this.budgets.map((b,i)=>Math.max(6,Math.min(70,b-.6*(this.observation[i]-28))));this.stage='done';
+    this.message='Review closes period 1. Both completed missions inform the period 2 budgets.';
    }
   }
  }
@@ -82,7 +96,8 @@
   const group=node('g',{'aria-label':'Drone D1'}),[dx,dy]=location;
   group.append(node('path',{d:`M${dx},${dy-11} l9,11 -9,11 -9,-11 Z`,fill:'var(--viz-series-2)',stroke:'var(--foreground)','stroke-width':1}));
   svg.append(group);
-  svg.append(node('text',{x:8,y:346,'text-anchor':'start'},s.delivered?'Request R1: delivered':'Request R1: pending'));
+  const requestLabel=s.requests.map(r=>`${r.id}: ${r.status}`).join(' · ');
+  svg.append(node('text',{x:8,y:346,'text-anchor':'start'},requestLabel));
   svg.append(node('text',{x:w-8,y:346,'text-anchor':'end'},`D1: ${s.distance} distance units`));
   $('count').textContent=`Event ${index+1} / ${states.length}`;
   $('clock').textContent=`Time: ${s.time.toFixed(0)} min`;
