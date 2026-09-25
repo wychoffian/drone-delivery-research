@@ -2,7 +2,7 @@
 
 Adaptive neighborhood exposure regulation for urban drone delivery.
 
-<div class="release"><span>Current stage</span><span>Literature scoping and executable prototype</span><span>Updated 22 September 2026</span></div>
+<div class="release"><span>Current stage</span><span>Sandbox protocol and executable prototype</span><span>Updated 26 September 2026</span></div>
 
 ## Ready to inspect
 
@@ -19,6 +19,7 @@ The milestones below distinguish completed prototypes from research work that re
 | Research question and bounded model | Drafted | [Model and rules](model.html) |
 | Literature evidence and candidate gap | First scoping pass | [Literature and gap](literature.html) |
 | ODD model specification | Drafted | [ODD specification](odd.html) |
+| Simulation sandbox protocol | Approved and documented | [Sandbox protocol](sandbox.html) |
 | Route allocation and regulatory feedback | Demonstrated | [Four-dial experiment](policy.html) |
 | One drone with mission state and timing | Demonstrated | [Delivery walkthrough](mission.html) |
 | Multiple requests and fleet constraints | Planned | Test dispatch while a drone is busy |
@@ -28,6 +29,10 @@ The milestones below distinguish completed prototypes from research work that re
 Table 1. Development status for the current research prototype. "Demonstrated" means that the stated mechanism runs with illustrative inputs.
 
 ## Development record
+
+### 26 September 2026: simulation sandbox protocol
+
+Defined the sandbox boundary, approved factors, policy regimes, 4,140-run screening design, common-random-number rule, outcome measures, failure conditions, and progression gates. The immediate implementation gate is a second request arriving during an active mission. [Read the sandbox protocol](sandbox.html).
 
 ### 22 September 2026: ODD model specification
 

@@ -1,0 +1,330 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="Research progress and executable prototypes for adaptive neighborhood exposure regulation of drone delivery."><title>Sandbox protocol | Drone delivery research</title><link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23152b44'/%3E%3Cpath d='M7 22L16 8l9 14M7 22h18' fill='none' stroke='%23ffffff' stroke-width='2'/%3E%3C/svg%3E"><link rel="stylesheet" href="style.css"></head><body><a class="skip" href="#main">Skip to content</a><header><a class="brand" href="index.html"><span class="mark" aria-hidden="true">D</span>Drone delivery research</a><span class="meta">CECAN fellowship project · Prototype v0.2</span></header><div class="shell"><nav aria-label="Project navigation"><span class="label">Research notebook</span><a href="index.html">Progress</a><a href="overview.html">Project overview</a><a href="literature.html">Literature and gap</a><a href="model.html">Model and rules</a><a href="odd.html">ODD specification</a><a href="sandbox.html" aria-current="page">Sandbox protocol</a><a href="pilot.html">Interactive pilot</a><a href="experiments.html">Experiments</a></nav><main id="main"><h1>Simulation sandbox protocol</h1>
+<h2>Adaptive neighborhood exposure regulation for urban drone delivery</h2>
+<p>Version 0.1, 26 September 2026</p>
+<p>This protocol defines how the model will be used before empirical or field testing. It complements the <a href="odd.html">ODD model specification</a>, which describes what the model contains. This document specifies the permitted experiments, comparison rules, evidence standards, and conditions for moving to the next stage.</p>
+<h2>Purpose</h2>
+<p>The simulation sandbox will test whether adaptive neighborhood exposure budgets behave as intended when delivery demand, population distribution, observation delay, and controller responsiveness vary.</p>
+<p>The sandbox supports model development and policy learning. It does not establish a legal noise limit, predict commercial performance, or demonstrate health effects. Current exposure values are proxy units until an empirical acoustic method is selected and validated.</p>
+<h2>Decision question</h2>
+<p>The sandbox addresses one primary question:</p>
+<blockquote>
+<p>Under what combinations of demand, population distribution, observation delay, and controller responsiveness do adaptive neighborhood exposure budgets reduce repeated local drone exposure without producing unacceptable service loss, oscillation, or burden transfer?</p>
+</blockquote>
+<p>The sandbox will not declare a policy successful from exposure reduction alone. A policy must be evaluated across service, exposure, distribution, and stability outcomes.</p>
+<h2>Sandbox boundary</h2>
+<p>Table 1 defines what is included in the first integrated sandbox and what remains outside it.</p>
+<table>
+<thead>
+<tr>
+<th>Included</th>
+<th>Excluded from the initial sandbox</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Synthetic route network with three alternative corridors</td>
+<td>Real airspace authorization and flight procedures</td>
+</tr>
+<tr>
+<td>Individual delivery requests and arrival times</td>
+<td>Customer adoption and willingness to pay</td>
+</tr>
+<tr>
+<td>Drone availability, battery reserve, mission timing, and return flight</td>
+<td>Failures, weather, collision avoidance, and emergency diversion</td>
+</tr>
+<tr>
+<td>Neighborhood measured and reserved exposure accounts</td>
+<td>Validated decibel, annoyance, or health-effect calculations</td>
+</tr>
+<tr>
+<td>Fixed, proportional, and damped budget controllers</td>
+<td>Legal enforcement powers and institutional behavior</td>
+</tr>
+<tr>
+<td>Population distributions and population-weighted burden</td>
+<td>Resident complaints, political response, and household behavior</td>
+</tr>
+<tr>
+<td>Delivery, exposure, distribution, and stability outputs</td>
+<td>Economic valuation and full life-cycle environmental effects</td>
+</tr>
+</tbody></table>
+<p>Table 1. Boundary of the first integrated simulation sandbox. Excluded elements may be added only when they affect the research question and have a defensible rule or evidence source.</p>
+<h2>Actors and permissions</h2>
+<p>The sandbox contains the following decision components:</p>
+<ul>
+<li>The operator may queue requests, assign an available drone, select a feasible route, reserve exposure, or defer a request.</li>
+<li>A drone may execute only its assigned outbound, delivery, return, and charging states.</li>
+<li>The regulator may update next-period budgets at a review boundary using the policy rule and available observation.</li>
+<li>Requests and neighborhoods are records. They do not make behavioral decisions.</li>
+</ul>
+<p>The operator cannot authorize a route that fails battery, payload, or exposure feasibility. The regulator cannot alter authorization for a mission that has already departed.</p>
+<h2>Experimental factors</h2>
+<p>Table 2 defines the four approved dials. The first two describe the operating scenario. The last two describe the adaptive controller and apply only to adaptive policies.</p>
+<table>
+<thead>
+<tr>
+<th>Dial</th>
+<th>Levels</th>
+<th>Interpretation</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Demand</td>
+<td>18, 45, or 80 expected requests per review period</td>
+<td>Low, medium, or high baseline demand before a 60 percent increase from period 9</td>
+</tr>
+<tr>
+<td>Population distribution</td>
+<td>Dispersed or concentrated</td>
+<td>Total population remains 900 while its distribution across neighborhoods changes</td>
+</tr>
+<tr>
+<td>Information delay</td>
+<td>0, 1, or 3 review periods</td>
+<td>Age of the exposure observation used to set the next budget</td>
+</tr>
+<tr>
+<td>Controller responsiveness</td>
+<td>Gain 0.15, 0.60, or 1.50</td>
+<td>Magnitude of the budget response to deviation from the exposure target</td>
+</tr>
+</tbody></table>
+<p>Table 2. Approved sandbox factors and levels. Values are experimental settings rather than calibrated policy recommendations.</p>
+<p>The population factor does not change buildings, the route network, or destination probabilities. It must therefore be described as population distribution rather than urban form.</p>
+<h2>Policy regimes</h2>
+<p>Table 3 defines the core comparison. All policies receive the same requests for a given seed.</p>
+<table>
+<thead>
+<tr>
+<th>Regime</th>
+<th>Route rule</th>
+<th>Budget rule</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>P0: unrestricted shortest path</td>
+<td>Select the shortest operationally feasible route</td>
+<td>No neighborhood exposure budget</td>
+</tr>
+<tr>
+<td>P1: noise-aware routing</td>
+<td>Minimize distance plus population-weighted exposure cost</td>
+<td>No neighborhood exposure budget</td>
+</tr>
+<tr>
+<td>P2: fixed budget</td>
+<td>Select the shortest route that fits every affected neighborhood account</td>
+<td>Hold the budget fixed at 28, 34, or 40 proxy units</td>
+</tr>
+<tr>
+<td>P3-U: proportional adaptive budget</td>
+<td>Use the P2 feasibility and route rule</td>
+<td>Apply the unsmoothed proportional update</td>
+</tr>
+<tr>
+<td>P3-D: damped adaptive budget</td>
+<td>Use the P2 feasibility and route rule</td>
+<td>Apply the proportional update with damping factor <code>lambda = 0.50</code></td>
+</tr>
+</tbody></table>
+<p>Table 3. Policies in the first sandbox experiment. The three P2 levels prevent the adaptive policy from being compared with only one arbitrary fixed budget.</p>
+<p>An asymmetric controller that tightens faster than it relaxes is reserved for a later sensitivity experiment. It will not be introduced until the symmetric proportional and damped rules pass verification.</p>
+<h2>Controller rules</h2>
+<p>The unsmoothed adaptive rule is:</p>
+<p><code>B(i,t+1) = clip(B(i,t) - a * (E(i,t-d) - T(i)), Bmin, Bmax)</code></p>
+<p>The damped rule is:</p>
+<p><code>B(i,t+1) = clip(B(i,t) - lambda * a * (E(i,t-d) - T(i)), Bmin, Bmax)</code></p>
+<p>The initial demonstration uses <code>T = 28</code>, <code>Bmin = 6</code>, <code>Bmax = 70</code>, and <code>lambda = 0.50</code>. These values remain sandbox assumptions. Updates occur after period <code>t</code> closes and apply to period <code>t+1</code>.</p>
+<h2>Experiment phases</h2>
+<p>The sandbox will proceed through the phases in Table 4. A later phase cannot begin until the preceding gate passes.</p>
+<table>
+<thead>
+<tr>
+<th>Phase</th>
+<th>Purpose</th>
+<th>Runs or cases</th>
+<th>Gate</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>A: rule verification</td>
+<td>Test scheduling, conservation, bounds, and edge cases</td>
+<td>Deterministic unit and event-sequence cases</td>
+<td>Every required invariant passes</td>
+</tr>
+<tr>
+<td>B: two-request integration</td>
+<td>Connect queueing, drone availability, and active exposure reservations</td>
+<td>One controlled event sequence with two overlapping requests</td>
+<td>No double assignment, lost reservation, or incorrect exposure debit</td>
+</tr>
+<tr>
+<td>C: stochastic screening</td>
+<td>Compare policies across the approved factor grid</td>
+<td>30 matched seeds for each unique configuration</td>
+<td>Results reproduce and uncertainty is reported</td>
+</tr>
+<tr>
+<td>D: sensitivity analysis</td>
+<td>Test fixed budgets, damping, exposure coefficients, and tie-breaking</td>
+<td>Targeted extensions around influential settings</td>
+<td>Conclusions are not dependent on one arbitrary parameter</td>
+</tr>
+<tr>
+<td>E: empirical readiness</td>
+<td>Replace selected synthetic inputs with evidenced values</td>
+<td>Case-specific runs</td>
+<td>Data provenance and validation targets are documented</td>
+</tr>
+</tbody></table>
+<p>Table 4. Sandbox phases and progression gates. Phase C is not evidence of empirical validity because it still uses synthetic inputs.</p>
+<h2>Core scenario matrix</h2>
+<p>The first stochastic screening uses six scenario combinations from three demand levels and two population patterns.</p>
+<p>P0 and P1 each contain 6 unique configurations. P2 contains 18 because each scenario is tested with fixed budgets of 28, 34, and 40. P3-U contains 54 because each scenario is crossed with three delays and three gains. P3-D contains the same 54 configurations with damping fixed at 0.50.</p>
+<p>The screening therefore contains 138 unique configurations per seed. With 30 matched seeds, the initial design contains 4,140 runs.</p>
+<p>Thirty seeds are a screening minimum, not a universal sample-size rule. The analysis will report Monte Carlo uncertainty. Additional seeds will be added when key policy differences or tail outcomes remain unstable.</p>
+<h2>Common random numbers</h2>
+<p>For each demand and population scenario, every policy receives the same request arrivals, destinations, payloads, and other stochastic inputs for a given seed. Controller behavior must not change the random-number stream used to generate demand.</p>
+<p>The run record must include:</p>
+<ul>
+<li>model and protocol version;</li>
+<li>policy and parameter values;</li>
+<li>random seed and demand-stream identifier;</li>
+<li>network and input-data versions;</li>
+<li>execution timestamp;</li>
+<li>software environment identifier.</li>
+</ul>
+<h2>Dispatch and reservation rules</h2>
+<p>Requests enter a first-in, first-out queue, with request identifier breaking timestamp ties. A later experiment may test priority or deadline rules, but the core comparison uses one queue discipline.</p>
+<p>Before departure, a mission must pass the following checks:</p>
+<ol>
+<li>A drone is available.</li>
+<li>Payload and complete return-trip battery use are feasible.</li>
+<li>The required battery reserve remains after return.</li>
+<li>Under P2 or P3, measured exposure plus existing reservations plus the proposed complete mission contribution remains within every affected neighborhood budget.</li>
+</ol>
+<p>An accepted mission immediately reserves its complete outbound and return exposure. Each neighborhood crossing transfers the relevant contribution from reserved to measured exposure. A request deferred because no drone is available must be distinguished from one blocked by exposure capacity.</p>
+<h2>Required verification cases</h2>
+<p>Table 5 defines the checks required before stochastic results are interpreted.</p>
+<table>
+<thead>
+<tr>
+<th>Case</th>
+<th>Expected result</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Zero demand</td>
+<td>No mission, exposure, reservation, or queue growth</td>
+</tr>
+<tr>
+<td>Same seed across policies</td>
+<td>Identical request sequence</td>
+</tr>
+<tr>
+<td>Zero responsiveness</td>
+<td>Adaptive rule reproduces the corresponding fixed-budget behavior</td>
+</tr>
+<tr>
+<td>No available drone</td>
+<td>New request remains queued and the active drone is not assigned twice</td>
+</tr>
+<tr>
+<td>Active reservation</td>
+<td>A second mission cannot consume exposure already reserved by the first</td>
+</tr>
+<tr>
+<td>Complete mission</td>
+<td>Outbound and return exposure are both measured and its reservation returns to zero</td>
+</tr>
+<tr>
+<td>Battery boundary</td>
+<td>Mission is rejected when projected return battery falls below reserve</td>
+</tr>
+<tr>
+<td>Exposure boundary</td>
+<td>Mission at the exact budget is accepted; a mission above it is rejected</td>
+</tr>
+<tr>
+<td>Delay timing</td>
+<td>Update uses period <code>t-d</code> and affects only period <code>t+1</code></td>
+</tr>
+<tr>
+<td>Controller bounds</td>
+<td>Every budget remains between <code>Bmin</code> and <code>Bmax</code></td>
+</tr>
+<tr>
+<td>Reproduction</td>
+<td>Identical version, inputs, and seed produce identical outputs</td>
+</tr>
+</tbody></table>
+<p>Table 5. Required verification cases for the integrated sandbox.</p>
+<h2>Outcomes and comparison rules</h2>
+<p>Table 6 defines the outcome families used in every policy comparison.</p>
+<table>
+<thead>
+<tr>
+<th>Family</th>
+<th>Primary measures</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Service</td>
+<td>Delivery rate, rejected requests, deferred requests, mean delay, 95th-percentile delay, queue length</td>
+</tr>
+<tr>
+<td>Operations</td>
+<td>Route shares, distance, energy use, utilization, charging time</td>
+</tr>
+<tr>
+<td>Exposure</td>
+<td>Neighborhood exposure by period, maximum exposure, exceedances, cumulative exposure</td>
+</tr>
+<tr>
+<td>Distribution</td>
+<td>Population-weighted burden, neighborhood dispersion, group burden when data permit</td>
+</tr>
+<tr>
+<td>Regulation</td>
+<td>Budget path, adjustment size, time at bounds, observation used</td>
+</tr>
+<tr>
+<td>Stability</td>
+<td>Budget oscillation, route switching, exposure variance, persistent queue growth</td>
+</tr>
+</tbody></table>
+<p>Table 6. Required sandbox outcomes. Results must retain the full neighborhood distribution rather than reporting only a network average.</p>
+<p>Policy comparisons follow four rules:</p>
+<ol>
+<li>Report exposure and delivery service together.</li>
+<li>Compare adaptive policies with several fixed budgets, including comparisons at similar service levels.</li>
+<li>Report uncertainty across matched seeds and do not rank policies from one run.</li>
+<li>Examine whether reduced exposure in one neighborhood is transferred to another population.</li>
+</ol>
+<h2>Failure conditions</h2>
+<p>A run is invalid if it contains a budget violation by an accepted mission, a negative reservation, a drone assigned to overlapping missions, a battery reserve violation, an incorrect delayed observation, or missing run metadata.</p>
+<p>The controller is considered behaviorally problematic under a scenario when budgets repeatedly alternate direction with increasing or persistent amplitude, remain saturated while unmet demand grows, or cause frequent corridor switching without a material exposure benefit. Exact diagnostic thresholds will be set after Phase C distributions are inspected and documented before policy ranking.</p>
+<h2>Evidence levels</h2>
+<p>Sandbox findings will use the following labels:</p>
+<ul>
+<li>Verification finding: the implementation follows a specified rule.</li>
+<li>Synthetic experiment finding: behavior observed under assumed inputs.</li>
+<li>Sensitivity finding: behavior that changes or persists across parameter ranges.</li>
+<li>Empirically anchored finding: behavior produced after the relevant inputs and validation targets are supported by data.</li>
+</ul>
+<p>The current project may report the first three levels. It must not describe a synthetic experiment as an observed real-world effect.</p>
+<h2>Progression to an empirical or field sandbox</h2>
+<p>The simulation may progress to an empirically anchored case when:</p>
+<ul>
+<li>the integrated queue, mission, reservation, exposure, and regulator processes pass verification;</li>
+<li>the experiment is reproducible from recorded versions and seeds;</li>
+<li>demand, vehicle performance, source noise, and population inputs have documented provenance;</li>
+<li>the exposure metric and review period are defined in compatible physical units;</li>
+<li>uncertainty and sensitivity results identify which assumptions matter;</li>
+<li>the relevant regulator or decision owner is identified.</li>
+</ul>
+<p>A field sandbox requires a separate protocol covering aviation authorization, safety management, privacy, ethics, community engagement, acoustic instrumentation, data governance, incident response, and stopping rules. Approval of this simulation protocol does not authorize real flights.</p>
+<h2>Immediate implementation gate</h2>
+<p>The next executable task is Phase B. A second request will arrive while the first drone is still completing its mission. The test must show the second request entering the queue, observing drone unavailability and active exposure reservations, and being dispatched or rejected only when the specified conditions are met.</p>
+<p class="download"><a href="notes/sandbox.md" download>Download this page as Markdown</a></p></main></div><footer><span>Mutlaq Aldajani · Research in development</span><span>Illustrative inputs · Last content update 26 September 2026</span></footer><script src="site.js"></script></body></html>

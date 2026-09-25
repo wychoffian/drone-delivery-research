@@ -278,3 +278,4 @@ The specification makes the next implementation test precise: introduce a second
 
 The result will determine whether individual agents add explanatory value. Later versions can then add multiple drones, charging, empirical exposure, socioeconomic attributes, and replicated policy experiments.
 
+[Read the simulation sandbox protocol](sandbox.html)
