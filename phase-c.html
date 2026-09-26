@@ -1,0 +1,132 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="Research progress and executable prototypes for adaptive neighborhood exposure regulation of drone delivery."><title>Phase C results | Drone delivery research</title><link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23152b44'/%3E%3Cpath d='M7 22L16 8l9 14M7 22h18' fill='none' stroke='%23ffffff' stroke-width='2'/%3E%3C/svg%3E"><link rel="stylesheet" href="style.css"></head><body><a class="skip" href="#main">Skip to content</a><header><a class="brand" href="index.html"><span class="mark" aria-hidden="true">D</span>Drone delivery research</a><span class="meta">CECAN fellowship project · Prototype v0.6</span></header><div class="shell"><nav aria-label="Project navigation"><span class="label">Research notebook</span><a href="index.html">Progress</a><a href="overview.html">Project overview</a><a href="literature.html">Literature and gap</a><a href="model.html">Model and rules</a><a href="odd.html">ODD specification</a><a href="sandbox.html">Sandbox protocol</a><a href="integration.html">Integrated model</a><a href="pilot.html">Interactive pilot</a><a href="experiments.html">Experiments</a><a href="phase-c.html" aria-current="page">Phase C results</a></nav><main id="main"><h1>Phase C matched-seed screening</h1>
+<p>Phase C is complete for the approved synthetic experiment. The batch contains 4,140 runs: 138 unique configurations evaluated with 30 matched seeds from 421 through 450.</p>
+<blockquote>
+<p>Evidence label: Synthetic experiment finding. These results describe model behavior under assumed inputs. They are not measurements of physical noise, health effects, public acceptance, or commercial operations.</p>
+</blockquote>
+<h2>Method</h2>
+<p>Each run covers 24 review periods of 480 operational minutes. Policies within a demand setting and seed receive the same request stream. The experiment crosses three demand levels with two population distributions. P2 uses fixed budgets of 28, 34, and 40 proxy units. P3-U and P3-D cross delays of 0, 1, and 3 periods with gains of 0.15, 0.60, and 1.50. P3-D applies a damping factor of 0.50.</p>
+<p>Reported intervals are 95 percent Monte Carlo confidence intervals across the 30 seeds, calculated as the sample mean plus or minus the t critical value for 29 degrees of freedom. They quantify simulation uncertainty for this seed sample. They do not include parameter, measurement, or model-structure uncertainty.</p>
+<h2>Selected comparison</h2>
+<p>Table 1 presents the preselected medium-demand, concentrated-population comparison. Values are means with 95 percent Monte Carlo intervals. The adaptive settings are delay 1 and gain 0.60, and the fixed-budget comparator uses 40 proxy units.</p>
+<table>
+<thead>
+<tr>
+<th>Regime</th>
+<th align="right">Completion rate, %</th>
+<th align="right">Mean wait, min</th>
+<th align="right">Peak exposure, units</th>
+<th align="right">Population-weighted burden</th>
+<th align="right">Final queue</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>P0</td>
+<td align="right">96.2 (95.5 to 97.0)</td>
+<td align="right">136.3 (110.2 to 162.5)</td>
+<td align="right">86.1 (85.0 to 87.3)</td>
+<td align="right">1030.3 (1023.6 to 1037.1)</td>
+<td align="right">57.3 (45.2 to 69.5)</td>
+</tr>
+<tr>
+<td>P1</td>
+<td align="right">86.2 (85.3 to 87.1)</td>
+<td align="right">477.5 (444.3 to 510.8)</td>
+<td align="right">52.1 (51.5 to 52.7)</td>
+<td align="right">157.9 (157.1 to 158.8)</td>
+<td align="right">208.6 (193.7 to 223.5)</td>
+</tr>
+<tr>
+<td>P2, budget 40</td>
+<td align="right">91.6 (90.7 to 92.5)</td>
+<td align="right">287.5 (253.7 to 321.2)</td>
+<td align="right">39.2 (39.2 to 39.2)</td>
+<td align="right">664.0 (662.7 to 665.2)</td>
+<td align="right">127.5 (112.7 to 142.3)</td>
+</tr>
+<tr>
+<td>P3-U, delay 1, gain 0.60</td>
+<td align="right">89.7 (88.8 to 90.6)</td>
+<td align="right">345.3 (311.4 to 379.1)</td>
+<td align="right">41.4 (40.8 to 41.9)</td>
+<td align="right">530.9 (530.0 to 531.7)</td>
+<td align="right">155.8 (140.8 to 170.8)</td>
+</tr>
+<tr>
+<td>P3-D, delay 1, gain 0.60</td>
+<td align="right">89.8 (88.9 to 90.7)</td>
+<td align="right">342.6 (308.9 to 376.3)</td>
+<td align="right">41.6 (41.1 to 42.1)</td>
+<td align="right">540.9 (540.1 to 541.7)</td>
+<td align="right">153.9 (139.1 to 168.8)</td>
+</tr>
+</tbody></table>
+<p>Table 1. Selected medium-demand comparison across 30 matched seeds. Exposure is measured in proxy units.</p>
+<p>The default damped adaptive setting completed 89.8 percent of requests, with a mean final queue of 153.9. P0 completed 96.2 percent. This difference must be interpreted together with the exposure and distribution measures rather than as a standalone policy ranking.</p>
+<h2>High-demand stress comparison</h2>
+<p>Table 2 applies the same policy settings under high demand and concentrated population. This scenario tests queue growth when demand rises by 60 percent from period 9.</p>
+<table>
+<thead>
+<tr>
+<th>Regime</th>
+<th align="right">Completion rate, %</th>
+<th align="right">Mean wait, min</th>
+<th align="right">Peak exposure, units</th>
+<th align="right">Population-weighted burden</th>
+<th align="right">Final queue</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>P0</td>
+<td align="right">61.5 (61.0 to 62.1)</td>
+<td align="right">1498.9 (1458.8 to 1538.9)</td>
+<td align="right">87.2 (86.3 to 88.1)</td>
+<td align="right">1176.0 (1170.5 to 1181.5)</td>
+<td align="right">1036.6 (1011.3 to 1061.9)</td>
+</tr>
+<tr>
+<td>P1</td>
+<td align="right">52.5 (52.0 to 53.0)</td>
+<td align="right">1991.8 (1951.7 to 2031.8)</td>
+<td align="right">52.5 (52.1 to 52.8)</td>
+<td align="right">171.9 (171.8 to 172.1)</td>
+<td align="right">1280.2 (1254.5 to 1305.9)</td>
+</tr>
+<tr>
+<td>P2, budget 40</td>
+<td align="right">57.1 (56.5 to 57.6)</td>
+<td align="right">1730.7 (1691.4 to 1770.1)</td>
+<td align="right">39.2 (39.2 to 39.3)</td>
+<td align="right">685.0 (684.8 to 685.2)</td>
+<td align="right">1156.4 (1130.9 to 1181.8)</td>
+</tr>
+<tr>
+<td>P3-U, delay 1, gain 0.60</td>
+<td align="right">55.4 (54.9 to 56.0)</td>
+<td align="right">1806.9 (1767.4 to 1846.4)</td>
+<td align="right">39.3 (39.2 to 39.3)</td>
+<td align="right">548.0 (547.8 to 548.1)</td>
+<td align="right">1200.3 (1174.8 to 1225.7)</td>
+</tr>
+<tr>
+<td>P3-D, delay 1, gain 0.60</td>
+<td align="right">55.6 (55.1 to 56.1)</td>
+<td align="right">1789.2 (1749.6 to 1828.7)</td>
+<td align="right">39.2 (39.2 to 39.3)</td>
+<td align="right">558.1 (557.9 to 558.3)</td>
+<td align="right">1196.7 (1171.5 to 1221.8)</td>
+</tr>
+</tbody></table>
+<p>Table 2. Selected high-demand stress comparison across 30 matched seeds. Exposure is measured in proxy units.</p>
+<p>Under the default damped adaptive setting, the high-demand scenario completed 55.6 percent of requests and ended with a mean queue of 1196.7. The result is a capacity and policy interaction within the current two-drone model.</p>
+<h2>Reproducibility files</h2>
+<ul>
+<li><a href="results/phase_c_runs.csv">Run-level results</a></li>
+<li><a href="results/phase_c_summary.csv">Configuration summaries</a></li>
+<li><a href="results/phase_c_metadata.json">Execution metadata</a></li>
+</ul>
+<p>Every run records the policy, factor settings, seed, demand-stream identifier, model version, and protocol version. The metadata file records the runtime environment and full seed list.</p>
+<h2>Discussion</h2>
+<p>The screening tests whether the implementation produces stable and interpretable contrasts across the approved factor grid. It does not justify a preferred regulatory policy. Comparisons at similar service levels are needed because tighter exposure budgets can reduce deliveries and queue performance.</p>
+<p>The model uses proxy exposure coefficients, a synthetic three-route network, identical drones, one charging rule, and no weather, failures, delivery deadlines, or socioeconomic group attributes. The population-weighted burden measure changes route cost and summarizes exposure distribution, but it is not a validated health or annoyance measure.</p>
+<p>Phase D should test the assumptions that can change the comparison: fixed-budget spacing, damping, exposure coefficients, destination probabilities, fleet size, charging capacity, and route tie-breaking. The research work should define a physical exposure measure and document data provenance before any empirical policy claim.</p>
+<p class="download"><a href="notes/phase-c.md" download>Download this page as Markdown</a></p></main></div><footer><span>Mutlaq Aldajani · Research in development</span><span>Illustrative inputs · Last content update 26 September 2026</span></footer><script src="site.js"></script></body></html>

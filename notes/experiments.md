@@ -1,6 +1,6 @@
 # Experiments and evidence
 
-The current evidence concerns implementation checks. Research experiments with empirically anchored inputs have not yet been run.
+The evidence includes implementation checks and a completed synthetic stochastic screening. Experiments with empirically anchored inputs have not yet been run.
 
 ## Reproducible demonstration
 
@@ -26,8 +26,10 @@ The verification suite covers 384 allocation cases and 360 integrated fleet-poli
 
 Use the same demand realizations for each policy and report delivery loss alongside exposure distribution. Compare multiple fixed budgets with adaptive policies, including comparisons at similar service levels. Otherwise, an adaptive policy can appear better merely because it becomes stricter.
 
-The batch runner will execute the approved 4,140 matched-seed configurations. Each saved run must record the model version, parameter values, random seed, demand-stream identifier, execution environment, and input versions. Results must remain linked to that version when the model changes.
+The batch runner executed the approved 4,140 matched-seed runs: 138 unique configurations with 30 seeds. Each saved run records the model version, parameter values, random seed, and demand-stream identifier. The metadata records the execution environment and input version.
+
+[Review the Phase C results and download the data](phase-c.html)
 
 ## Discussion
 
-Proxy units cannot establish physical noise or health effects. Sensitivity analysis can characterize uncertainty in the assumptions, but cannot replace acoustic validation. The next development task is the Phase C batch runner. In parallel, the research work must define the exposure measure and audit the proposed datasets.
+Proxy units cannot establish physical noise or health effects. Monte Carlo intervals describe variation across the selected seeds, while Phase D sensitivity analysis will test dependence on model assumptions. Neither replaces acoustic validation. The research work must define the exposure measure and audit the proposed datasets.

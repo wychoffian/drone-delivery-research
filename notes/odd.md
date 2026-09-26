@@ -277,6 +277,6 @@ The synthetic graph predetermines a small set of exposure-transfer options. Prox
 
 The operational prototype now contains two drones, three requests, overlapping missions, simultaneous exposure reservations, and charging. R3 encounters fleet unavailability and waits until D1 completes charging. The controlled sequence connects queueing, availability, battery state, and exposure accounting in operational time.
 
-The operational events are now connected to the multi-period policy model. The next test is Phase C matched-seed screening, which will determine whether individual fleet states materially change policy comparisons across the approved factor grid. Later versions can add empirical exposure and socioeconomic attributes.
+The operational events are connected to the multi-period policy model. Phase C has now tested 138 unique configurations across 30 matched seeds and reports uncertainty on the [Phase C results page](phase-c.html). Phase D will test dependence on selected assumptions. Later versions can add empirical exposure and socioeconomic attributes.
 
 [Read the simulation sandbox protocol](sandbox.html)

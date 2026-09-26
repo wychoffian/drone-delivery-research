@@ -2,7 +2,7 @@
 
 Adaptive neighborhood exposure regulation for urban drone delivery.
 
-<div class="release"><span>Current stage</span><span>Integrated fleet and policy model verified</span><span>Updated 26 September 2026</span></div>
+<div class="release"><span>Current stage</span><span>Phase C stochastic screening complete</span><span>Updated 26 September 2026</span></div>
 
 ## Ready to inspect
 
@@ -25,13 +25,17 @@ The milestones below distinguish completed prototypes from research work that re
 | Two-request queue and drone availability | Demonstrated | [Queue and availability walkthrough](mission.html) |
 | Small fleet and charging constraints | Demonstrated | [Fleet and charging walkthrough](mission.html) |
 | Integrated fleet and policy periods | Demonstrated | [Integrated fleet and policy model](fleet-policy.html) |
-| Phase C matched-seed screening | Planned | Run 4,140 configurations and report uncertainty |
+| Phase C matched-seed screening | Complete | [Review 4,140 runs with uncertainty](phase-c.html) |
 | Empirical acoustic exposure | Planned | Audit sources and define the exposure measure |
 | Replicated policy comparisons | Planned | Compare fixed budgets at matched service levels |
 
 Table 1. Development status for the current research prototype. "Demonstrated" means that the stated mechanism runs with illustrative inputs.
 
 ## Development record
+
+### 26 September 2026: Phase C matched-seed screening
+
+Executed 138 unique configurations with 30 matched seeds, producing 4,140 run records. The published results report 95 percent Monte Carlo intervals for service, operations, exposure, distribution, and controller behavior. All findings remain synthetic. [Review the Phase C results](phase-c.html).
 
 ### 26 September 2026: integrated fleet and policy model
 
@@ -70,6 +74,6 @@ Implemented the four experimental factors and policy regimes P0 through P3. Veri
 - Which acoustic measure and observation window should replace the exposure proxy?
 - Which fleet interactions are necessary to answer the regulatory question?
 
-The next development milestone is the Phase C matched-seed batch runner. It will execute the approved 4,140-run screening design, save run metadata, and report uncertainty for service, exposure, distribution, and stability outcomes.
+The next development milestone is Phase D sensitivity analysis. It will test whether the Phase C comparisons depend on fixed-budget spacing, damping, exposure coefficients, destination probabilities, fleet size, charging capacity, or route tie-breaking.
 
 Progress entries are maintained with the project code. They change when a new version of the website is published.

@@ -220,4 +220,8 @@ The small-fleet extension is now implemented with two drones, three requests, si
 
 The event-based fleet is now connected to the multi-period policy controller. The integrated model reproduces the operational conservation rules and the policy timing checks across 360 factor-policy verification cases.
 
-The next task is the Phase C batch runner. It must execute the approved matched-seed matrix, retain configuration and version metadata, and report Monte Carlo uncertainty before any policy ranking.
+## Phase C implementation result
+
+Phase C executed the approved matrix of 138 unique configurations across 30 matched seeds, for 4,140 runs. The run-level data, 138 configuration summaries, execution metadata, and 95 percent Monte Carlo intervals are published on the [Phase C results page](phase-c.html). The findings retain the synthetic experiment label and do not establish a preferred policy.
+
+The next task is Phase D sensitivity analysis. It will test fixed-budget spacing, damping, exposure coefficients, destination probabilities, fleet size, charging capacity, and route tie-breaking before any policy ranking.

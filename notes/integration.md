@@ -34,7 +34,7 @@ P0 selects the shortest route. P1 adds the population-weighted exposure term. P2
 
 The generator uses seed 421 for the interactive demonstration. Every policy receives identical request counts, destinations, and within-period arrival times for a selected demand setting. Policy behavior does not alter the random-number stream.
 
-The interactive run is one reproducible example. It is not a statistical policy comparison. Phase C will repeat the approved configurations across matched seeds.
+The interactive run is one reproducible example. The [Phase C screening](phase-c.html) repeats the approved configurations across matched seeds.
 
 ## Outputs
 
@@ -76,4 +76,4 @@ The integrated model now makes fleet capacity endogenous. P0 and P1 can accumula
 
 The prototype still uses two identical drones, unlimited charging access, one synthetic network, proxy exposure coefficients, and one interactive seed. The dispatch cutoff is a modeling choice that should be tested in sensitivity analysis. Its main implication is that regulatory accounting remains clear at the cost of delaying late-period requests.
 
-The next step is Phase C stochastic screening. The batch runner should execute the approved 4,140 matched-seed runs, save configuration and version metadata, and report Monte Carlo uncertainty for service, exposure, distribution, and stability outcomes.
+Phase C has executed the approved 4,140 matched-seed runs and published run-level data, configuration summaries, execution metadata, and Monte Carlo uncertainty. Phase D will test the assumptions that can change the policy comparisons.
