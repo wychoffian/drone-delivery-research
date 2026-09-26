@@ -30,6 +30,12 @@ The batch runner executed the approved 4,140 matched-seed runs: 138 unique confi
 
 [Review the Phase C results and download the data](phase-c.html)
 
+## Phase D sensitivity
+
+The first Phase D module contains 6,780 runs from 226 configurations. It tests fleet sizes from two to eight drones, one to unlimited chargers, fixed budgets from 22 to 46 proxy units, three exposure scales, three damping values, and two route tie-breaking rules in the medium- and high-demand concentrated-population scenarios.
+
+[Review the Phase D sensitivity results and download the data](phase-d.html)
+
 ## Discussion
 
-Proxy units cannot establish physical noise or health effects. Monte Carlo intervals describe variation across the selected seeds, while Phase D sensitivity analysis will test dependence on model assumptions. Neither replaces acoustic validation. The research work must define the exposure measure and audit the proposed datasets.
+Proxy units cannot establish physical noise or health effects. Monte Carlo intervals describe variation across the selected seeds. Phase D shows material dependence on fleet capacity and exposure scaling, so its progression gate remains open. The research work must define the exposure measure and audit the proposed datasets.

@@ -224,4 +224,10 @@ The event-based fleet is now connected to the multi-period policy controller. Th
 
 Phase C executed the approved matrix of 138 unique configurations across 30 matched seeds, for 4,140 runs. The run-level data, 138 configuration summaries, execution metadata, and 95 percent Monte Carlo intervals are published on the [Phase C results page](phase-c.html). The findings retain the synthetic experiment label and do not establish a preferred policy.
 
-The next task is Phase D sensitivity analysis. It will test fixed-budget spacing, damping, exposure coefficients, destination probabilities, fleet size, charging capacity, and route tie-breaking before any policy ranking.
+This Phase C result established the Phase D sensitivity agenda: fixed-budget spacing, damping, exposure coefficients, destination probabilities, fleet size, charging capacity, and route tie-breaking.
+
+## Phase D implementation result
+
+The first targeted Phase D module executed 226 unique configurations across 30 matched seeds, for 6,780 runs. It tested fleet size, charging capacity, fixed budgets, exposure coefficient scaling, controller damping, and route tie-breaking. [Review the Phase D results](phase-d.html).
+
+The gate remains open. Fleet capacity materially changes service outcomes, and proportional scaling of the exposure coefficients changes P3-D completion under high demand from 89.3 to 55.3 percent. Destination probabilities and joint interactions among influential factors remain to be tested. The exposure measure and policy budgets require empirical calibration before Phase E.

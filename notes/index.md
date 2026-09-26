@@ -2,7 +2,7 @@
 
 Adaptive neighborhood exposure regulation for urban drone delivery.
 
-<div class="release"><span>Current stage</span><span>Phase C stochastic screening complete</span><span>Updated 26 September 2026</span></div>
+<div class="release"><span>Current stage</span><span>Phase D sensitivity evidence published</span><span>Updated 26 September 2026</span></div>
 
 ## Ready to inspect
 
@@ -26,12 +26,17 @@ The milestones below distinguish completed prototypes from research work that re
 | Small fleet and charging constraints | Demonstrated | [Fleet and charging walkthrough](mission.html) |
 | Integrated fleet and policy periods | Demonstrated | [Integrated fleet and policy model](fleet-policy.html) |
 | Phase C matched-seed screening | Complete | [Review 4,140 runs with uncertainty](phase-c.html) |
+| Phase D targeted sensitivity | First module complete, gate open | [Review 6,780 sensitivity runs](phase-d.html) |
 | Empirical acoustic exposure | Planned | Audit sources and define the exposure measure |
 | Replicated policy comparisons | Planned | Compare fixed budgets at matched service levels |
 
 Table 1. Development status for the current research prototype. "Demonstrated" means that the stated mechanism runs with illustrative inputs.
 
 ## Development record
+
+### 26 September 2026: Phase D targeted sensitivity
+
+Executed 226 configurations with 30 matched seeds, producing 6,780 runs. The analysis varies fleet size, charger capacity, fixed budgets, exposure scaling, controller damping, and route tie-breaking. Fleet capacity and exposure scaling materially change the results, so the Phase D progression gate remains open. [Review the Phase D sensitivity results](phase-d.html).
 
 ### 26 September 2026: Phase C matched-seed screening
 
@@ -74,6 +79,6 @@ Implemented the four experimental factors and policy regimes P0 through P3. Veri
 - Which acoustic measure and observation window should replace the exposure proxy?
 - Which fleet interactions are necessary to answer the regulatory question?
 
-The next development milestone is Phase D sensitivity analysis. It will test whether the Phase C comparisons depend on fixed-budget spacing, damping, exposure coefficients, destination probabilities, fleet size, charging capacity, or route tie-breaking.
+The next development milestone is the second Phase D module. It will test destination probabilities and joint interactions among fleet capacity, charger capacity, and the exposure measure. Empirical calibration is required before Phase E.
 
 Progress entries are maintained with the project code. They change when a new version of the website is published.

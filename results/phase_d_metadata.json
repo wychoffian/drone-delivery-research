@@ -1,0 +1,72 @@
+{
+  "title": "Phase D targeted sensitivity analysis",
+  "model_version": "0.7",
+  "protocol_version": "0.1",
+  "input_version": "synthetic-v0.1",
+  "generated_at": "2026-09-26T10:59:42.559Z",
+  "runtime": {
+    "node": "v24.19.0",
+    "platform": "darwin",
+    "architecture": "arm64"
+  },
+  "seeds": {
+    "first": 421,
+    "last": 450,
+    "count": 30,
+    "values": [
+      421,
+      422,
+      423,
+      424,
+      425,
+      426,
+      427,
+      428,
+      429,
+      430,
+      431,
+      432,
+      433,
+      434,
+      435,
+      436,
+      437,
+      438,
+      439,
+      440,
+      441,
+      442,
+      443,
+      444,
+      445,
+      446,
+      447,
+      448,
+      449,
+      450
+    ]
+  },
+  "unique_configurations": 226,
+  "total_runs": 6780,
+  "modules": {
+    "fleet_capacity": "Fleet sizes 2, 4, 6, and 8",
+    "charging_capacity": "One, two, or unlimited chargers for fleets of 4 and 8",
+    "exposure_scale": "Exposure coefficients multiplied by 0.75, 1.00, or 1.25",
+    "controller_damping": "P3-D damping of 0.25, 0.50, or 0.75",
+    "route_tie_break": "Prefer lower or higher route index when costs tie",
+    "fixed_budget": "P2 budgets of 22, 28, 34, 40, or 46 proxy units"
+  },
+  "scenarios": {
+    "demands": [
+      45,
+      80
+    ],
+    "population": "concentrated"
+  },
+  "evidence_label": "Sensitivity finding",
+  "files": {
+    "run_level": "phase_d_runs.csv",
+    "configuration_summary": "phase_d_summary.csv",
+    "report": "phase_d_report.md"
+  }
+}

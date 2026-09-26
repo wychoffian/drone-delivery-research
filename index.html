@@ -1,6 +1,6 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="Research progress and executable prototypes for adaptive neighborhood exposure regulation of drone delivery."><title>Progress | Drone delivery research</title><link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23152b44'/%3E%3Cpath d='M7 22L16 8l9 14M7 22h18' fill='none' stroke='%23ffffff' stroke-width='2'/%3E%3C/svg%3E"><link rel="stylesheet" href="style.css"></head><body><a class="skip" href="#main">Skip to content</a><header><a class="brand" href="index.html"><span class="mark" aria-hidden="true">D</span>Drone delivery research</a><span class="meta">CECAN fellowship project · Prototype v0.6</span></header><div class="shell"><nav aria-label="Project navigation"><span class="label">Research notebook</span><a href="index.html" aria-current="page">Progress</a><a href="overview.html">Project overview</a><a href="literature.html">Literature and gap</a><a href="model.html">Model and rules</a><a href="odd.html">ODD specification</a><a href="sandbox.html">Sandbox protocol</a><a href="integration.html">Integrated model</a><a href="pilot.html">Interactive pilot</a><a href="experiments.html">Experiments</a><a href="phase-c.html">Phase C results</a></nav><main id="main"><h1>Research progress</h1>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="Research progress and executable prototypes for adaptive neighborhood exposure regulation of drone delivery."><title>Progress | Drone delivery research</title><link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23152b44'/%3E%3Cpath d='M7 22L16 8l9 14M7 22h18' fill='none' stroke='%23ffffff' stroke-width='2'/%3E%3C/svg%3E"><link rel="stylesheet" href="style.css"></head><body><a class="skip" href="#main">Skip to content</a><header><a class="brand" href="index.html"><span class="mark" aria-hidden="true">D</span>Drone delivery research</a><span class="meta">CECAN fellowship project · Prototype v0.7</span></header><div class="shell"><nav aria-label="Project navigation"><span class="label">Research notebook</span><a href="index.html" aria-current="page">Progress</a><a href="overview.html">Project overview</a><a href="literature.html">Literature and gap</a><a href="model.html">Model and rules</a><a href="odd.html">ODD specification</a><a href="sandbox.html">Sandbox protocol</a><a href="integration.html">Integrated model</a><a href="pilot.html">Interactive pilot</a><a href="experiments.html">Experiments</a><a href="phase-c.html">Phase C results</a><a href="phase-d.html">Phase D sensitivity</a></nav><main id="main"><h1>Research progress</h1>
 <p>Adaptive neighborhood exposure regulation for urban drone delivery.</p>
-<div class="release"><span>Current stage</span><span>Phase C stochastic screening complete</span><span>Updated 26 September 2026</span></div>
+<div class="release"><span>Current stage</span><span>Phase D sensitivity evidence published</span><span>Updated 26 September 2026</span></div>
 
 <h2>Ready to inspect</h2>
 <div class="feature-grid"><a class="feature" href="mission.html"><span class="number">01</span><h3>Follow the small fleet</h3><p>Inspect two drones, three requests, concurrent reservations, queueing, and charging.</p><span class="link-label">Open fleet walkthrough</span></a><a class="feature" href="fleet-policy.html"><span class="number">02</span><h3>Run the integrated model</h3><p>Change the four dials and compare five policies with fleet capacity and queues.</p><span class="link-label">Open integrated experiment</span></a></div>
@@ -67,6 +67,11 @@
 <td><a href="phase-c.html">Review 4,140 runs with uncertainty</a></td>
 </tr>
 <tr>
+<td>Phase D targeted sensitivity</td>
+<td>First module complete, gate open</td>
+<td><a href="phase-d.html">Review 6,780 sensitivity runs</a></td>
+</tr>
+<tr>
 <td>Empirical acoustic exposure</td>
 <td>Planned</td>
 <td>Audit sources and define the exposure measure</td>
@@ -79,6 +84,8 @@
 </tbody></table>
 <p>Table 1. Development status for the current research prototype. &quot;Demonstrated&quot; means that the stated mechanism runs with illustrative inputs.</p>
 <h2>Development record</h2>
+<h3>26 September 2026: Phase D targeted sensitivity</h3>
+<p>Executed 226 configurations with 30 matched seeds, producing 6,780 runs. The analysis varies fleet size, charger capacity, fixed budgets, exposure scaling, controller damping, and route tie-breaking. Fleet capacity and exposure scaling materially change the results, so the Phase D progression gate remains open. <a href="phase-d.html">Review the Phase D sensitivity results</a>.</p>
 <h3>26 September 2026: Phase C matched-seed screening</h3>
 <p>Executed 138 unique configurations with 30 matched seeds, producing 4,140 run records. The published results report 95 percent Monte Carlo intervals for service, operations, exposure, distribution, and controller behavior. All findings remain synthetic. <a href="phase-c.html">Review the Phase C results</a>.</p>
 <h3>26 September 2026: integrated fleet and policy model</h3>
@@ -102,6 +109,6 @@
 <li>Which acoustic measure and observation window should replace the exposure proxy?</li>
 <li>Which fleet interactions are necessary to answer the regulatory question?</li>
 </ul>
-<p>The next development milestone is Phase D sensitivity analysis. It will test whether the Phase C comparisons depend on fixed-budget spacing, damping, exposure coefficients, destination probabilities, fleet size, charging capacity, or route tie-breaking.</p>
+<p>The next development milestone is the second Phase D module. It will test destination probabilities and joint interactions among fleet capacity, charger capacity, and the exposure measure. Empirical calibration is required before Phase E.</p>
 <p>Progress entries are maintained with the project code. They change when a new version of the website is published.</p>
 <p class="download"><a href="notes/index.md" download>Download this page as Markdown</a></p></main></div><footer><span>Mutlaq Aldajani · Research in development</span><span>Illustrative inputs · Last content update 26 September 2026</span></footer><script src="site.js"></script></body></html>

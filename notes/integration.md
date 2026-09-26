@@ -76,4 +76,4 @@ The integrated model now makes fleet capacity endogenous. P0 and P1 can accumula
 
 The prototype still uses two identical drones, unlimited charging access, one synthetic network, proxy exposure coefficients, and one interactive seed. The dispatch cutoff is a modeling choice that should be tested in sensitivity analysis. Its main implication is that regulatory accounting remains clear at the cost of delaying late-period requests.
 
-Phase C has executed the approved 4,140 matched-seed runs and published run-level data, configuration summaries, execution metadata, and Monte Carlo uncertainty. Phase D will test the assumptions that can change the policy comparisons.
+Phase C executed the approved 4,140 matched-seed runs. The first [Phase D sensitivity analysis](phase-d.html) adds configurable fleet size, charging capacity, exposure scaling, controller damping, and route tie-breaking. It contains 6,780 matched-seed runs.

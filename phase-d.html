@@ -1,0 +1,219 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="Research progress and executable prototypes for adaptive neighborhood exposure regulation of drone delivery."><title>Phase D sensitivity | Drone delivery research</title><link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23152b44'/%3E%3Cpath d='M7 22L16 8l9 14M7 22h18' fill='none' stroke='%23ffffff' stroke-width='2'/%3E%3C/svg%3E"><link rel="stylesheet" href="style.css"></head><body><a class="skip" href="#main">Skip to content</a><header><a class="brand" href="index.html"><span class="mark" aria-hidden="true">D</span>Drone delivery research</a><span class="meta">CECAN fellowship project · Prototype v0.7</span></header><div class="shell"><nav aria-label="Project navigation"><span class="label">Research notebook</span><a href="index.html">Progress</a><a href="overview.html">Project overview</a><a href="literature.html">Literature and gap</a><a href="model.html">Model and rules</a><a href="odd.html">ODD specification</a><a href="sandbox.html">Sandbox protocol</a><a href="integration.html">Integrated model</a><a href="pilot.html">Interactive pilot</a><a href="experiments.html">Experiments</a><a href="phase-c.html">Phase C results</a><a href="phase-d.html" aria-current="page">Phase D sensitivity</a></nav><main id="main"><h1>Phase D targeted sensitivity analysis</h1>
+<p>Phase D tests whether selected Phase C findings depend on fleet capacity, charging capacity, fixed-budget choice, exposure coefficients, controller damping, or route tie-breaking. The analysis contains 6,780 runs from 226 unique configurations, each evaluated with the same 30 seeds used in Phase C.</p>
+<blockquote>
+<p>Evidence label: Sensitivity finding. These results describe changes within a synthetic model. They do not validate the exposure proxy or establish a real-world fleet or policy requirement.</p>
+</blockquote>
+<h2>Design</h2>
+<p>The targeted design uses the medium- and high-demand concentrated-population scenarios because Phase C identified capacity pressure there. It varies one assumption group at a time around the reference model. The policy comparison includes P0, P1, P2 budgets 28, 34, and 40, P3-U, and P3-D. A separate fixed-budget module extends P2 to budgets 22 and 46.</p>
+<p>Reported values are means with 95 percent Monte Carlo intervals across 30 matched seeds. One-at-a-time tests reveal dependence on each selected assumption. They do not estimate interactions among every sensitivity factor.</p>
+<h2>Fleet capacity</h2>
+<p>Table 1 shows the high-demand P3-D result as fleet size increases. This test directly examines the capacity constraint found in Phase C.</p>
+<table>
+<thead>
+<tr>
+<th align="right">Drones</th>
+<th align="right">Completion rate, %</th>
+<th align="right">Mean wait, min</th>
+<th align="right">Final queue</th>
+<th align="right">Peak exposure, units</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="right">2</td>
+<td align="right">55.6 (55.1 to 56.1)</td>
+<td align="right">1789.2 (1749.6 to 1828.7)</td>
+<td align="right">1196.7 (1171.5 to 1221.8)</td>
+<td align="right">39.2 (39.2 to 39.3)</td>
+</tr>
+<tr>
+<td align="right">4</td>
+<td align="right">69.3 (68.6 to 69.9)</td>
+<td align="right">880.3 (849.6 to 911.0)</td>
+<td align="right">828.2 (802.6 to 853.8)</td>
+<td align="right">48.6 (46.4 to 50.7)</td>
+</tr>
+<tr>
+<td align="right">6</td>
+<td align="right">69.3 (68.6 to 69.9)</td>
+<td align="right">850.0 (819.3 to 880.8)</td>
+<td align="right">828.3 (802.7 to 853.8)</td>
+<td align="right">48.5 (46.4 to 50.6)</td>
+</tr>
+<tr>
+<td align="right">8</td>
+<td align="right">69.3 (68.6 to 69.9)</td>
+<td align="right">835.8 (805.3 to 866.4)</td>
+<td align="right">828.2 (802.7 to 853.7)</td>
+<td align="right">48.5 (46.3 to 50.6)</td>
+</tr>
+</tbody></table>
+<p>Table 1. High-demand P3-D sensitivity to fleet size. Exposure is measured in proxy units.</p>
+<p>Increasing the fleet from two to four drones changes mean completion from 55.6 to 69.3 percent. With eight drones it reaches 69.3 percent. This confirms that the Phase C high-demand queue is materially dependent on the assumed fleet size.</p>
+<h2>Charging capacity</h2>
+<p>Table 2 tests whether charger access constrains an eight-drone fleet under high demand and P3-D.</p>
+<table>
+<thead>
+<tr>
+<th>Charger capacity</th>
+<th align="right">Completion rate, %</th>
+<th align="right">Mean charging wait, min</th>
+<th align="right">Peak charger queue</th>
+<th align="right">Final request queue</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td align="right">59.5 (59.0 to 60.1)</td>
+<td align="right">41.5 (41.3 to 41.7)</td>
+<td align="right">7.0 (7.0 to 7.0)</td>
+<td align="right">1090.2 (1064.9 to 1115.6)</td>
+</tr>
+<tr>
+<td>2</td>
+<td align="right">69.3 (68.6 to 69.9)</td>
+<td align="right">9.2 (9.1 to 9.3)</td>
+<td align="right">6.0 (6.0 to 6.0)</td>
+<td align="right">828.2 (802.7 to 853.7)</td>
+</tr>
+<tr>
+<td>unlimited</td>
+<td align="right">69.3 (68.6 to 69.9)</td>
+<td align="right">0.0 (0.0 to 0.0)</td>
+<td align="right">0.0 (0.0 to 0.0)</td>
+<td align="right">828.2 (802.7 to 853.7)</td>
+</tr>
+</tbody></table>
+<p>Table 2. High-demand P3-D sensitivity to charger capacity with eight drones.</p>
+<p>One charger produces a mean charging wait of 41.5 minutes, compared with 0.0 minutes under unlimited parallel charging. Charger capacity must therefore be stated whenever fleet size changes.</p>
+<h2>Fixed exposure budgets</h2>
+<p>Table 3 extends the fixed-budget comparison for a four-drone fleet under high demand.</p>
+<table>
+<thead>
+<tr>
+<th align="right">Fixed budget</th>
+<th align="right">Completion rate, %</th>
+<th align="right">Mean wait, min</th>
+<th align="right">Peak exposure, units</th>
+<th align="right">Population-weighted burden</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="right">22</td>
+<td align="right">50.8 (50.4 to 51.3)</td>
+<td align="right">1950.1 (1910.4 to 1989.9)</td>
+<td align="right">22.0 (22.0 to 22.0)</td>
+<td align="right">433.2 (433.2 to 433.2)</td>
+</tr>
+<tr>
+<td align="right">28</td>
+<td align="right">65.0 (64.5 to 65.6)</td>
+<td align="right">1209.3 (1172.1 to 1246.6)</td>
+<td align="right">28.0 (28.0 to 28.0)</td>
+<td align="right">568.4 (568.2 to 568.6)</td>
+</tr>
+<tr>
+<td align="right">34</td>
+<td align="right">76.0 (75.4 to 76.6)</td>
+<td align="right">789.4 (767.6 to 811.3)</td>
+<td align="right">34.0 (34.0 to 34.0)</td>
+<td align="right">675.5 (674.4 to 676.6)</td>
+</tr>
+<tr>
+<td align="right">40</td>
+<td align="right">85.6 (84.9 to 86.2)</td>
+<td align="right">499.2 (473.3 to 525.1)</td>
+<td align="right">40.0 (40.0 to 40.0)</td>
+<td align="right">778.2 (777.1 to 779.4)</td>
+</tr>
+<tr>
+<td align="right">46</td>
+<td align="right">94.2 (93.5 to 94.9)</td>
+<td align="right">220.5 (192.0 to 249.0)</td>
+<td align="right">46.0 (46.0 to 46.0)</td>
+<td align="right">877.7 (876.4 to 879.0)</td>
+</tr>
+</tbody></table>
+<p>Table 3. High-demand P2 sensitivity to the fixed neighborhood budget. Exposure is measured in proxy units.</p>
+<p>The table provides a service-exposure frontier rather than a single preferred budget. A budget choice requires an empirically defined exposure measure and an acceptable service criterion.</p>
+<h2>Controller damping</h2>
+<p>Table 4 tests P3-D damping with a four-drone fleet under high demand. The delay remains one period and the gain remains 0.60.</p>
+<table>
+<thead>
+<tr>
+<th align="right">Damping</th>
+<th align="right">Completion rate, %</th>
+<th align="right">Peak exposure, units</th>
+<th align="right">Budget bound share, %</th>
+<th align="right">Mean oscillations</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="right">0.25</td>
+<td align="right">72.7 (72.0 to 73.4)</td>
+<td align="right">47.3 (46.0 to 48.7)</td>
+<td align="right">0.0 (0.0 to 0.0)</td>
+<td align="right">12.4 (11.1 to 13.7)</td>
+</tr>
+<tr>
+<td align="right">0.50</td>
+<td align="right">69.3 (68.6 to 69.9)</td>
+<td align="right">48.6 (46.4 to 50.7)</td>
+<td align="right">6.5 (6.5 to 6.5)</td>
+<td align="right">18.9 (17.8 to 19.9)</td>
+</tr>
+<tr>
+<td align="right">0.75</td>
+<td align="right">68.0 (67.4 to 68.7)</td>
+<td align="right">48.9 (46.7 to 51.0)</td>
+<td align="right">17.6 (17.6 to 17.7)</td>
+<td align="right">19.7 (18.7 to 20.7)</td>
+</tr>
+</tbody></table>
+<p>Table 4. High-demand P3-D sensitivity to controller damping.</p>
+<h2>Exposure coefficient scale</h2>
+<p>Table 5 tests whether P3-D results depend on the magnitude assigned to every proxy exposure coefficient. The fleet contains four drones and charging is unlimited.</p>
+<table>
+<thead>
+<tr>
+<th align="right">Exposure scale</th>
+<th align="right">Completion rate, %</th>
+<th align="right">Mean wait, min</th>
+<th align="right">Final queue</th>
+<th align="right">Peak exposure, units</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="right">0.75</td>
+<td align="right">89.3 (88.6 to 90.0)</td>
+<td align="right">259.4 (232.3 to 286.4)</td>
+<td align="right">288.9 (266.8 to 311.0)</td>
+<td align="right">45.5 (45.3 to 45.7)</td>
+</tr>
+<tr>
+<td align="right">1.00</td>
+<td align="right">69.3 (68.6 to 69.9)</td>
+<td align="right">880.3 (849.6 to 911.0)</td>
+<td align="right">828.2 (802.6 to 853.8)</td>
+<td align="right">48.6 (46.4 to 50.7)</td>
+</tr>
+<tr>
+<td align="right">1.25</td>
+<td align="right">55.3 (54.8 to 55.9)</td>
+<td align="right">1482.4 (1446.3 to 1518.4)</td>
+<td align="right">1203.0 (1177.4 to 1228.6)</td>
+<td align="right">40.1 (39.9 to 40.4)</td>
+</tr>
+</tbody></table>
+<p>Table 5. High-demand P3-D sensitivity to proportional scaling of all exposure coefficients.</p>
+<p>Completion changes from 89.3 percent at scale 0.75 to 55.3 percent at scale 1.25. This is a material dependency. The exposure measure and its relationship to the budget must be calibrated before the Phase D progression gate can pass.</p>
+<p>The route tie-breaking test produced completion rates of 69.3 and 69.2 percent for the lower- and higher-index rules. Peak exposure changed from 48.6 to 50.2 proxy units. This selected scenario is much less sensitive to tie-breaking than to fleet capacity or exposure scaling.</p>
+<h2>Reproducibility files</h2>
+<ul>
+<li><a href="results/phase_d_runs.csv">Run-level results</a></li>
+<li><a href="results/phase_d_summary.csv">Configuration summaries</a></li>
+<li><a href="results/phase_d_metadata.json">Execution metadata</a></li>
+</ul>
+<h2>Discussion</h2>
+<p>Phase D determines whether the Phase C conclusions survive selected alternative assumptions. It does not calibrate the model. Fleet and charger sensitivities are operational implications because capacity changes service outcomes. Exposure-scale and controller sensitivities show where empirical evidence and controller design are needed.</p>
+<p>The design varies factors one group at a time in two concentrated-population scenarios. It does not cover all factor interactions, alternative network geometries, weather, failures, delivery deadlines, or measured acoustics. The Phase D progression gate remains open because conclusions depend materially on fleet capacity and exposure scaling. The next sensitivity extension should test destination probabilities and joint interactions among the factors that changed the results. Empirical readiness still requires a physical exposure definition, source data, and validation targets.</p>
+<p class="download"><a href="notes/phase-d.md" download>Download this page as Markdown</a></p></main></div><footer><span>Mutlaq Aldajani · Research in development</span><span>Illustrative inputs · Last content update 26 September 2026</span></footer><script src="site.js"></script></body></html>

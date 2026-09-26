@@ -62,38 +62,51 @@
   return periods;
  }
  function run(policy,cfg,demand,pop){
+  const fleetSize=cfg.fleetSize??2,chargerCapacity=cfg.chargerCapacity??Infinity,exposureScale=cfg.exposureScale??1,controllerDamping=cfg.damping??damping,tieBreak=cfg.tieBreak??'low';
+  const coeff=coefficient.map(value=>value*exposureScale);
   let budgets=Array(9).fill(cfg.fixedBudget??initialBudget),exposure=Array(9).fill(0),reserved=Array(9).fill(0),trips=[0,0,0],distance=0,energy=0,current=0,sequence=0;
-  let received=0,dispatched=0,completed=0,busyMinutes=0,waits=[],queue=[],history=[];
-  const drones=['D1','D2'].map(id=>({id,status:'available',battery:100,request:null}));
-  const events=[];
-  const schedule=(time,priority,type,data={})=>{events.push({time,priority,type,data,sequence:sequence++});events.sort((a,b)=>a.time-b.time||a.priority-b.priority||a.sequence-b.sequence);};
+  let received=0,dispatched=0,completed=0,busyMinutes=0,peakQueue=0,peakChargerQueue=0,waits=[],chargeWaits=[],queue=[],chargeQueue=[],activeChargers=0,history=[];
+  const drones=Array.from({length:fleetSize},(_,i)=>({id:`D${i+1}`,status:'available',battery:100,request:null,chargeQueuedAt:null}));
+  const events=[];let eventCursor=0;
+  const compare=(a,b)=>a.time-b.time||a.priority-b.priority||a.sequence-b.sequence;
+  const schedule=(time,priority,type,data={})=>{
+   const event={time,priority,type,data,sequence:sequence++};let low=eventCursor,high=events.length;
+   while(low<high){const middle=(low+high)>>1;if(compare(events[middle],event)<=0)low=middle+1;else high=middle;}
+   events.splice(low,0,event);
+  };
   for(let p=0;p<totalPeriods;p++){for(const request of demand[p])schedule(p*periodLength+request.offset,30,'arrival',{request:{...request,period:p,arrival:p*periodLength+request.offset}});schedule((p+1)*periodLength,20,'boundary');}
-  const routesFor=(destination,policyCode)=>[0,1,2].map(row=>{const length=2*(6+Math.abs(row-1)+Math.abs(row-destination)),burden=coefficient.slice(row*3,row*3+3).reduce((sum,c,j)=>sum+c*pop[row*3+j],0)/100;return{row,length,cost:length+(policyCode===1?.75*burden:0)};}).sort((a,b)=>a.cost-b.cost||a.row-b.row);
+  const routesFor=(destination,policyCode)=>[0,1,2].map(row=>{const length=2*(6+Math.abs(row-1)+Math.abs(row-destination)),burden=coeff.slice(row*3,row*3+3).reduce((sum,c,j)=>sum+c*pop[row*3+j],0)/100;return{row,length,cost:length+(policyCode===1?.75*burden:0)};}).sort((a,b)=>a.cost-b.cost||(tieBreak==='high'?b.row-a.row:a.row-b.row));
   const dispatch=time=>{
    if(current>=totalPeriods||time>(current+1)*periodLength-dispatchCutoff)return;
    while(queue.length){
     const drone=drones.find(d=>d.status==='available');if(!drone)return;
-    const request=queue[0],route=routesFor(request.destination,policy).find(r=>time+r.length/2+1<=(current+1)*periodLength&&(policy<2||[0,1,2].every(j=>{const i=r.row*3+j;return exposure[i]+reserved[i]+coefficient[i]<=budgets[i]+1e-9;})));
+    const request=queue[0],route=routesFor(request.destination,policy).find(r=>time+r.length/2+1<=(current+1)*periodLength&&(policy<2||[0,1,2].every(j=>{const i=r.row*3+j;return exposure[i]+reserved[i]+coeff[i]<=budgets[i]+1e-9;})));
     if(!route)return;
     queue.shift();request.dispatch=time;request.route=route;drone.status='mission';drone.request=request.id;drone.battery=100-route.length*2;
-    for(let j=0;j<3;j++)reserved[route.row*3+j]+=coefficient[route.row*3+j];
+    for(let j=0;j<3;j++)reserved[route.row*3+j]+=coeff[route.row*3+j];
     dispatched++;waits.push(time-request.arrival);trips[route.row]++;distance+=route.length;energy+=route.length*2;busyMinutes+=route.length/2+1;
     schedule(time+route.length/2+1,10,'complete',{drone:drone.id,request,route});
    }
   };
-  while(events.length){
-   const event=events.shift(),time=event.time,data=event.data;
-   if(event.type==='arrival'){queue.push(data.request);received++;dispatch(time);continue;}
-   if(event.type==='complete'){
-    const drone=drones.find(d=>d.id===data.drone);for(let j=0;j<3;j++){const i=data.route.row*3+j;reserved[i]-=coefficient[i];exposure[i]+=coefficient[i];}
-    completed++;drone.status='charging';const charge=(100-drone.battery)/4;schedule(time+charge,15,'charged',{drone:drone.id});continue;
+  const startCharging=time=>{
+   while(chargeQueue.length&&activeChargers<chargerCapacity){
+    const drone=chargeQueue.shift();chargeWaits.push(time-drone.chargeQueuedAt);drone.status='charging';activeChargers++;
+    const charge=(100-drone.battery)/4;schedule(time+charge,15,'charged',{drone:drone.id});
    }
-   if(event.type==='charged'){const drone=drones.find(d=>d.id===data.drone);drone.status='available';drone.battery=100;drone.request=null;dispatch(time);continue;}
+  };
+  while(eventCursor<events.length){
+   const event=events[eventCursor++],time=event.time,data=event.data;
+   if(event.type==='arrival'){queue.push(data.request);peakQueue=Math.max(peakQueue,queue.length);received++;dispatch(time);continue;}
+   if(event.type==='complete'){
+    const drone=drones.find(d=>d.id===data.drone);for(let j=0;j<3;j++){const i=data.route.row*3+j;reserved[i]-=coeff[i];exposure[i]+=coeff[i];}
+    completed++;drone.status='waiting-charge';drone.chargeQueuedAt=time;chargeQueue.push(drone);startCharging(time);peakChargerQueue=Math.max(peakChargerQueue,chargeQueue.length);continue;
+   }
+   if(event.type==='charged'){const drone=drones.find(d=>d.id===data.drone);activeChargers--;drone.status='available';drone.battery=100;drone.request=null;drone.chargeQueuedAt=null;startCharging(time);dispatch(time);continue;}
    if(event.type==='boundary'){
-    const observation=current-cfg.delay,source=observation===current?exposure:observation>=0?history[observation].exposure:null,effectiveGain=policy===4?cfg.gain*damping:cfg.gain;
+    const observation=current-cfg.delay,source=observation===current?exposure:observation>=0?history[observation].exposure:null,effectiveGain=policy===4?cfg.gain*controllerDamping:cfg.gain;
     const next=policy>=3&&source?budgets.map((b,i)=>Math.max(budgetMin,Math.min(budgetMax,b-effectiveGain*(source[i]-target)))):budgets.slice();
-    history.push({period:current+1,received,dispatched,completed,queueEnd:queue.length,meanWait:waits.length?waits.reduce((a,b)=>a+b,0)/waits.length:0,waits:waits.slice(),distance,energy,utilization:busyMinutes/(2*periodLength),exposure:exposure.slice(),reserved:reserved.slice(),trips:trips.slice(),budgets:budgets.slice(),next,observation:policy>=3&&source?observation+1:null,max:Math.max(...exposure)});
-    budgets=next;exposure=Array(9).fill(0);reserved=Array(9).fill(0);trips=[0,0,0];distance=0;energy=0;received=0;dispatched=0;completed=0;busyMinutes=0;waits=[];current++;dispatch(time);
+    history.push({period:current+1,received,dispatched,completed,queueEnd:queue.length,peakQueue,chargerQueueEnd:chargeQueue.length,peakChargerQueue,meanWait:waits.length?waits.reduce((a,b)=>a+b,0)/waits.length:0,waits:waits.slice(),meanChargeWait:chargeWaits.length?chargeWaits.reduce((a,b)=>a+b,0)/chargeWaits.length:0,chargeWaits:chargeWaits.slice(),distance,energy,utilization:busyMinutes/(fleetSize*periodLength),exposure:exposure.slice(),reserved:reserved.slice(),trips:trips.slice(),budgets:budgets.slice(),next,observation:policy>=3&&source?observation+1:null,max:Math.max(...exposure)});
+    budgets=next;exposure=Array(9).fill(0);reserved=Array(9).fill(0);trips=[0,0,0];distance=0;energy=0;received=0;dispatched=0;completed=0;busyMinutes=0;peakQueue=queue.length;peakChargerQueue=chargeQueue.length;waits=[];chargeWaits=[];current++;dispatch(time);
    }
   }
   history.finalQueue=queue.length;return history;
