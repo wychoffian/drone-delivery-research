@@ -1,0 +1,205 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="Research progress and executable prototypes for adaptive neighborhood exposure regulation of drone delivery."><title>Phase E12 final pilot | Drone delivery research</title><link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23152b44'/%3E%3Cpath d='M7 22L16 8l9 14M7 22h18' fill='none' stroke='%23ffffff' stroke-width='2'/%3E%3C/svg%3E"><link rel="stylesheet" href="style.css"></head><body><a class="skip" href="#main">Skip to content</a><header><a class="brand" href="index.html"><span class="mark" aria-hidden="true">D</span>Drone delivery research</a><span class="meta">CECAN fellowship project · Prototype v0.23</span></header><div class="shell"><nav aria-label="Project navigation"><span class="label">Research notebook</span><a href="index.html">Progress</a><a href="overview.html">Project overview</a><a href="literature.html">Literature and gap</a><a href="model.html">Model and rules</a><a href="odd.html">ODD specification</a><a href="sandbox.html">Sandbox protocol</a><a href="integration.html">Integrated model</a><a href="pilot.html">Interactive pilot</a><a href="experiments.html">Experiments</a><a href="phase-c.html">Phase C results</a><a href="phase-d.html">Phase D sensitivity</a><a href="phase-d-joint.html">Phase D joint analysis</a><a href="empirical-calibration.html">Empirical calibration</a><a href="phase-e0.html">Phase E0 acoustics</a><a href="phase-e1.html">Phase E1 routes</a><a href="phase-e2.html">Phase E2 integration</a><a href="phase-e3.html">Phase E3 sensitivity</a><a href="phase-e4.html">Phase E4 diagnosis</a><a href="phase-e5.html">Phase E5 thresholds</a><a href="phase-e6.html">Phase E6 allocation</a><a href="phase-e7.html">Phase E7 event plan</a><a href="phase-e8.html">Phase E8 workload</a><a href="phase-e9.html">Phase E9 rolling</a><a href="phase-e10.html">Phase E10 controllers</a><a href="phase-e11.html">Phase E11 capacity</a><a href="phase-e12.html" aria-current="page">Phase E12 final pilot</a></nav><main id="main"><h1>Phase E12 final synthetic pilot</h1>
+<p>Phase E12 runs the selected pilot configuration for 240 review periods across 100 matched seeds. It compares all proposal regimes and evaluates the preregistered service, queue, exposure, destination-balance, and controller-stability gates.</p>
+<blockquote>
+<p>Evidence label: Frozen synthetic simulation pilot. It supports conclusions about model behavior under declared assumptions. It does not establish field readiness or an empirical policy recommendation.</p>
+</blockquote>
+<h2>Frozen configuration</h2>
+<p>Table 1 records the final pilot configuration.</p>
+<table>
+<thead>
+<tr>
+<th>Component</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Demand</td>
+<td>Mean 30 requests per period, increasing by 60% from period 9</td>
+</tr>
+<tr>
+<td>Fleet</td>
+<td>Four drones and four chargers</td>
+</tr>
+<tr>
+<td>Horizon</td>
+<td>240 periods with a 48-period final evaluation window</td>
+</tr>
+<tr>
+<td>Replication</td>
+<td>100 matched seeds, 901 through 1000</td>
+</tr>
+<tr>
+<td>Dispatcher</td>
+<td>Rolling 3 fair</td>
+</tr>
+<tr>
+<td>Adaptive target</td>
+<td>16.3 reference-mission equivalents</td>
+</tr>
+<tr>
+<td>Information delay</td>
+<td>One period</td>
+</tr>
+<tr>
+<td>Gain</td>
+<td>0.60</td>
+</tr>
+<tr>
+<td>Selected damping</td>
+<td>0.10</td>
+</tr>
+</tbody></table>
+<p>Table 1. Frozen Phase E12 synthetic pilot configuration.</p>
+<h2>Progression gates</h2>
+<p>Table 2 reports the selected P3-D 0.10 result against every progression gate.</p>
+<table>
+<thead>
+<tr>
+<th>Gate</th>
+<th align="right">Threshold</th>
+<th align="right">Observed mean</th>
+<th align="right">Passing seeds</th>
+<th>Result</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Completion</td>
+<td align="right">At least 99%</td>
+<td align="right">99.98%</td>
+<td align="right">100 / 100</td>
+<td>Pass</td>
+</tr>
+<tr>
+<td>Late queue slope</td>
+<td align="right">At most 0.1</td>
+<td align="right">-0.002</td>
+<td align="right">100 / 100</td>
+<td>Pass</td>
+</tr>
+<tr>
+<td>Late mean waiting</td>
+<td align="right">At most 30 minutes</td>
+<td align="right">1.70</td>
+<td align="right">100 / 100</td>
+<td>Pass</td>
+</tr>
+<tr>
+<td>Oldest queued request</td>
+<td align="right">At most 480 minutes</td>
+<td align="right">10.4</td>
+<td align="right">100 / 100</td>
+<td>Pass</td>
+</tr>
+<tr>
+<td>Destination completion gap</td>
+<td align="right">At most 2 percentage points</td>
+<td align="right">0.034 points</td>
+<td align="right">100 / 100</td>
+<td>Pass</td>
+</tr>
+<tr>
+<td>Budget violations</td>
+<td align="right">Zero</td>
+<td align="right">0</td>
+<td align="right">100 / 100</td>
+<td>Pass</td>
+</tr>
+<tr>
+<td>Late budget SD</td>
+<td align="right">At most 1</td>
+<td align="right">0.404</td>
+<td align="right">98 / 100</td>
+<td>Pass</td>
+</tr>
+<tr>
+<td>Late budget saturation</td>
+<td align="right">At most 25%</td>
+<td align="right">0%</td>
+<td align="right">100 / 100</td>
+<td>Pass</td>
+</tr>
+<tr>
+<td>All gates</td>
+<td align="right">At least 95% of seeds</td>
+<td align="right">98%</td>
+<td align="right">98 / 100</td>
+<td>Pass</td>
+</tr>
+</tbody></table>
+<p>Table 2. Final progression-gate evaluation for P3-D 0.10.</p>
+<p>The final queue is small and has a declining late-window trend. The controller remains below its maximum budget and produces no accepted mission that exceeds an active receiver budget.</p>
+<h2>Policy comparison</h2>
+<p>Table 3 compares service and exposure across the five regimes.</p>
+<table>
+<thead>
+<tr>
+<th>Policy</th>
+<th align="right">Completion (%)</th>
+<th align="right">Late mean wait</th>
+<th align="right">Population-weighted exposure</th>
+<th align="right">Maximum mean receiver exposure</th>
+<th align="right">Receiver-exposure Gini</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>P0 shortest path</td>
+<td align="right">99.98</td>
+<td align="right">1.55</td>
+<td align="right">34.85</td>
+<td align="right">47.44</td>
+<td align="right">0.657</td>
+</tr>
+<tr>
+<td>P1 noise aware</td>
+<td align="right">99.98</td>
+<td align="right">1.71</td>
+<td align="right">6.50</td>
+<td align="right">37.94</td>
+<td align="right">0.527</td>
+</tr>
+<tr>
+<td>P2 fixed budget</td>
+<td align="right">99.21</td>
+<td align="right">742.58</td>
+<td align="right">15.84</td>
+<td align="right">15.86</td>
+<td align="right">0.001</td>
+</tr>
+<tr>
+<td>P3-U</td>
+<td align="right">99.95</td>
+<td align="right">31.20</td>
+<td align="right">15.96</td>
+<td align="right">15.98</td>
+<td align="right">0.002</td>
+</tr>
+<tr>
+<td>P3-D 0.10</td>
+<td align="right">99.98</td>
+<td align="right">1.70</td>
+<td align="right">15.93</td>
+<td align="right">15.94</td>
+<td align="right">0.000</td>
+</tr>
+</tbody></table>
+<p>Table 3. Full-horizon service and exposure outcomes across the proposal policy regimes.</p>
+<p>P0 concentrates every route on the central corridor. P1 sends about 80% of routes through the north corridor and 20% through the south corridor. Its low population-weighted exposure therefore hides substantial transfer from the concentrated central population to the outer receivers. The mean outer-to-central receiver-exposure ratio is 100.02 under P1.</p>
+<p>P2, P3-U, and P3-D distribute corridor use almost equally. P2 produces a growing queue and fails the waiting-time gate. P3-U misses the waiting and controller-variation gates. P3-D 0.10 combines balanced receiver exposure with stable service and controller behavior.</p>
+<h2>Freeze decision</h2>
+<p>The synthetic pilot passes its progression gate and is frozen as <code>phase-e12-synthetic-pilot-v1</code>. The freeze manifest records SHA-256 hashes for the model, runner, results, gate evaluation, and metadata. Changes to those files create a new model version rather than modifying this result in place.</p>
+<p>This freeze applies only to the synthetic simulation pilot. Empirical calibration and field-pilot authorization remain separate stages.</p>
+<h2>Discussion</h2>
+<p>The result depends on synthetic demand, synthetic geometry, assumed population concentration, equal request priority, and one charger per drone. Acoustic route increments use transferred calibration data, while the operational and socioeconomic inputs remain uncalibrated. P1&#39;s apparent population-weighted benefit demonstrates why average burden cannot replace receiver-level distribution measures.</p>
+<p>The simulation implication is specific: under these assumptions, P3-D with damping 0.10 passes the declared pilot gates while the fixed and undamped regulated alternatives do not. Future research should replace the synthetic demand, fleet, population, and urban-form inputs before treating this configuration as evidence for a location or field operation.</p>
+<h2>Frozen reproducibility files</h2>
+<ul>
+<li><a href="results/phase_e12_pilot_runs.csv">Run-level results</a></li>
+<li><a href="results/phase_e12_pilot_summary.csv">Policy summaries</a></li>
+<li><a href="results/phase_e12_period_summary.csv">Period summaries</a></li>
+<li><a href="results/phase_e12_gate_evaluation.csv">Gate evaluation</a></li>
+<li><a href="results/phase_e12_metadata.json">Execution metadata</a></li>
+<li><a href="results/phase_e12_freeze_manifest.json">Freeze manifest</a></li>
+<li><a href="source/acoustic-fleet.html">Frozen model source</a></li>
+<li><a href="source/phase-e12.cjs">Frozen final-pilot runner</a></li>
+</ul>
+<p class="download"><a href="notes/phase-e12.md" download>Download this page as Markdown</a></p></main></div><footer><span>Mutlaq Aldajani · Research in development</span><span>Illustrative inputs · Last content update 26 September 2026</span></footer><script src="site.js"></script></body></html>

@@ -1,0 +1,95 @@
+{
+  "experiment": "Phase E12 final synthetic pilot",
+  "generated_at": "2026-09-26T18:45:52.055Z",
+  "model_status": "Frozen after progression-gate approval",
+  "progression_gate_pass": true,
+  "total_runs": 500,
+  "unique_configurations": 5,
+  "period_summaries": 1200,
+  "seeds": [
+    901,
+    1000
+  ],
+  "periods": 240,
+  "late_window_periods": 48,
+  "pilot_configuration": {
+    "demand_mean": 30,
+    "demand_step_multiplier": 1.6,
+    "demand_step_period": 9,
+    "fleet_size": 4,
+    "charger_capacity": 4,
+    "population": [
+      40,
+      40,
+      40,
+      220,
+      220,
+      220,
+      40,
+      40,
+      40
+    ],
+    "rolling_dispatch": {
+      "rollingLookahead": 3,
+      "rollingExposureWeight": 1,
+      "rollingWorkloadWeight": 0.3,
+      "rollingFairnessWeight": 1
+    },
+    "adaptive_target": 16.3,
+    "gain": 0.6,
+    "delay": 1,
+    "damping": 0.1
+  },
+  "policies": [
+    {
+      "id": "p0",
+      "label": "P0 shortest path",
+      "code": 0
+    },
+    {
+      "id": "p1",
+      "label": "P1 noise aware",
+      "code": 1,
+      "acousticWeightKm": 0.35
+    },
+    {
+      "id": "p2",
+      "label": "P2 fixed",
+      "code": 2,
+      "initialBudgetEquivalent": 16.3,
+      "delay": 0,
+      "gain": 0
+    },
+    {
+      "id": "p3u",
+      "label": "P3-U",
+      "code": 3,
+      "initialBudgetEquivalent": 20,
+      "targetEquivalent": 16.3,
+      "delay": 1,
+      "gain": 0.6,
+      "damping": 1
+    },
+    {
+      "id": "p3d_01",
+      "label": "P3-D0.10",
+      "code": 4,
+      "initialBudgetEquivalent": 20,
+      "targetEquivalent": 16.3,
+      "delay": 1,
+      "gain": 0.6,
+      "damping": 0.1
+    }
+  ],
+  "progression_gates": {
+    "minimumCompletionRate": 0.99,
+    "maximumLateQueueSlope": 0.1,
+    "maximumLateMeanWaitMinutes": 30,
+    "maximumOldestQueueAgeMinutes": 480,
+    "maximumDestinationCompletionGap": 0.02,
+    "maximumLateBudgetSd": 1,
+    "maximumLateSaturationShare": 0.25,
+    "minimumPassingSeedShare": 0.95
+  },
+  "model_sha256": "654c6bd7435bae50759ff7accd017b46e004c7c5611a36ca8bbaa23a27c1e098"
+}

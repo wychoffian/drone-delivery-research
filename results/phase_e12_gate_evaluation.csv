@@ -1,0 +1,10 @@
+metric,operator,threshold,observed_mean,passing_seeds,total_seeds,passing_seed_share,gate_pass
+completion_rate,>=,0.99,0.9998472217703551,100,100,1,1
+late_queue_slope,<=,0.1,-0.0019632001736864966,100,100,1,1
+late_mean_wait_minutes,<=,30,1.703714546185973,100,100,1,1
+final_oldest_queue_age,<=,480,10.4,100,100,1,1
+destination_completion_gap,<=,0.02,0.00033811074177334644,100,100,1,1
+budget_violations,=,0,0,100,100,1,1
+late_central_budget_sd,<=,1,0.40391926404278683,98,100,0.98,1
+late_budget_saturation_share,<=,0.25,0,100,100,1,1
+all_progression_gates,>=,0.95,0.98,98,100,0.98,1

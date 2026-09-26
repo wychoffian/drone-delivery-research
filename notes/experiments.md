@@ -88,6 +88,18 @@ Phase E10 reconnects Rolling 3 to P2, P3-U, and P3-D across medium and high dema
 
 [Review the Phase E10 controller results and download the data](phase-e10.html)
 
+## Phase E11 pilot capacity envelope
+
+Phase E11 contains 4,230 runs across sequential demand, fleet, target, and responsiveness screens. It identifies four drones, four chargers, demand mean 30, and target 16.3 as the operating region for the final synthetic pilot. Damping 0.20 passes the screening gate in 97 percent of seeds.
+
+[Review the Phase E11 capacity results and download the data](phase-e11.html)
+
+## Phase E12 final synthetic pilot
+
+Phase E12 tests the selected configuration for 240 periods across 100 matched seeds and all proposal policy regimes. P3-D 0.10 passes every progression gate in 98 percent of seeds. P1 reduces population-weighted exposure but transfers physical exposure from the concentrated central population to the outer receivers. The final model and results are frozen with file hashes.
+
+[Review the frozen Phase E12 pilot and download the data](phase-e12.html)
+
 ## Discussion
 
-The Phase D results remain useful as proxy-model baselines. Phase E replaces the proxy increments with calibrated physical exposure calculations, but the network, demand, operations, and budgets remain scenarios. Monte Carlo intervals describe variation across the selected seeds. They do not include all empirical parameter uncertainty. Phase E10 reconnects online dispatch and adaptive control. The next experiment must find demand and fleet combinations that do not produce a growing queue.
+The Phase D results remain useful as proxy-model baselines. Phase E replaces the proxy increments with calibrated physical exposure calculations, but the network, demand, operations, and budgets remain scenarios. Monte Carlo intervals describe variation across the selected seeds. They do not include all empirical parameter uncertainty. Phase E12 completes and freezes the synthetic pilot. Empirical calibration remains necessary before a location-specific or field-pilot interpretation.

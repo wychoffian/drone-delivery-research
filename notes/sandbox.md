@@ -281,3 +281,11 @@ At budget 14.05, Rolling 3 raises completion from 18.4 to 31.3 percent and balan
 Phase E10 reconnects Rolling 3 to P2, P3-U, and P3-D over 120 periods under medium and high demand. [Review the Phase E10 results](phase-e10.html).
 
 P3-D 0.50 has lower late-window budget variation than P3-U and retains a small service advantage near target 14 after approximate exposure matching. Both adaptive policies reach the maximum budget at target 18 because the two-drone fleet cannot generate the requested exposure. Both tested demand settings also produce growing queues. The controller implementation gate is complete, but the pilot operating gate remains open until a capacity-envelope experiment identifies stable demand and fleet combinations.
+
+## Phase E capacity envelope and final pilot
+
+Phase E11 executes 4,230 runs across demand, fleet, target, and damping screens. It identifies demand mean 30, four drones, four chargers, target 16.3, and reduced damping as the final synthetic pilot configuration. [Review the capacity envelope](phase-e11.html).
+
+Phase E12 then executes 500 runs over 240 periods across 100 matched seeds and all five policy variants. P3-D 0.10 passes every progression gate in 98 percent of seeds. The synthetic model, assumptions, results, and gate evaluation are frozen with file hashes. [Review the final pilot and freeze record](phase-e12.html).
+
+The simulation-pilot gate is complete. Empirical calibration and field-pilot authorization remain outside this approval.

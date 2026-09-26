@@ -2,7 +2,7 @@
 
 Adaptive neighborhood exposure regulation for urban drone delivery.
 
-<div class="release"><span>Current stage</span><span>Phase E10 rolling adaptive controllers published</span><span>Updated 26 September 2026</span></div>
+<div class="release"><span>Current stage</span><span>Phase E12 synthetic pilot frozen</span><span>Updated 26 September 2026</span></div>
 
 ## Ready to inspect
 
@@ -39,12 +39,22 @@ The milestones below distinguish completed prototypes from research work that re
 | Phase E7 event-integrated planning | Complete | [Review 13,440 event runs](phase-e7.html) |
 | Phase E8 workload-aware planning | Complete | [Review 13,440 time-aware runs](phase-e8.html) |
 | Phase E9 online rolling dispatch | Complete | [Review 600 long-horizon runs](phase-e9.html) |
-| Phase E10 rolling adaptive-policy comparison | Complete, pilot operating gate open | [Review 1,380 controller runs](phase-e10.html) |
-| Pilot capacity envelope | Next | Find demand and fleet combinations with stable late-window queues |
+| Phase E10 rolling adaptive-policy comparison | Complete | [Review 1,380 controller runs](phase-e10.html) |
+| Phase E11 pilot capacity envelope | Complete | [Review 4,230 design runs](phase-e11.html) |
+| Phase E12 final synthetic pilot | Frozen, progression gates passed | [Review 500 final runs and freeze record](phase-e12.html) |
+| Empirical pilot calibration | Next | Replace synthetic operational and socioeconomic assumptions |
 
 Table 1. Development status for the current research prototype. "Demonstrated" means that the stated mechanism runs with illustrative inputs.
 
 ## Development record
+
+### 26 September 2026: Phase E12 final synthetic pilot
+
+Executed 500 final runs over 240 periods with 100 matched seeds. The selected P3-D 0.10 policy passes every progression gate in 98 percent of seeds, completes 99.98 percent of requests, and keeps receiver exposure balanced without budget saturation. The model, assumptions, results, and gate evaluation are frozen with file hashes. [Review the final pilot](phase-e12.html).
+
+### 26 September 2026: Phase E11 pilot capacity envelope
+
+Executed 4,230 design runs across fleet, demand, target, and responsiveness screens. The selected operating point uses four drones, four chargers, demand mean 30, target 16.3, and reduced damping. Fleet expansion alone cannot stabilize a queue when the exposure target remains too restrictive. [Review the capacity envelope](phase-e11.html).
 
 ### 26 September 2026: Phase E10 rolling adaptive controllers
 
@@ -143,6 +153,6 @@ Implemented the four experimental factors and policy regimes P0 through P3. Veri
 - Which review window and policy-budget definition should govern the physical exposure account?
 - Which fleet interactions are necessary to answer the regulatory question?
 
-The next milestone is the pilot capacity envelope. The project should vary demand and fleet size with Rolling 3 and P3-D 0.50, then identify configurations where late-window queues stop growing. Policy budgets remain scenarios until their basis is agreed.
+The next milestone is empirical pilot calibration. The project should replace synthetic demand, vehicle, population, socioeconomic, and urban-form assumptions before interpreting the frozen configuration for a location. Policy targets remain scenarios until their basis is agreed.
 
 Progress entries are maintained with the project code. They change when a new version of the website is published.

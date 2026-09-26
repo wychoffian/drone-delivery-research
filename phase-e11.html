@@ -1,0 +1,208 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="Research progress and executable prototypes for adaptive neighborhood exposure regulation of drone delivery."><title>Phase E11 capacity | Drone delivery research</title><link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23152b44'/%3E%3Cpath d='M7 22L16 8l9 14M7 22h18' fill='none' stroke='%23ffffff' stroke-width='2'/%3E%3C/svg%3E"><link rel="stylesheet" href="style.css"></head><body><a class="skip" href="#main">Skip to content</a><header><a class="brand" href="index.html"><span class="mark" aria-hidden="true">D</span>Drone delivery research</a><span class="meta">CECAN fellowship project · Prototype v0.23</span></header><div class="shell"><nav aria-label="Project navigation"><span class="label">Research notebook</span><a href="index.html">Progress</a><a href="overview.html">Project overview</a><a href="literature.html">Literature and gap</a><a href="model.html">Model and rules</a><a href="odd.html">ODD specification</a><a href="sandbox.html">Sandbox protocol</a><a href="integration.html">Integrated model</a><a href="pilot.html">Interactive pilot</a><a href="experiments.html">Experiments</a><a href="phase-c.html">Phase C results</a><a href="phase-d.html">Phase D sensitivity</a><a href="phase-d-joint.html">Phase D joint analysis</a><a href="empirical-calibration.html">Empirical calibration</a><a href="phase-e0.html">Phase E0 acoustics</a><a href="phase-e1.html">Phase E1 routes</a><a href="phase-e2.html">Phase E2 integration</a><a href="phase-e3.html">Phase E3 sensitivity</a><a href="phase-e4.html">Phase E4 diagnosis</a><a href="phase-e5.html">Phase E5 thresholds</a><a href="phase-e6.html">Phase E6 allocation</a><a href="phase-e7.html">Phase E7 event plan</a><a href="phase-e8.html">Phase E8 workload</a><a href="phase-e9.html">Phase E9 rolling</a><a href="phase-e10.html">Phase E10 controllers</a><a href="phase-e11.html" aria-current="page">Phase E11 capacity</a><a href="phase-e12.html">Phase E12 final pilot</a></nav><main id="main"><h1>Phase E11 pilot capacity envelope</h1>
+<p>Phase E11 identifies a stable synthetic pilot configuration before the final policy comparison. It contains four sequential screens with 4,230 runs across 141 configurations. Every screen uses Rolling 3 dispatch, carried queues, matched demand seeds, and 120 review periods.</p>
+<blockquote>
+<p>Evidence label: Synthetic pilot-design experiment. The selected operating point is suitable for the final simulation pilot, but it is not a recommendation for a field fleet or legal exposure limit.</p>
+</blockquote>
+<h2>Preregistered progression gates</h2>
+<p>Table 1 defines the gates used before inspecting the results.</p>
+<table>
+<thead>
+<tr>
+<th>Outcome</th>
+<th align="right">Gate</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Completion</td>
+<td align="right">At least 99%</td>
+</tr>
+<tr>
+<td>Late queue slope</td>
+<td align="right">At most 0.1 requests per period</td>
+</tr>
+<tr>
+<td>Late mean waiting</td>
+<td align="right">At most 30 minutes</td>
+</tr>
+<tr>
+<td>Oldest queued request</td>
+<td align="right">At most 480 minutes</td>
+</tr>
+<tr>
+<td>Destination completion gap</td>
+<td align="right">At most 2 percentage points</td>
+</tr>
+<tr>
+<td>Late controller budget SD</td>
+<td align="right">At most 1 reference mission</td>
+</tr>
+<tr>
+<td>Late budget saturation</td>
+<td align="right">At most 25% of periods</td>
+</tr>
+<tr>
+<td>Configuration acceptance</td>
+<td align="right">At least 95% of seeds pass every gate</td>
+</tr>
+</tbody></table>
+<p>Table 1. Progression gates for selecting the final synthetic pilot configuration.</p>
+<h2>Fleet and demand screen</h2>
+<p>The first screen tests eight demand levels and fleets from one to six drones at adaptive target 14.05 with damping 0.50. Table 2 reports the boundary configurations.</p>
+<table>
+<thead>
+<tr>
+<th align="right">Demand</th>
+<th align="right">Fleet</th>
+<th align="right">Stable seeds (%)</th>
+<th align="right">Completion (%)</th>
+<th align="right">Final queue</th>
+<th align="right">Late mean wait</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="right">25</td>
+<td align="right">2</td>
+<td align="right">93</td>
+<td align="right">99.9</td>
+<td align="right">4.1</td>
+<td align="right">34.8</td>
+</tr>
+<tr>
+<td align="right">25</td>
+<td align="right">3</td>
+<td align="right">97</td>
+<td align="right">100.0</td>
+<td align="right">2.1</td>
+<td align="right">3.4</td>
+</tr>
+<tr>
+<td align="right">25</td>
+<td align="right">4</td>
+<td align="right">100</td>
+<td align="right">100.0</td>
+<td align="right">1.9</td>
+<td align="right">1.0</td>
+</tr>
+<tr>
+<td align="right">30</td>
+<td align="right">4</td>
+<td align="right">0</td>
+<td align="right">90.3</td>
+<td align="right">544.2</td>
+<td align="right">4,582.0</td>
+</tr>
+<tr>
+<td align="right">45</td>
+<td align="right">4</td>
+<td align="right">0</td>
+<td align="right">60.3</td>
+<td align="right">3,345.2</td>
+<td align="right">19,806.7</td>
+</tr>
+</tbody></table>
+<p>Table 2. Capacity boundary under target 14.05 and damping 0.50.</p>
+<p>Adding drones cannot stabilize demand 30 at target 14.05 because exposure control, rather than fleet capacity, becomes binding. The next screen therefore varies the target without changing the progression gates.</p>
+<h2>Target and responsiveness refinement</h2>
+<p>The target screens cover 14.05 through 17.00. They locate a transition near target 16, where service becomes stable but damping 0.50 still produces excessive seed-level budget variation. The final responsiveness screen tests damping from 0.20 to 0.50.</p>
+<p>Table 3 reports the selected target with two damping settings.</p>
+<table>
+<thead>
+<tr>
+<th align="right">Demand</th>
+<th align="right">Fleet</th>
+<th align="right">Target</th>
+<th align="right">Damping</th>
+<th align="right">Seeds passing every gate (%)</th>
+<th align="right">Completion (%)</th>
+<th align="right">Late budget SD</th>
+<th align="right">Saturation (%)</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="right">30</td>
+<td align="right">4</td>
+<td align="right">16.3</td>
+<td align="right">0.50</td>
+<td align="right">37</td>
+<td align="right">99.97</td>
+<td align="right">1.16</td>
+<td align="right">6.3</td>
+</tr>
+<tr>
+<td align="right">30</td>
+<td align="right">4</td>
+<td align="right">16.3</td>
+<td align="right">0.20</td>
+<td align="right">97</td>
+<td align="right">99.97</td>
+<td align="right">0.50</td>
+<td align="right">0.0</td>
+</tr>
+</tbody></table>
+<p>Table 3. Responsiveness refinement at the selected demand, fleet, and target.</p>
+<p>Damping 0.20 meets the screening gates without saturation. Targets 16.4 and 16.5 also pass with damping 0.20. The experiment selects 16.3 because it is the lowest passing target.</p>
+<h2>Selected pilot configuration</h2>
+<p>Table 4 records the configuration advanced to the independent final run.</p>
+<table>
+<thead>
+<tr>
+<th>Component</th>
+<th>Frozen candidate value</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Initial demand mean</td>
+<td>30 requests per period</td>
+</tr>
+<tr>
+<td>Demand increase</td>
+<td>60% from period 9</td>
+</tr>
+<tr>
+<td>Fleet and charging</td>
+<td>Four drones and four chargers</td>
+</tr>
+<tr>
+<td>Adaptive policy</td>
+<td>P3-D</td>
+</tr>
+<tr>
+<td>Exposure target</td>
+<td>16.3 reference-mission equivalents</td>
+</tr>
+<tr>
+<td>Gain and delay</td>
+<td>0.60 and one period</td>
+</tr>
+<tr>
+<td>Damping</td>
+<td>0.20 for the screening candidate</td>
+</tr>
+<tr>
+<td>Dispatcher</td>
+<td>Rolling 3 fair</td>
+</tr>
+</tbody></table>
+<p>Table 4. Configuration selected for the first independent final-pilot run.</p>
+<p>The first 240-period run found that damping 0.20 passed every gate in only 75% of new seeds because its longer reporting window exposed additional budget variation. The model retained every preregistered threshold and reduced damping to 0.10. This single corrective change was then rerun across the same complete policy comparison. <a href="phase-e12.html">Phase E12</a> records the accepted result and freeze.</p>
+<h2>Discussion</h2>
+<p>The capacity boundary depends on the synthetic demand process, mission times, route geometry, and transferred acoustic model. The screens vary fleet size, target, and damping in stages rather than as one exhaustive factorial design.</p>
+<p>The implication is that fleet expansion alone cannot resolve an exposure-constrained queue. A stable pilot requires a compatible demand level, exposure target, and controller response. Future research should repeat the envelope with observed demand, vehicle charging data, and a target defined with the relevant decision owner.</p>
+<h2>Reproducibility files</h2>
+<ul>
+<li><a href="results/phase_e11_capacity_runs.csv">Fleet and demand runs</a></li>
+<li><a href="results/phase_e11_capacity_summary.csv">Fleet and demand summaries</a></li>
+<li><a href="results/phase_e11_period_summary.csv">Fleet and demand period summaries</a></li>
+<li><a href="results/phase_e11_metadata.json">Fleet and demand metadata</a></li>
+<li><a href="results/phase_e11_target_runs.csv">Target-screen runs</a></li>
+<li><a href="results/phase_e11_target_summary.csv">Target-screen summaries</a></li>
+<li><a href="results/phase_e11_refinement_runs.csv">Fine-target runs</a></li>
+<li><a href="results/phase_e11_refinement_summary.csv">Fine-target summaries</a></li>
+<li><a href="results/phase_e11_damping_runs.csv">Responsiveness runs</a></li>
+<li><a href="results/phase_e11_damping_summary.csv">Responsiveness summaries</a></li>
+<li><a href="source/phase-e11.cjs">Fleet and demand runner</a></li>
+<li><a href="source/phase-e11b.cjs">Target-screen runner</a></li>
+<li><a href="source/phase-e11c.cjs">Fine-target runner</a></li>
+<li><a href="source/phase-e11d.cjs">Responsiveness runner</a></li>
+</ul>
+<p class="download"><a href="notes/phase-e11.md" download>Download this page as Markdown</a></p></main></div><footer><span>Mutlaq Aldajani · Research in development</span><span>Illustrative inputs · Last content update 26 September 2026</span></footer><script src="site.js"></script></body></html>
