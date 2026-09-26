@@ -1,11 +1,11 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Drone mission</title><link rel="stylesheet" href="demo.css"></head><body><div id="drone-mission">
- <h2>Two requests, one available drone</h2>
+ <h2>Three requests, two drones, and charging</h2>
  <div class="text-small text-muted">Synthetic network · Assumed starting exposure · Proxy units, not decibels</div>
  <div class="viz-row mission-controls"><button type="button" class="btn" id="dm-back">Previous event</button><button type="button" class="btn btn-primary" id="dm-next">Next event</button><span id="dm-count" class="tabular-nums"></span></div>
- <div class="viz-row mission-state" aria-live="polite"><span id="dm-clock"></span><span id="dm-state"></span><span id="dm-battery"></span></div>
- <svg id="dm-map" role="img" aria-label="Drone mission across nine neighborhoods"></svg>
+ <div class="viz-row mission-state" aria-live="polite"><span id="dm-clock"></span><span id="dm-state"></span><span id="dm-queue"></span></div>
+ <svg id="dm-map" role="img" aria-label="Two-drone missions across nine neighborhoods"></svg>
  <div id="dm-event" aria-live="polite"></div>
- <div class="text-small text-muted">Circles: neighborhoods · Diamond: drone D1 · Squares: depot and customer</div>
+ <div class="text-small text-muted">Circles: neighborhoods · Orange diamond: D1 · Blue diamond: D2 · Squares: depot and customer</div>
 </div>
 <style>
  #drone-mission {color:var(--foreground)}
@@ -19,67 +19,93 @@
 (()=>{
  const root=document.getElementById('drone-mission'), $=id=>root.querySelector('#dm-'+id);
  const C=[1.1,.8,1,1,1.4,1.1,.9,1,.8];
- class Mission {
-  constructor(){this.time=0;this.stage='request';this.battery=100;this.status='Idle';this.route=null;this.point=0;this.exposure=[27,26,25,24,39.2,24,22,23,24];this.budgets=Array(9).fill(40);this.reserved=Array(9).fill(0);this.nextBudgets=null;this.message='Request R1 arrives for the customer in Z2.';this.observation=null;this.distance=0;this.ledger=[];this.queue=[];this.active=null;this.requests=[{id:'R1',arrival:0,status:'new',wait:null,delivered:null},{id:'R2',arrival:2,status:'scheduled',wait:null,delivered:null}];}
-  chooseRoute(){
-   const routes=[0,1,2].map(r=>({row:r,length:2*(6+2*Math.abs(r-1))})).sort((a,b)=>a.length-b.length||a.row-b.row);
-   return routes.find(r=>this.battery-r.length*2>=20&&[0,1,2].every(j=>this.exposure[r.row*3+j]+this.reserved[r.row*3+j]+C[r.row*3+j]<=this.budgets[r.row*3+j]+1e-9));
+ class FleetModel {
+  constructor(){
+   this.time=0;this.exposure=[27,26,25,24,39.2,24,22,23,24];this.budgets=Array(9).fill(40);this.reserved=Array(9).fill(0);this.nextBudgets=null;this.observation=null;this.message='The controlled fleet case begins before R1 arrives.';this.ledger=[];this.queue=[];this.events=[];this.sequence=0;this.done=false;this.chargeRate=4;
+   this.requests=[{id:'R1',arrival:0,status:'scheduled',wait:null,assignedDrone:null,delivered:null},{id:'R2',arrival:2,status:'scheduled',wait:null,assignedDrone:null,delivered:null},{id:'R3',arrival:10,status:'scheduled',wait:null,assignedDrone:null,delivered:null}];
+   this.drones=['D1','D2'].map(id=>({id,status:'available',battery:100,distance:0,activeRequest:null,route:null,point:0,chargeUntil:null}));
+   for(const request of this.requests)this.schedule(request.arrival,20,'arrival',{request:request.id});
+   this.schedule(35,90,'review');
   }
-  dispatch(){
-   if(this.active||!this.queue.length)return false;
-   const request=this.requests.find(r=>r.id===this.queue[0]),route=this.chooseRoute();
-   if(!route){request.status='unserved';this.queue.shift();this.status='Unserved';this.stage=this.queue.length?'dispatch':'review';this.message=`${request.id} cannot be dispatched: no route meets the exposure budget and battery reserve.`;return false;}
-   this.queue.shift();this.active=request.id;request.status='active';request.wait=this.time-request.arrival;this.route=route;this.point=0;this.stage='outbound';this.status='Outbound';
+  schedule(time,priority,type,data={}){this.events.push({time,priority,type,data,sequence:this.sequence++});this.events.sort((a,b)=>a.time-b.time||a.priority-b.priority||a.sequence-b.sequence);}
+  request(id){return this.requests.find(r=>r.id===id);}
+  drone(id){return this.drones.find(d=>d.id===id);}
+  chooseRoute(drone){
+   const routes=[0,1,2].map(row=>({row,length:2*(6+2*Math.abs(row-1))})).sort((a,b)=>a.length-b.length||a.row-b.row);
+   return routes.find(route=>drone.battery-route.length*2>=20&&[0,1,2].every(j=>{const i=route.row*3+j;return this.exposure[i]+this.reserved[i]+C[i]<=this.budgets[i]+1e-9;}));
+  }
+  ensureDispatch(){
+   if(!this.queue.length||!this.drones.some(d=>d.status==='available'))return;
+   if(!this.events.some(e=>e.time===this.time&&e.type==='dispatch'))this.schedule(this.time,30,'dispatch');
+  }
+  scheduleMission(drone,request,route){
+   this.queue.shift();request.status='active';request.assignedDrone=drone.id;request.wait=this.time-request.arrival;
+   drone.status='outbound';drone.activeRequest=request.id;drone.route=route;drone.point=0;drone.chargeUntil=null;
    for(let j=0;j<3;j++)this.reserved[route.row*3+j]+=C[route.row*3+j];
-   this.message=request.id==='R1'?'Central route rejected: N5 would reach 40.6 > 40. Upper route assigned to R1.':`D1 is available. R2 leaves the queue after ${request.wait} minutes and is assigned the upper route.`;
-   return true;
+   const segment=route.length/8,dt=segment/2,start=this.time,delivery=start+4*dt+1;
+   for(let j=0;j<3;j++)this.schedule(start+(j+1)*dt,10,'crossing',{drone:drone.id,request:request.id,neighborhood:route.row*3+j,point:j+1,direction:'outbound',segment});
+   this.schedule(start+4*dt,10,'customer',{drone:drone.id,request:request.id,segment});
+   this.schedule(delivery,10,'delivery',{drone:drone.id,request:request.id});
+   for(let j=0;j<3;j++)this.schedule(delivery+(j+1)*dt,10,'crossing',{drone:drone.id,request:request.id,neighborhood:route.row*3+2-j,point:3-j,direction:'return',segment});
+   this.schedule(delivery+4*dt,10,'depot',{drone:drone.id,request:request.id,segment});
   }
+  move(drone,segment){drone.battery-=segment*2;drone.distance+=segment;}
   step(){
-   if(this.stage==='done')return;
-   if(this.stage==='request'){
-    this.requests[0].status='queued';this.queue.push('R1');this.dispatch();return;
+   if(this.done||!this.events.length)return;
+   const event=this.events.shift();this.time=event.time;const data=event.data;
+   if(event.type==='arrival'){
+    const request=this.request(data.request);request.status='queued';this.queue.push(request.id);
+    this.message=`${request.id} arrives at minute ${this.time}. ${this.drones.some(d=>d.status==='available')?'An available drone can be considered.':'Both drones are unavailable, so the request remains queued.'}`;
+    this.ensureDispatch();return;
    }
-   if(this.stage==='arrival2'){
-    this.requests[1].status='queued';this.queue.push('R2');this.stage='outbound';this.status='Outbound';this.message='R2 arrives at minute 2. D1 is active, so R2 joins the first-in, first-out queue.';return;
+   if(event.type==='dispatch'){
+    const request=this.request(this.queue[0]),candidates=this.drones.filter(d=>d.status==='available').sort((a,b)=>a.id.localeCompare(b.id));
+    const choice=candidates.map(drone=>({drone,route:this.chooseRoute(drone)})).find(x=>x.route);
+    if(!choice){request.status='unserved';this.queue.shift();this.message=`${request.id} cannot be dispatched because no available drone and route pass the battery and exposure checks.`;this.ensureDispatch();return;}
+    this.scheduleMission(choice.drone,request,choice.route);
+    this.message=request.id==='R1'?'D1 is selected by identifier. The central route fails at N5, so R1 uses the upper route.':request.id==='R2'?`D2 is selected while D1 is active. R2 feasibility includes R1's measured exposure and active reservation.`:`D1 has completed charging. R3 leaves the queue after ${request.wait} minutes and is dispatched.`;
+    this.ensureDispatch();return;
    }
-   if(this.stage==='outbound'||this.stage==='returning'){
-    const returning=this.stage==='returning',segment=this.route.length/8;
-    this.time+=segment/2;this.battery-=segment*2;this.distance+=segment;
-    this.point+=returning?-1:1;this.status=returning?'Returning':'Outbound';
-    const j=this.point-1;
-    if(j>=0&&j<3){const i=this.route.row*3+j,increment=C[i]/2;this.exposure[i]+=increment;this.reserved[i]=Math.max(0,this.reserved[i]-increment);this.ledger.push({time:this.time,request:this.active,neighborhood:i,increment});this.message=`${this.active} ${returning?'return':'outbound'} crossing N${i+1}: +${increment.toFixed(2)} exposure units.`;}
-    else this.message=returning?'Drone D1 returns to the depot. Mission complete.':'Drone D1 reaches the customer.';
-    if(this.point===4&&!returning){this.stage='delivery';this.status='At customer';}
-    if(this.point===0&&returning){
-     const completed=this.requests.find(r=>r.id===this.active);completed.status='complete';this.active=null;this.route=null;this.status='Available';
-     if(this.queue.length){this.stage='dispatch';this.message='D1 returns to the depot. R2 remains first in the queue.';}else this.stage='review';
-    }else if(!returning&&this.time===2&&this.requests[1].status==='scheduled')this.stage='arrival2';
-    return;
+   if(event.type==='crossing'){
+    const drone=this.drone(data.drone),increment=C[data.neighborhood]/2;this.move(drone,data.segment);drone.point=data.point;drone.status=data.direction==='outbound'?'outbound':'returning';
+    this.exposure[data.neighborhood]+=increment;this.reserved[data.neighborhood]=Math.max(0,this.reserved[data.neighborhood]-increment);this.ledger.push({time:this.time,request:data.request,drone:drone.id,neighborhood:data.neighborhood,increment});
+    this.message=`${drone.id} ${data.direction} for ${data.request} crosses N${data.neighborhood+1}: +${increment.toFixed(2)} exposure units.`;return;
    }
-   if(this.stage==='delivery'){this.time+=1;const request=this.requests.find(r=>r.id===this.active);request.delivered=this.time;request.status='delivered';this.stage='returning';this.status='Delivered';this.message=`Parcel ${this.active} delivered. The return flight still contributes exposure.`;return;}
-   if(this.stage==='dispatch'){this.dispatch();return;}
-   if(this.stage==='review'){
-    this.time=20;this.observation=this.exposure.slice();this.nextBudgets=this.budgets.map((b,i)=>Math.max(6,Math.min(70,b-.6*(this.observation[i]-28))));this.stage='done';
-    this.message='Review closes period 1. Both completed missions inform the period 2 budgets.';
+   if(event.type==='customer'){
+    const drone=this.drone(data.drone);this.move(drone,data.segment);drone.point=4;drone.status='delivering';this.message=`${drone.id} reaches the customer with ${data.request}.`;return;
+   }
+   if(event.type==='delivery'){
+    const drone=this.drone(data.drone),request=this.request(data.request);request.status='delivered';request.delivered=this.time;drone.status='returning';this.message=`${data.request} is delivered by ${drone.id}. The return mission remains active.`;return;
+   }
+   if(event.type==='depot'){
+    const drone=this.drone(data.drone),request=this.request(data.request);this.move(drone,data.segment);drone.point=0;drone.route=null;drone.activeRequest=null;request.status='complete';
+    drone.status='charging';drone.chargeUntil=this.time+(100-drone.battery)/this.chargeRate;this.schedule(drone.chargeUntil,10,'charged',{drone:drone.id});
+    this.message=`${drone.id} completes ${request.id} and starts charging at ${drone.battery.toFixed(0)}% battery. It will be available at minute ${drone.chargeUntil}.`;return;
+   }
+   if(event.type==='charged'){
+    const drone=this.drone(data.drone);drone.battery=100;drone.status='available';drone.chargeUntil=null;this.message=`${drone.id} completes charging and becomes available.`;this.ensureDispatch();return;
+   }
+   if(event.type==='review'){
+    this.observation=this.exposure.slice();this.nextBudgets=this.budgets.map((b,i)=>Math.max(6,Math.min(70,b-.6*(this.observation[i]-28))));this.done=true;this.message='Review closes period 1. All three completed missions inform the period 2 budgets.';
    }
   }
  }
- const model=new Mission(),states=[JSON.parse(JSON.stringify(model))];
- while(model.stage!=='done'){model.step();states.push(JSON.parse(JSON.stringify(model)));if(states.length>30)throw Error('Mission did not terminate');}
+ const model=new FleetModel(),states=[JSON.parse(JSON.stringify(model))];
+ while(!model.done){model.step();states.push(JSON.parse(JSON.stringify(model)));if(states.length>80)throw Error('Fleet model did not terminate');}
  let index=0;
- const readState=state=>{const n=state?.privateContent?.event;if(state?.modelContent?.visual==='drone-mission-v1'&&Number.isInteger(n))index=Math.max(0,Math.min(states.length-1,n));};
+ const readState=state=>{const n=state?.privateContent?.event;if(state?.modelContent?.visual==='drone-fleet-v1'&&Number.isInteger(n))index=Math.max(0,Math.min(states.length-1,n));};
  readState(window.researchState?.widgetState);
  const ns='http://www.w3.org/2000/svg';
  function node(tag,attrs,text){const n=document.createElementNS(ns,tag);for(const [k,v] of Object.entries(attrs))n.setAttribute(k,String(v));if(text!==undefined)n.textContent=text;return n;}
  function render(){
-  const s=states[index],svg=$('map'),w=svg.clientWidth,h=356,narrow=w<480;
+  const s=states[index],svg=$('map'),w=svg.clientWidth,h=372,narrow=w<520;
   svg.setAttribute('viewBox',`0 0 ${w} ${h}`);svg.setAttribute('height',h);svg.replaceChildren();
   const ys=[58,160,262],xs=[w*.28,w*.50,w*.72],start=[24,160],finish=[w-24,160];
-  svg.append(node('title',{},`${s.status}. ${s.message} Battery ${s.battery} percent.`));
+  svg.append(node('title',{},`${s.message} ${s.drones.map(d=>`${d.id} ${d.status} at ${d.battery.toFixed(0)} percent`).join('. ')}.`));
   for(let r=0;r<3;r++){
    const path=`M24,160 L${w*.16},${ys[r]} H${w*.84} L${w-24},160`;
    svg.append(node('path',{d:path,fill:'none',stroke:'var(--border)','stroke-width':1.5}));
-   if(s.route?.row===r)svg.append(node('path',{d:path,fill:'none',stroke:'var(--viz-series-1)','stroke-width':3}));
+   if(s.drones.some(d=>d.route?.row===r))svg.append(node('path',{d:path,fill:'none',stroke:'var(--viz-series-1)','stroke-width':3}));
    for(let j=0;j<3;j++){
     const i=r*3+j,x=xs[j],y=ys[r];
     svg.append(node('circle',{cx:x,cy:y,r:15,fill:'var(--background)'}));
@@ -92,25 +118,28 @@
   [start,finish].forEach(([x,y])=>svg.append(node('rect',{x:x-5,y:y-5,width:10,height:10,fill:'var(--foreground)'})));
   svg.append(node('text',{x:8,y:195,'text-anchor':'start'},'Depot'));
   svg.append(node('text',{x:w-8,y:195,'text-anchor':'end'},'Z2'));
-  const location=s.point===0?start:s.point===4?finish:[xs[s.point-1],ys[s.route.row]];
-  const group=node('g',{'aria-label':'Drone D1'}),[dx,dy]=location;
-  group.append(node('path',{d:`M${dx},${dy-11} l9,11 -9,11 -9,-11 Z`,fill:'var(--viz-series-2)',stroke:'var(--foreground)','stroke-width':1}));
-  svg.append(group);
+  for(const [k,drone] of s.drones.entries()){
+   const base=drone.point===0?start:drone.point===4?finish:[xs[drone.point-1],ys[drone.route.row]],offset=k?7:-7,dx=base[0]+offset,dy=base[1];
+   const group=node('g',{'aria-label':`${drone.id}: ${drone.status}`});
+   group.append(node('path',{d:`M${dx},${dy-10} l8,10 -8,10 -8,-10 Z`,fill:k?'var(--viz-series-1)':'var(--viz-series-2)',stroke:'var(--foreground)','stroke-width':1}));
+   group.append(node('text',{x:dx,y:dy-(k?30:15),'text-anchor':'middle'},drone.id));
+   svg.append(group);
+  }
   const requestLabel=s.requests.map(r=>`${r.id}: ${r.status}`).join(' · ');
-  svg.append(node('text',{x:8,y:346,'text-anchor':'start'},requestLabel));
-  svg.append(node('text',{x:w-8,y:346,'text-anchor':'end'},`D1: ${s.distance} distance units`));
+  svg.append(node('text',{x:8,y:362,'text-anchor':'start'},requestLabel));
+  svg.append(node('text',{x:w-8,y:362,'text-anchor':'end'},`${s.drones.reduce((sum,d)=>sum+d.distance,0)} distance units`));
   $('count').textContent=`Event ${index+1} / ${states.length}`;
   $('clock').textContent=`Time: ${s.time.toFixed(0)} min`;
-  $('state').textContent=`D1: ${s.status}`;
-  $('battery').textContent=`Battery: ${s.battery.toFixed(0)}%`;
+  $('state').textContent=s.drones.map(d=>`${d.id}: ${d.status} ${d.battery.toFixed(0)}%`).join(' · ');
+  $('queue').textContent=`Queue: ${s.queue.length?s.queue.join(', '):'empty'}`;
   $('event').textContent=s.message;
   $('back').disabled=index===0;$('next').disabled=index===states.length-1;
   root.dataset.ready='true';root.dataset.event=index;
  }
- function move(amount){index=Math.max(0,Math.min(states.length-1,index+amount));render();if(window.researchState?.setWidgetState)window.researchState.setWidgetState({modelContent:{visual:'drone-mission-v1',event:index+1,state:states[index].status},privateContent:{event:index}}).catch(()=>{});}
+ function move(amount){index=Math.max(0,Math.min(states.length-1,index+amount));render();if(window.researchState?.setWidgetState)window.researchState.setWidgetState({modelContent:{visual:'drone-fleet-v1',event:index+1,state:states[index].drones.map(d=>d.status).join(',')},privateContent:{event:index}}).catch(()=>{});}
  $('back').addEventListener('click',()=>move(-1));$('next').addEventListener('click',()=>move(1));
  window.addEventListener('openai:set_globals',e=>{if(e.detail?.globals?.widgetState){readState(e.detail.globals.widgetState);render();}});
- window.droneMission={Mission,states};render();new ResizeObserver(render).observe(root);
+ window.droneMission={FleetModel,states};render();new ResizeObserver(render).observe(root);
 })();
 </script>
 <script>new ResizeObserver(()=>{if(parent!==window)parent.postMessage({type:'demo-height',height:document.body.scrollHeight},location.origin);}).observe(document.body);</script></body></html>

@@ -216,4 +216,6 @@ A field sandbox requires a separate protocol covering aviation authorization, sa
 
 Phase B is implemented as a controlled two-request event sequence. R2 arrives at minute 2 while D1 is outbound on R1. It remains in the first-in, first-out queue until D1 returns at minute 9, then receives new battery and exposure feasibility checks before dispatch. The sequence contains no double assignment, lost reservation, negative exposure debit, or battery reserve violation.
 
-The next implementation adds a small fleet and charging state. It must test drone selection, simultaneous reservations, queue growth, and utilization before Phase C begins.
+The small-fleet extension is now implemented with two drones, three requests, simultaneous reservations, and charging. R3 remains queued while D1 charges and D2 returns, then dispatches after a new feasibility check. Assignment uniqueness, battery reserve, reservation conservation, and charging transitions pass the controlled checks.
+
+The next implementation gate connects the event-based fleet to the multi-period policy controller. Phase C begins only after the integrated model reproduces the operational sequence and the existing policy timing checks.

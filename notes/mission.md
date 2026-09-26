@@ -1,47 +1,56 @@
-# Two requests, one available drone
+# Two drones, three requests, and charging
 
-This executable walkthrough implements the Phase B integration case. It connects a first-in, first-out request queue with individual drone availability, complete-mission battery checks, and exposure reservations. It is a browser prototype with assumed inputs rather than an empirically calibrated model.
+This executable walkthrough extends the operational model to a small fleet. It connects first-in, first-out queueing with deterministic drone selection, simultaneous exposure reservations, mission battery use, and charging. It remains a controlled browser prototype with assumed inputs.
 
-Request R1 arrives at minute 0. Request R2 arrives at minute 2 while drone D1 is completing R1. The figure shows R2 waiting until D1 returns, then being reconsidered under the battery and exposure state that exists at dispatch time.
+R1 arrives at minute 0 and is assigned to D1. R2 arrives at minute 2 while D1 is active and is assigned to D2. R3 arrives at minute 10 while D1 is charging and D2 is returning, so it waits until D1 completes charging.
 
-Figure 1. Event sequence for two overlapping delivery requests in the synthetic nine-neighborhood network. Circles show measured exposure, the diamond identifies D1, and squares identify the depot and customer. The request labels record queue, mission, delivery, and completion states.
+Figure 1 presents the resulting event sequence.
+
+Figure 1. Event sequence for three requests and two drones in the synthetic nine-neighborhood network. Orange identifies D1, blue identifies D2, circles show measured neighborhood exposure, and the request labels show queue and service states.
 
 ## Model assumptions
 
-Both requests have destination Z2. One drone starts at the depot with 100 percent battery. The queue follows first-in, first-out order. A request can leave the queue only when D1 is available and a complete outbound and return mission satisfies the battery reserve and neighborhood exposure budgets.
+All requests have destination Z2. D1 and D2 start at the depot with 100 percent battery. The operator processes the queue in first-in, first-out order. Available drones are ranked by identifier, so D1 is selected before D2 when both are equally feasible.
 
-The central route has a return distance of 12 units. The upper and lower routes each have a return distance of 16 units. Flight speed is 2 distance units per minute. Battery use is 2 percentage points per distance unit, and the required return reserve is 20 percent. Delivery takes one minute.
+A complete mission must retain at least 20 percent battery after return. Flight consumes 2 battery percentage points per distance unit. Charging restores 4 percentage points per minute until the battery reaches 100 percent. These values make the state transitions inspectable and are not vehicle specifications.
 
-All neighborhoods have a current exposure budget of 40 proxy units. Starting exposure for N1 through N9 is `[27, 26, 25, 24, 39.2, 24, 22, 23, 24]`. Complete return-trip increments are `[1.1, 0.8, 1.0, 1.0, 1.4, 1.1, 0.9, 1.0, 0.8]` along the chosen corridor. Each crossing transfers half of a neighborhood's mission contribution from reserved exposure to measured exposure.
+The central route has a return distance of 12 units. The upper and lower routes each have a return distance of 16 units. All neighborhoods have a current budget of 40 proxy exposure units. Starting exposure for N1 through N9 is [27, 26, 25, 24, 39.2, 24, 22, 23, 24].
 
-The review period closes at minute 20 so both controlled missions finish before the regulatory update. This boundary is an illustrative verification setting rather than a proposed policy interval.
+Complete return-trip increments are [1.1, 0.8, 1.0, 1.0, 1.4, 1.1, 0.9, 1.0, 0.8] along the chosen corridor. Dispatch feasibility uses measured exposure plus all active reservations plus the proposed mission contribution. Each crossing moves half of the relevant mission contribution from reserved to measured exposure.
+
+The review boundary is minute 35, after all missions and charging events in this controlled sequence.
 
 ## Event sequence
 
-The central route is unavailable to R1 because N5 would reach 40.6 units. The operator assigns the upper route and reserves its full exposure contribution before departure.
+At minute 0, D1 receives R1. The central route fails because N5 would reach 40.6 units, so the operator selects the upper route and reserves its complete exposure contribution.
 
-R2 arrives at minute 2. D1 is outbound on R1, so the operator records R2 as queued without assigning D1 a second mission. R1 reaches the customer at minute 4, completes delivery at minute 5, and returns at minute 9. Its reservation is then zero.
+At minute 2, D1 is outbound and D2 is available. The operator checks R2 against the exposure already measured by R1 and R1's remaining reservation. The upper route still fits, so D2 receives R2. Both missions then hold reservations in the same neighborhood accounts.
 
-At minute 9, the operator reconsiders the first queued request. R2 has waited seven minutes. D1 has 68 percent battery, and the upper route remains feasible after accounting for R1's measured exposure. The operator reserves R2's complete mission contribution and dispatches it. R2 is delivered at minute 14 and D1 returns at minute 18 with 36 percent battery.
+D1 completes R1 at minute 9 with 68 percent battery and charges until minute 17. D2 completes R2 at minute 11 and charges until minute 19.
 
-The two missions add 2.2 units to N1, 1.6 to N2, and 2.0 to N3. Final period exposures are 29.2, 27.6, and 27.0. All reservations are zero after the second return. At minute 20, the regulator uses the completed period exposure to calculate period 2 budgets with `next_budget = clip(current_budget - 0.6 * (exposure - 28), 6, 70)`.
+R3 arrives at minute 10. D1 is charging and D2 is returning, so R3 remains queued. When D1 finishes charging at minute 17, the operator checks the request again and dispatches it. The recorded wait is seven minutes. D1 completes R3 at minute 26 and finishes charging at minute 34.
+
+The three missions add 3.3 units to N1, 2.4 to N2, and 3.0 to N3. Their final exposures are 30.3, 28.4, and 28.0 units. All active reservations return to zero. Both drones are available with full batteries when the regulator closes the period at minute 35.
 
 ## Verification result
 
-The controlled sequence passes the Phase B gate:
+The controlled fleet sequence passes the following checks:
 
-- D1 is never assigned to overlapping missions.
-- R2 remains queued while D1 is unavailable.
-- The queue preserves request order and records a seven-minute wait.
-- Each mission reserves its full outbound and return exposure before departure.
-- Every crossing converts reserved exposure into measured exposure without making the reservation negative.
-- Both return journeys are included, and all reservations finish at zero.
-- The final battery remains above the required reserve.
+- each request is assigned to at most one drone;
+- each drone executes at most one mission at a time;
+- R1 and R2 hold simultaneous reservations without exceeding a neighborhood budget;
+- R3 remains queued while both drones are unavailable;
+- D1 becomes dispatchable only after charging completes;
+- queue order and the seven-minute wait are recorded;
+- crossing events never make a reservation negative;
+- outbound and return exposure are both measured;
+- both batteries remain above the return reserve;
+- final measured exposure plus active reservations stays within every budget.
 
-These are implementation checks, not evidence about operational performance or policy effectiveness.
+These are verification findings. They do not establish fleet performance or policy effectiveness.
 
 ## Discussion
 
-The prototype now shows that individual availability changes the timing of service: R2 waits even though an exposure-feasible route exists. This is the first mechanism that cannot be represented by the earlier allocation-only demonstration without adding an explicit capacity rule.
+The small fleet creates two mechanisms absent from the allocation-only policy prototype. Missions can reserve exposure concurrently, and charging can delay service even when a route remains feasible. Individual drone state therefore affects when requests are served in this controlled case.
 
-The case remains deterministic and uses one drone, one destination, no charging, and no delivery deadline. It does not test competition among several available drones or persistent queue growth. The next implementation should add a small fleet and charging state, then connect these operational events to the multi-period policy experiment. That comparison will show whether individual drone states materially change policy conclusions.
+The walkthrough still uses one destination, identical drones, one charging rule, no charger-capacity limit, and no delivery deadline. Demand is scheduled rather than stochastic. The next development step should connect this event model to the 24-period policy controller. That integration will allow matched demand sequences to test whether fleet state changes policy comparisons before Phase C stochastic screening begins.

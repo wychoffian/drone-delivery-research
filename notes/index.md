@@ -2,11 +2,11 @@
 
 Adaptive neighborhood exposure regulation for urban drone delivery.
 
-<div class="release"><span>Current stage</span><span>Phase B queue integration complete</span><span>Updated 26 September 2026</span></div>
+<div class="release"><span>Current stage</span><span>Small fleet and charging verified</span><span>Updated 26 September 2026</span></div>
 
 ## Ready to inspect
 
-<div class="feature-grid"><a class="feature" href="mission.html"><span class="number">01</span><h3>Follow two requests</h3><p>Inspect queueing, drone availability, battery use, and exposure reservations.</p><span class="link-label">Open mission walkthrough</span></a><a class="feature" href="policy.html"><span class="number">02</span><h3>Explore the four dials</h3><p>Change demand and population concentration, then inspect the effect of regulatory delay and responsiveness.</p><span class="link-label">Open policy experiment</span></a></div>
+<div class="feature-grid"><a class="feature" href="mission.html"><span class="number">01</span><h3>Follow the small fleet</h3><p>Inspect two drones, three requests, concurrent reservations, queueing, and charging.</p><span class="link-label">Open fleet walkthrough</span></a><a class="feature" href="policy.html"><span class="number">02</span><h3>Explore the four dials</h3><p>Change demand and population concentration, then inspect the effect of regulatory delay and responsiveness.</p><span class="link-label">Open policy experiment</span></a></div>
 
 These demonstrations use assumed inputs and proxy exposure units. They test model logic; they do not establish empirical policy findings.
 
@@ -23,13 +23,18 @@ The milestones below distinguish completed prototypes from research work that re
 | Route allocation and regulatory feedback | Demonstrated | [Four-dial experiment](policy.html) |
 | One drone with mission state and timing | Demonstrated | [Delivery walkthrough](mission.html) |
 | Two-request queue and drone availability | Demonstrated | [Queue and availability walkthrough](mission.html) |
-| Small fleet and charging constraints | Planned | Add two drones and explicit charging state |
+| Small fleet and charging constraints | Demonstrated | [Fleet and charging walkthrough](mission.html) |
+| Integrated fleet and policy periods | Planned | Connect operational events to the four policy regimes |
 | Empirical acoustic exposure | Planned | Audit sources and define the exposure measure |
 | Replicated policy comparisons | Planned | Compare fixed budgets at matched service levels |
 
 Table 1. Development status for the current research prototype. "Demonstrated" means that the stated mechanism runs with illustrative inputs.
 
 ## Development record
+
+### 26 September 2026: small fleet and charging
+
+Added D2, R3, concurrent exposure reservations, deterministic drone selection, and charging. R3 arrives while D1 is charging and D2 is returning, waits seven minutes, and dispatches when D1 becomes available. Verification covers simultaneous reservations, assignment uniqueness, queue state, charging completion, battery reserve, and exposure conservation. [Inspect the fleet sequence](mission.html).
 
 ### 26 September 2026: two-request integration
 
@@ -60,6 +65,6 @@ Implemented the four experimental factors and policy regimes P0 through P3. Veri
 - Which acoustic measure and observation window should replace the exposure proxy?
 - Which fleet interactions are necessary to answer the regulatory question?
 
-The next development milestone is a small fleet with explicit charging. Its purpose is to test drone selection, simultaneous reservations, utilization, and queue growth before the operational model is connected to the multi-period policy experiment.
+The next development milestone is integration of the event-based fleet with the 24-period policy controller. Its purpose is to test whether drone availability, charging, and concurrent reservations change comparisons among P0, P1, P2, P3-U, and P3-D before Phase C screening begins.
 
 Progress entries are maintained with the project code. They change when a new version of the website is published.

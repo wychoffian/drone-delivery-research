@@ -2,7 +2,7 @@
 
 ## Adaptive neighborhood exposure regulation for urban drone delivery
 
-Version 0.2, 26 September 2026
+Version 0.3, 26 September 2026
 
 This model description follows the Overview, Design concepts, and Details protocol described by [Grimm et al. (2020)](https://doi.org/10.18564/jasss.4259). It specifies the target integrated research model. The current browser prototypes implement parts of this specification but do not yet constitute the complete agent-based model.
 
@@ -16,7 +16,8 @@ Table 1 distinguishes executable behavior from planned model components.
 | Fixed and proportional exposure budgets | Implemented | Policy prototype and 384 deterministic checks across factor combinations |
 | One drone mission, battery, timing, and return exposure | Implemented separately | Event-based mission walkthrough |
 | Two-request queue and drone availability | Implemented separately | Controlled Phase B event sequence |
-| Multiple drones, charging, and fleet interaction | Planned | Next operational implementation |
+| Two-drone fleet, simultaneous reservations, and charging | Implemented separately | Controlled three-request event sequence |
+| Integrated operational and policy periods | Planned | Next model integration |
 | Damped adaptive controller | Specified, not implemented | Added following the regulation and control literature review |
 | Empirical acoustic exposure | Planned | Current exposure values are proxy units |
 | Socioeconomic equity attributes | Planned | Current population patterns are synthetic |
@@ -61,7 +62,7 @@ Table 2. Entities, state variables, and actions in the target model. Residents a
 
 The synthetic environment contains one depot, three delivery zones, three alternative corridors, and nine exposed neighborhoods. Each corridor crosses three neighborhoods. The research version may replace this network with an empirical spatial graph, but the synthetic network remains the verification case.
 
-The model uses two time scales. Operational time advances through request arrivals, drone movement, delivery, return, and charging events. Regulatory time advances at review boundaries. Operational time is represented in minutes. The duration of a review period, `H_review`, remains a calibration parameter. The ten-minute boundary in the single-mission walkthrough is an illustrative test value, not a proposed policy interval.
+The model uses two time scales. Operational time advances through request arrivals, drone movement, delivery, return, and charging events. Regulatory time advances at review boundaries. Operational time is represented in minutes. The duration of a review period, `H_review`, remains a calibration parameter. The minute 35 boundary in the small-fleet walkthrough is an illustrative test value, not a proposed policy interval.
 
 The current synthetic network uses abstract distance units. The mission walkthrough uses flight speed of two distance units per minute, battery consumption of two percentage points per distance unit, and a 20 percent battery reserve. These values are verification assumptions that will be replaced or bounded using evidence.
 
@@ -213,7 +214,7 @@ Once assigned, the complete mission contribution is added to reserved exposure. 
 
 ### Mission execution
 
-A drone transitions through `available`, `outbound`, `delivering`, `returning`, `charging`, and back to `available`. Movement consumes battery and advances route position. Delivery changes the request status, but the drone remains occupied until it returns. Recharging time is included only after empirical or bounded assumptions are defined.
+A drone transitions through `available`, `outbound`, `delivering`, `returning`, `charging`, and back to `available`. Movement consumes battery and advances route position. Delivery changes the request status, but the drone remains occupied until it returns. The controlled fleet case charges at 4 battery percentage points per minute. This is a verification assumption that requires empirical replacement or sensitivity bounds.
 
 When the drone crosses an exposed neighborhood, that portion of the mission contribution moves from reserved to measured exposure. At mission completion, its reservation must equal zero. A failed or diverted mission requires an explicit reservation-reconciliation rule before such failures are introduced.
 
@@ -274,8 +275,8 @@ The operator and regulator are retained as explicit decision components for trac
 
 The synthetic graph predetermines a small set of exposure-transfer options. Proxy units omit physical acoustics, ambient sound, and perception. The controller target and bounds are experimental. Legal authority for neighborhood budgets has not been established. These limitations prevent policy recommendations from the current prototype.
 
-The two-request implementation now shows a request encountering drone unavailability and active exposure reservations. It passes the controlled Phase B event sequence and connects queueing with operational time.
+The operational prototype now contains two drones, three requests, overlapping missions, simultaneous exposure reservations, and charging. R3 encounters fleet unavailability and waits until D1 completes charging. The controlled sequence connects queueing, availability, battery state, and exposure accounting in operational time.
 
-The next test adds a small fleet and charging, then connects those events to the multi-period policy model. That comparison will determine whether individual agents add explanatory value. Later versions can add empirical exposure, socioeconomic attributes, and replicated policy experiments.
+The next test connects these events to the multi-period policy model. That comparison will determine whether individual agents add explanatory value and whether Phase C screening should retain the full event representation. Later versions can add empirical exposure, socioeconomic attributes, and replicated policy experiments.
 
 [Read the simulation sandbox protocol](sandbox.html)
