@@ -263,3 +263,9 @@ At budget 14.05, both greedy variants serve 23 missions per high-demand case whi
 Phase E7 executes the optimized request-route assignments with within-period arrivals, two drones, charging, mission duration, and acoustic reservations. [Review the Phase E7 results](phase-e7.html).
 
 At budget 14.05, the planned dispatcher executes 38.99 of 39 planned missions on average, compared with 23 for the greedy method. At budgets 16 through 18, some exposure-feasible plans cannot finish before the review boundary. The timing gate remains open until planning includes request release times, route duration, and drone availability.
+
+## Phase E workload-planning result
+
+Phase E8 adds route-specific mission and recharge workload to the optimizer and tests three two-drone capacity limits. [Review the Phase E8 results](phase-e8.html).
+
+The 930-minute limit executes about 99.7 percent of planned missions at budgets 16 through 18 and completes the full plan in about 87 percent of cases. The 960-minute limit raises mean dispatch but reduces strict full-plan completion. The rolling gate remains open because the planner still sees all period requests in advance and does not carry backlog across review periods.

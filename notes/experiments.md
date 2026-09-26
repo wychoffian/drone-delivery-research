@@ -70,6 +70,12 @@ Phase E7 converts each optimized allocation into request-level route assignments
 
 [Review the Phase E7 event integration and download the data](phase-e7.html)
 
+## Phase E8 workload-aware planning
+
+Phase E8 adds mission duration and recharge workload to the optimizer. It compares 900-, 930-, and 960-minute two-drone workload limits across 480 demand cases and seven budgets. The workload constraint retains the allocation benefit and exposes a measurable reliability-throughput tradeoff.
+
+[Review the Phase E8 workload analysis and download the data](phase-e8.html)
+
 ## Discussion
 
-The Phase D results remain useful as proxy-model baselines. Phase E replaces the proxy increments with calibrated physical exposure calculations, but the network, demand, operations, and budgets remain scenarios. Monte Carlo intervals describe variation across the selected seeds. They do not include all empirical parameter uncertainty. Phase E7 integrates planned routes with the event model, but policy ranking still requires a time-aware rolling scheduler and multi-period replication.
+The Phase D results remain useful as proxy-model baselines. Phase E replaces the proxy increments with calibrated physical exposure calculations, but the network, demand, operations, and budgets remain scenarios. Monte Carlo intervals describe variation across the selected seeds. They do not include all empirical parameter uncertainty. Phase E8 adds operational workload, but policy ranking still requires rolling decisions from arrived requests and multi-period replication.

@@ -62,7 +62,7 @@ At budget 14.05, higher planned throughput increases the average wait among disp
 
 Phase E7 passes the exposure-allocation integration test in the problematic budget range. The optimized route mix can be executed with the event model and removes the non-monotonic service loss around budget 14. The fixed 46-mission capacity approximation does not pass at higher budgets.
 
-The next development step is a rolling-horizon scheduler that includes request release times, route duration, drone availability, and charging in its planning constraints. A practical implementation can replan when a drone becomes available, with a short look-ahead window and a time limit. The study should compare greedy, exposure-planned, and time-aware planned operator policies before rerunning the adaptive controller.
+[Phase E8](phase-e8.html) adds route-specific mission and recharge workload to the optimizer. It substantially reduces the higher-budget execution gap and identifies a reliability-throughput tradeoff between conservative and full-capacity plans.
 
 ## Discussion
 

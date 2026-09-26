@@ -1,0 +1,219 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="Research progress and executable prototypes for adaptive neighborhood exposure regulation of drone delivery."><title>Phase E8 workload | Drone delivery research</title><link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23152b44'/%3E%3Cpath d='M7 22L16 8l9 14M7 22h18' fill='none' stroke='%23ffffff' stroke-width='2'/%3E%3C/svg%3E"><link rel="stylesheet" href="style.css"></head><body><a class="skip" href="#main">Skip to content</a><header><a class="brand" href="index.html"><span class="mark" aria-hidden="true">D</span>Drone delivery research</a><span class="meta">CECAN fellowship project · Prototype v0.19</span></header><div class="shell"><nav aria-label="Project navigation"><span class="label">Research notebook</span><a href="index.html">Progress</a><a href="overview.html">Project overview</a><a href="literature.html">Literature and gap</a><a href="model.html">Model and rules</a><a href="odd.html">ODD specification</a><a href="sandbox.html">Sandbox protocol</a><a href="integration.html">Integrated model</a><a href="pilot.html">Interactive pilot</a><a href="experiments.html">Experiments</a><a href="phase-c.html">Phase C results</a><a href="phase-d.html">Phase D sensitivity</a><a href="phase-d-joint.html">Phase D joint analysis</a><a href="empirical-calibration.html">Empirical calibration</a><a href="phase-e0.html">Phase E0 acoustics</a><a href="phase-e1.html">Phase E1 routes</a><a href="phase-e2.html">Phase E2 integration</a><a href="phase-e3.html">Phase E3 sensitivity</a><a href="phase-e4.html">Phase E4 diagnosis</a><a href="phase-e5.html">Phase E5 thresholds</a><a href="phase-e6.html">Phase E6 allocation</a><a href="phase-e7.html">Phase E7 event plan</a><a href="phase-e8.html" aria-current="page">Phase E8 workload</a></nav><main id="main"><h1>Phase E8 time-aware workload planning</h1>
+<p>Phase E8 adds route-specific flight, service, and recharge workload to the allocation optimizer. It tests whether a workload-constrained plan can retain the Phase E7 exposure-allocation benefit while reducing unfinished plans at higher budgets. The experiment contains 13,440 event-model runs from 480 demand cases, seven budgets, and four operator methods.</p>
+<blockquote>
+<p>Evidence label: Time-capacity diagnostic in a synthetic network. The planner still sees all requests within a review period in advance and is not yet a rolling-horizon dispatch policy.</p>
+</blockquote>
+<h2>Design</h2>
+<p>For each route, workload is mission duration plus the time required to restore the battery used by that mission. The optimizer first maximizes mission count under destination availability, nine receiver budgets, and a two-drone workload cap. It then minimizes total workload while holding the mission count fixed.</p>
+<p>Table 1 defines the tested methods.</p>
+<table>
+<thead>
+<tr>
+<th>Method</th>
+<th>Workload treatment</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Greedy event</td>
+<td>No period plan; dispatch uses the shortest route currently feasible.</td>
+</tr>
+<tr>
+<td>Time plan 900</td>
+<td>Optimized routes must use at most 900 total drone-minutes.</td>
+</tr>
+<tr>
+<td>Time plan 930</td>
+<td>Optimized routes must use at most 930 total drone-minutes.</td>
+</tr>
+<tr>
+<td>Time plan 960</td>
+<td>Optimized routes may use the full nominal two-drone period capacity.</td>
+</tr>
+</tbody></table>
+<p>Table 1. Greedy comparison and three time-aware workload limits.</p>
+<p>The 900-minute limit is conservative. The 960-minute limit equals two drones multiplied by the 480-minute review period. It does not reserve time for late request releases or the requirement that accepted missions finish before the boundary. The 930-minute setting provides an intermediate sensitivity case.</p>
+<h2>Executed missions</h2>
+<p>Table 2 reports mean dispatched missions per case.</p>
+<table>
+<thead>
+<tr>
+<th align="right">Budget</th>
+<th align="right">Greedy event</th>
+<th align="right">Time plan 900</th>
+<th align="right">Time plan 930</th>
+<th align="right">Time plan 960</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="right">14.00</td>
+<td align="right">39.0</td>
+<td align="right">39.0</td>
+<td align="right">39.0</td>
+<td align="right">39.0</td>
+</tr>
+<tr>
+<td align="right">14.05</td>
+<td align="right">23.0</td>
+<td align="right">39.0</td>
+<td align="right">39.0</td>
+<td align="right">39.0</td>
+</tr>
+<tr>
+<td align="right">14.10</td>
+<td align="right">33.0</td>
+<td align="right">41.0</td>
+<td align="right">41.0</td>
+<td align="right">41.0</td>
+</tr>
+<tr>
+<td align="right">14.15</td>
+<td align="right">42.0</td>
+<td align="right">42.0</td>
+<td align="right">42.0</td>
+<td align="right">42.0</td>
+</tr>
+<tr>
+<td align="right">16.00</td>
+<td align="right">44.5</td>
+<td align="right">43.0</td>
+<td align="right">44.9</td>
+<td align="right">44.9</td>
+</tr>
+<tr>
+<td align="right">17.00</td>
+<td align="right">44.8</td>
+<td align="right">43.0</td>
+<td align="right">44.9</td>
+<td align="right">45.6</td>
+</tr>
+<tr>
+<td align="right">18.00</td>
+<td align="right">44.9</td>
+<td align="right">43.0</td>
+<td align="right">44.9</td>
+<td align="right">45.6</td>
+</tr>
+</tbody></table>
+<p>Table 2. Mean missions dispatched by the event model after workload-aware planning.</p>
+<p>Every time-aware setting removes the allocation discontinuity at budgets 14.05 and 14.10. The conservative 900-minute cap sacrifices service when the exposure budget is loose. The 930-minute cap approximately matches or slightly exceeds greedy dispatch at budgets 16 through 18. The 960-minute cap produces the highest mean dispatch at budgets 17 and 18.</p>
+<h2>Plan execution reliability</h2>
+<p>Table 3 reports the share of planned missions executed and the percentage of cases that complete every planned mission.</p>
+<table>
+<thead>
+<tr>
+<th align="right">Budget</th>
+<th align="right">Workload cap</th>
+<th align="right">Planned missions</th>
+<th align="right">Plan execution (%)</th>
+<th align="right">Full-plan cases (%)</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="right">14.05</td>
+<td align="right">900, 930, or 960</td>
+<td align="right">39.0</td>
+<td align="right">100.0</td>
+<td align="right">99.2</td>
+</tr>
+<tr>
+<td align="right">16.00</td>
+<td align="right">900</td>
+<td align="right">43.0</td>
+<td align="right">100.0</td>
+<td align="right">98.1</td>
+</tr>
+<tr>
+<td align="right">16.00</td>
+<td align="right">930</td>
+<td align="right">45.0</td>
+<td align="right">99.7</td>
+<td align="right">87.1</td>
+</tr>
+<tr>
+<td align="right">17.00</td>
+<td align="right">930</td>
+<td align="right">45.0</td>
+<td align="right">99.7</td>
+<td align="right">87.9</td>
+</tr>
+<tr>
+<td align="right">17.00</td>
+<td align="right">960</td>
+<td align="right">46.0</td>
+<td align="right">99.0</td>
+<td align="right">67.1</td>
+</tr>
+<tr>
+<td align="right">18.00</td>
+<td align="right">930</td>
+<td align="right">45.0</td>
+<td align="right">99.7</td>
+<td align="right">87.5</td>
+</tr>
+<tr>
+<td align="right">18.00</td>
+<td align="right">960</td>
+<td align="right">46.0</td>
+<td align="right">99.1</td>
+<td align="right">68.1</td>
+</tr>
+</tbody></table>
+<p>Table 3. Mission-level plan execution and strict full-plan completion.</p>
+<p>The 930-minute plan leaves about one mission of nominal capacity unused but completes the entire plan in about 87 percent of higher-budget cases. The 960-minute plan dispatches about 0.7 more missions at budgets 17 and 18, while only about two thirds of cases execute every planned mission. Both execute more than 99 percent of planned missions on average.</p>
+<h2>Waiting time</h2>
+<p>Table 4 compares waiting time for selected methods.</p>
+<table>
+<thead>
+<tr>
+<th align="right">Budget</th>
+<th>Method</th>
+<th align="right">Mean wait (minutes)</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="right">14.05</td>
+<td>Greedy</td>
+<td align="right">68.9</td>
+</tr>
+<tr>
+<td align="right">14.05</td>
+<td>Time plan 930</td>
+<td align="right">93.7</td>
+</tr>
+<tr>
+<td align="right">17.00</td>
+<td>Greedy</td>
+<td align="right">141.5</td>
+</tr>
+<tr>
+<td align="right">17.00</td>
+<td>Time plan 930</td>
+<td align="right">113.3</td>
+</tr>
+<tr>
+<td align="right">18.00</td>
+<td>Greedy</td>
+<td align="right">141.6</td>
+</tr>
+<tr>
+<td align="right">18.00</td>
+<td>Time plan 960</td>
+<td align="right">116.5</td>
+</tr>
+</tbody></table>
+<p>Table 4. Mean waiting time among dispatched missions in selected cases.</p>
+<p>At budget 14.05, the planner serves 16 more missions and the additional missions raise the mean wait. When the budget is loose, the shorter workload mix reduces waiting time relative to the greedy rule. These outcomes confirm that throughput and waiting time must be reported together.</p>
+<h2>Progression decision</h2>
+<p>Phase E8 passes the route-workload integration gate. Adding route-specific operational workload preserves the allocation benefit near budget 14 and substantially reduces the high-budget schedule gap. The experiment also identifies a clear tradeoff between the 930- and 960-minute limits.</p>
+<p>The next development step is a rolling-horizon version that uses only arrived requests, replans when a drone becomes available, carries the queue across periods, and works with adaptive budgets. It should compare a reliability-oriented workload reserve with a throughput-oriented setting before the controller experiment is repeated.</p>
+<h2>Discussion</h2>
+<p>The workload constraint aggregates two drones into one capacity account. It does not assign missions to individual drones or model exact release-time scheduling inside the optimizer. Event execution supplies those checks after planning. Advance knowledge of period demand remains a strong assumption.</p>
+<p>The practical implication is that a single mission-count cap is insufficient, while a route-workload constraint is a useful intermediate approximation. Future research should implement receding-horizon decisions, preserve a documented fairness rule, measure solver time, and test carried backlog. Empirical pilot readiness still requires this integration and empirical demand, vehicle, population, and policy inputs.</p>
+<h2>Reproducibility files</h2>
+<ul>
+<li><a href="results/phase_e8_time_plans.json">Time-aware request-route plans</a></li>
+<li><a href="results/phase_e8_time_runs.csv">Event-run results</a></li>
+<li><a href="results/phase_e8_time_summary.csv">Budget-method summaries</a></li>
+<li><a href="results/phase_e8_metadata.json">Execution metadata</a></li>
+</ul>
+<p class="download"><a href="notes/phase-e8.md" download>Download this page as Markdown</a></p></main></div><footer><span>Mutlaq Aldajani · Research in development</span><span>Illustrative inputs · Last content update 26 September 2026</span></footer><script src="site.js"></script></body></html>

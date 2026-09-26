@@ -1,0 +1,30 @@
+{
+  "experiment": "Phase E8 time-aware workload planning",
+  "generated_at": "2026-09-26T17:35:30.336Z",
+  "cases": 480,
+  "budgets": [
+    14,
+    14.05,
+    14.1,
+    14.15,
+    16,
+    17,
+    18
+  ],
+  "workload_caps": [
+    900,
+    930,
+    960
+  ],
+  "methods": [
+    "Greedy event",
+    "Time plan 900",
+    "Time plan 930",
+    "Time plan 960"
+  ],
+  "run_rows": 13440,
+  "summary_rows": 28,
+  "periods_per_case": 1,
+  "workload_definition": "Mission duration plus recharge time, where recharge time equals twice the route distance in kilometres divided by 4 battery units per minute.",
+  "planning_assumption": "All requests in a review period are visible. The model maximizes mission count, then minimizes total route workload."
+}
