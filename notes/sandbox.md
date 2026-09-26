@@ -269,3 +269,9 @@ At budget 14.05, the planned dispatcher executes 38.99 of 39 planned missions on
 Phase E8 adds route-specific mission and recharge workload to the optimizer and tests three two-drone capacity limits. [Review the Phase E8 results](phase-e8.html).
 
 The 930-minute limit executes about 99.7 percent of planned missions at budgets 16 through 18 and completes the full plan in about 87 percent of cases. The 960-minute limit raises mean dispatch but reduces strict full-plan completion. The rolling gate remains open because the planner still sees all period requests in advance and does not carry backlog across review periods.
+
+## Phase E online rolling result
+
+Phase E9 implements an online rule that examines the first three arrived requests whenever a drone becomes available. It carries the queue across 120 review periods and uses no future request information. [Review the Phase E9 results](phase-e9.html).
+
+At budget 14.05, Rolling 3 raises completion from 18.4 to 31.3 percent and balances destination completion and corridor use. It matches a ten-request look-ahead with lower computation. The rolling gate is complete for fixed budgets. The controller gate is open until Rolling 3 is tested with adaptive budgets under medium and high demand.

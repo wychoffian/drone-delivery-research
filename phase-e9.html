@@ -1,0 +1,247 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="Research progress and executable prototypes for adaptive neighborhood exposure regulation of drone delivery."><title>Phase E9 rolling | Drone delivery research</title><link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23152b44'/%3E%3Cpath d='M7 22L16 8l9 14M7 22h18' fill='none' stroke='%23ffffff' stroke-width='2'/%3E%3C/svg%3E"><link rel="stylesheet" href="style.css"></head><body><a class="skip" href="#main">Skip to content</a><header><a class="brand" href="index.html"><span class="mark" aria-hidden="true">D</span>Drone delivery research</a><span class="meta">CECAN fellowship project · Prototype v0.20</span></header><div class="shell"><nav aria-label="Project navigation"><span class="label">Research notebook</span><a href="index.html">Progress</a><a href="overview.html">Project overview</a><a href="literature.html">Literature and gap</a><a href="model.html">Model and rules</a><a href="odd.html">ODD specification</a><a href="sandbox.html">Sandbox protocol</a><a href="integration.html">Integrated model</a><a href="pilot.html">Interactive pilot</a><a href="experiments.html">Experiments</a><a href="phase-c.html">Phase C results</a><a href="phase-d.html">Phase D sensitivity</a><a href="phase-d-joint.html">Phase D joint analysis</a><a href="empirical-calibration.html">Empirical calibration</a><a href="phase-e0.html">Phase E0 acoustics</a><a href="phase-e1.html">Phase E1 routes</a><a href="phase-e2.html">Phase E2 integration</a><a href="phase-e3.html">Phase E3 sensitivity</a><a href="phase-e4.html">Phase E4 diagnosis</a><a href="phase-e5.html">Phase E5 thresholds</a><a href="phase-e6.html">Phase E6 allocation</a><a href="phase-e7.html">Phase E7 event plan</a><a href="phase-e8.html">Phase E8 workload</a><a href="phase-e9.html" aria-current="page">Phase E9 rolling</a></nav><main id="main"><h1>Phase E9 online rolling dispatch</h1>
+<p>Phase E9 replaces advance period-level planning with an online dispatcher that uses only requests already in the queue. It replans whenever a drone becomes available, carries backlog across 120 periods, and balances exposure use, route workload, and queue order. The experiment contains 600 runs from 20 configurations and 30 matched demand seeds.</p>
+<blockquote>
+<p>Evidence label: Online-dispatch diagnostic in a synthetic network. The rule is executable without future request knowledge, but its weights and budgets remain experimental assumptions.</p>
+</blockquote>
+<h2>Rolling rule</h2>
+<p>At each dispatch opportunity, the rolling method examines the first <code>k</code> arrived requests. For each feasible request-route combination it calculates:</p>
+<p><code>score = peak post-dispatch budget use + 0.30 * normalized route workload + fairness weight * queue position</code></p>
+<p>The dispatcher selects the lowest-scoring combination. Route workload includes mission duration and recharge time. A fairness weight of 1 retains queue order unless exposure and workload benefits justify a limited reordering.</p>
+<p>Table 1 defines the tested methods.</p>
+<table>
+<thead>
+<tr>
+<th>Method</th>
+<th align="right">Look-ahead</th>
+<th align="right">Fairness weight</th>
+<th>Information available</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Greedy FIFO</td>
+<td align="right">1</td>
+<td align="right">Strict FIFO</td>
+<td>First queued request</td>
+</tr>
+<tr>
+<td>Rolling 3 fair</td>
+<td align="right">3</td>
+<td align="right">1</td>
+<td>First three arrived requests</td>
+</tr>
+<tr>
+<td>Rolling 10 fair</td>
+<td align="right">10</td>
+<td align="right">1</td>
+<td>First ten arrived requests</td>
+</tr>
+<tr>
+<td>Rolling 30 throughput</td>
+<td align="right">30</td>
+<td align="right">0</td>
+<td>First 30 arrived requests</td>
+</tr>
+</tbody></table>
+<p>Table 1. Online operator methods compared over 120 review periods.</p>
+<p>The experiment tests fixed budgets 14.00, 14.05, 14.10, 14.15, and 18.00. Demand uses the existing high-demand scenario and increases from period 9. The queue carries across all periods.</p>
+<h2>Service and threshold recovery</h2>
+<p>Table 2 reports full-horizon completion and the service ratio during periods 97 through 120.</p>
+<table>
+<thead>
+<tr>
+<th align="right">Budget</th>
+<th>Method</th>
+<th align="right">Completion (%)</th>
+<th align="right">Late-window service ratio (%)</th>
+<th align="right">Final queue</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="right">14.00</td>
+<td>Greedy FIFO</td>
+<td align="right">31.2</td>
+<td align="right">30.4</td>
+<td align="right">10,298</td>
+</tr>
+<tr>
+<td align="right">14.00</td>
+<td>Rolling 3 fair</td>
+<td align="right">31.3</td>
+<td align="right">30.4</td>
+<td align="right">10,296</td>
+</tr>
+<tr>
+<td align="right">14.05</td>
+<td>Greedy FIFO</td>
+<td align="right">18.4</td>
+<td align="right">17.9</td>
+<td align="right">12,216</td>
+</tr>
+<tr>
+<td align="right">14.05</td>
+<td>Rolling 3 fair</td>
+<td align="right">31.3</td>
+<td align="right">30.4</td>
+<td align="right">10,296</td>
+</tr>
+<tr>
+<td align="right">14.10</td>
+<td>Greedy FIFO</td>
+<td align="right">26.4</td>
+<td align="right">25.7</td>
+<td align="right">11,016</td>
+</tr>
+<tr>
+<td align="right">14.10</td>
+<td>Rolling 3 fair</td>
+<td align="right">32.9</td>
+<td align="right">32.0</td>
+<td align="right">10,056</td>
+</tr>
+<tr>
+<td align="right">14.15</td>
+<td>Greedy FIFO</td>
+<td align="right">33.7</td>
+<td align="right">32.8</td>
+<td align="right">9,936</td>
+</tr>
+<tr>
+<td align="right">14.15</td>
+<td>Rolling 3 fair</td>
+<td align="right">33.7</td>
+<td align="right">32.8</td>
+<td align="right">9,936</td>
+</tr>
+<tr>
+<td align="right">18.00</td>
+<td>Greedy FIFO</td>
+<td align="right">36.6</td>
+<td align="right">35.6</td>
+<td align="right">9,499</td>
+</tr>
+<tr>
+<td align="right">18.00</td>
+<td>Rolling 3 fair</td>
+<td align="right">36.7</td>
+<td align="right">35.8</td>
+<td align="right">9,477</td>
+</tr>
+<tr>
+<td align="right">18.00</td>
+<td>Rolling 30 throughput</td>
+<td align="right">36.9</td>
+<td align="right">35.9</td>
+<td align="right">9,457</td>
+</tr>
+</tbody></table>
+<p>Table 2. Long-horizon service results for selected greedy and rolling configurations.</p>
+<p>Rolling 3 removes the non-monotonic service loss at budgets 14.05 and 14.10 without using future demand. At budget 14.05, it increases full-horizon completion by 12.9 percentage points. At budget 18, the improvement is small because fleet workload is already the main constraint.</p>
+<p>Rolling 10 produces the same reported service as Rolling 3 in every tested budget. Rolling 30 provides a small additional gain at budget 18, but it removes the queue-position penalty and examines ten times as many requests. Rolling 3 is therefore the parsimonious rule for the next pilot stage.</p>
+<h2>Destination and route balance</h2>
+<p>Table 3 reports destination completion and route shares at the main discontinuity.</p>
+<table>
+<thead>
+<tr>
+<th>Method at budget 14.05</th>
+<th>Destination completion north / central / south (%)</th>
+<th>Route shares north / central / south (%)</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Greedy FIFO</td>
+<td>18.3 / 18.4 / 18.5</td>
+<td>31.3 / 60.9 / 7.8</td>
+</tr>
+<tr>
+<td>Rolling 3 fair</td>
+<td>31.1 / 31.3 / 31.2</td>
+<td>33.3 / 33.3 / 33.3</td>
+</tr>
+</tbody></table>
+<p>Table 3. Destination completion and corridor use at budget 14.05.</p>
+<p>The rolling rule increases service without favoring one destination. It also prevents the central-corridor concentration that exhausts a receiver account under the greedy rule. At budget 18, Rolling 3 produces destination completion rates of 36.7 percent for each destination and near-balanced corridor use.</p>
+<h2>Waiting time and overload</h2>
+<p>Table 4 reports late-window waiting outcomes. Values are minutes because each review period contains 480 operational minutes.</p>
+<table>
+<thead>
+<tr>
+<th align="right">Budget</th>
+<th>Method</th>
+<th align="right">Late mean wait</th>
+<th align="right">Mean late-period 95th percentile</th>
+<th align="right">Oldest queued request at period 120</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="right">14.05</td>
+<td>Greedy FIFO</td>
+<td align="right">40,905</td>
+<td align="right">40,970</td>
+<td align="right">45,776</td>
+</tr>
+<tr>
+<td align="right">14.05</td>
+<td>Rolling 3 fair</td>
+<td align="right">34,497</td>
+<td align="right">34,616</td>
+<td align="right">38,545</td>
+</tr>
+<tr>
+<td align="right">18.00</td>
+<td>Greedy FIFO</td>
+<td align="right">31,834</td>
+<td align="right">31,970</td>
+<td align="right">35,538</td>
+</tr>
+<tr>
+<td align="right">18.00</td>
+<td>Rolling 3 fair</td>
+<td align="right">31,762</td>
+<td align="right">31,897</td>
+<td align="right">35,459</td>
+</tr>
+</tbody></table>
+<p>Table 4. Waiting-time outcomes under sustained demand above system capacity.</p>
+<p>Waiting times become extremely large because the high-demand input exceeds the service capacity in every method. Rolling dispatch reduces the backlog at the problematic threshold but does not make the system stable. These values should be interpreted as evidence of overload, not as a plausible service forecast.</p>
+<h2>Computation</h2>
+<p>Table 5 reports mean local runtime for one 120-period run.</p>
+<table>
+<thead>
+<tr>
+<th>Budget 18 method</th>
+<th align="right">Runtime (milliseconds)</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Greedy FIFO</td>
+<td align="right">86.6</td>
+</tr>
+<tr>
+<td>Rolling 3 fair</td>
+<td align="right">135.7</td>
+</tr>
+<tr>
+<td>Rolling 10 fair</td>
+<td align="right">221.4</td>
+</tr>
+<tr>
+<td>Rolling 30 throughput</td>
+<td align="right">419.3</td>
+</tr>
+</tbody></table>
+<p>Table 5. Mean execution time in the recorded local Node.js environment.</p>
+<p>Rolling 3 adds modest computation and matches Rolling 10 on the measured service outcomes. Runtime is environment-specific and should be measured again after implementation in the final research platform.</p>
+<h2>Progression decision</h2>
+<p>Phase E9 passes the online rolling-dispatch gate for the synthetic fixed-budget model. Rolling 3 uses only arrived requests, carries queues across periods, removes the allocation discontinuity, preserves destination balance, and has lower computation than the larger windows.</p>
+<p>The next development step is to connect Rolling 3 to P3-U and P3-D, repeat the long-horizon controller experiment, and compare adaptive policies with fixed budgets at matched service and exposure. That experiment should include medium demand because the high-demand scenario is structurally overloaded.</p>
+<h2>Discussion</h2>
+<p>The rolling score and fairness weight are design choices rather than empirically calibrated behavior. The rule considers at most three requests and does not solve an exact scheduling problem. It also treats all customer requests as equal except for queue position.</p>
+<p>The implication is that the operator layer is now adequate for renewed controller testing, but the high-demand queue cannot support a practical pilot service target. Future research should test medium demand, delivery deadlines, priority rules, and solver alternatives. Empirical pilot readiness still requires observed demand, vehicle performance, target-area population, and a defensible policy target.</p>
+<h2>Reproducibility files</h2>
+<ul>
+<li><a href="results/phase_e9_rolling_runs.csv">Run-level results</a></li>
+<li><a href="results/phase_e9_rolling_summary.csv">Configuration summaries</a></li>
+<li><a href="results/phase_e9_period_summary.csv">Period summaries</a></li>
+<li><a href="results/phase_e9_metadata.json">Execution metadata</a></li>
+</ul>
+<p class="download"><a href="notes/phase-e9.md" download>Download this page as Markdown</a></p></main></div><footer><span>Mutlaq Aldajani · Research in development</span><span>Illustrative inputs · Last content update 26 September 2026</span></footer><script src="site.js"></script></body></html>

@@ -1,0 +1,51 @@
+{
+  "experiment": "Phase E9 online rolling dispatch",
+  "generated_at": "2026-09-26T17:48:09.258Z",
+  "total_runs": 600,
+  "unique_configurations": 20,
+  "period_summaries": 2400,
+  "seeds": [
+    501,
+    530
+  ],
+  "periods": 120,
+  "late_window_periods": 24,
+  "budgets": [
+    14,
+    14.05,
+    14.1,
+    14.15,
+    18
+  ],
+  "methods": [
+    {
+      "id": "greedy",
+      "label": "Greedy FIFO"
+    },
+    {
+      "id": "rolling3_fair",
+      "label": "Rolling 3 fair",
+      "rollingLookahead": 3,
+      "rollingExposureWeight": 1,
+      "rollingWorkloadWeight": 0.3,
+      "rollingFairnessWeight": 1
+    },
+    {
+      "id": "rolling10_fair",
+      "label": "Rolling 10 fair",
+      "rollingLookahead": 10,
+      "rollingExposureWeight": 1,
+      "rollingWorkloadWeight": 0.3,
+      "rollingFairnessWeight": 1
+    },
+    {
+      "id": "rolling30_throughput",
+      "label": "Rolling 30 throughput",
+      "rollingLookahead": 30,
+      "rollingExposureWeight": 1,
+      "rollingWorkloadWeight": 0.3,
+      "rollingFairnessWeight": 0
+    }
+  ],
+  "information_rule": "Only arrived requests in the queue are considered. The rolling method replans whenever dispatch is attempted and a drone is available."
+}

@@ -78,7 +78,7 @@ At budget 14.05, the planner serves 16 more missions and the additional missions
 
 Phase E8 passes the route-workload integration gate. Adding route-specific operational workload preserves the allocation benefit near budget 14 and substantially reduces the high-budget schedule gap. The experiment also identifies a clear tradeoff between the 930- and 960-minute limits.
 
-The next development step is a rolling-horizon version that uses only arrived requests, replans when a drone becomes available, carries the queue across periods, and works with adaptive budgets. It should compare a reliability-oriented workload reserve with a throughput-oriented setting before the controller experiment is repeated.
+[Phase E9](phase-e9.html) implements an online rolling rule that uses only arrived requests, replans whenever dispatch is attempted, and carries the queue across 120 periods. Rolling 3 removes the allocation discontinuity with less computation than larger look-ahead windows.
 
 ## Discussion
 

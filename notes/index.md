@@ -2,7 +2,7 @@
 
 Adaptive neighborhood exposure regulation for urban drone delivery.
 
-<div class="release"><span>Current stage</span><span>Phase E8 workload-aware planning published</span><span>Updated 26 September 2026</span></div>
+<div class="release"><span>Current stage</span><span>Phase E9 online rolling dispatch published</span><span>Updated 26 September 2026</span></div>
 
 ## Ready to inspect
 
@@ -37,13 +37,17 @@ The milestones below distinguish completed prototypes from research work that re
 | Phase E5 long-horizon threshold analysis | Complete | [Review 2,100 long-horizon runs](phase-e5.html) |
 | Phase E6 allocation benchmark | Complete | [Review 20,160 allocation results](phase-e6.html) |
 | Phase E7 event-integrated planning | Complete | [Review 13,440 event runs](phase-e7.html) |
-| Phase E8 workload-aware planning | Complete, rolling gate open | [Review 13,440 time-aware runs](phase-e8.html) |
-| Rolling-horizon scheduler | Next | Replan from arrived requests and carry queues across periods |
-| Replicated policy comparisons | Planned | Repeat controller comparisons with greedy and time-aware operator policies |
+| Phase E8 workload-aware planning | Complete | [Review 13,440 time-aware runs](phase-e8.html) |
+| Phase E9 online rolling dispatch | Complete, controller gate open | [Review 600 long-horizon runs](phase-e9.html) |
+| Rolling adaptive-policy comparison | Next | Connect Rolling 3 to P3-U and P3-D under medium and high demand |
 
 Table 1. Development status for the current research prototype. "Demonstrated" means that the stated mechanism runs with illustrative inputs.
 
 ## Development record
+
+### 26 September 2026: Phase E9 online rolling dispatch
+
+Executed 600 runs over 120 periods with carried queues and no future request knowledge. Rolling 3 removes the budget 14.05 allocation discontinuity, balances destination completion and corridor use, and matches Rolling 10 with lower computation. Sustained high demand remains structurally overloaded. [Review the Phase E9 results](phase-e9.html).
 
 ### 26 September 2026: Phase E8 workload-aware planning
 

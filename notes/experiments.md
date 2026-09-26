@@ -76,6 +76,12 @@ Phase E8 adds mission duration and recharge workload to the optimizer. It compar
 
 [Review the Phase E8 workload analysis and download the data](phase-e8.html)
 
+## Phase E9 online rolling dispatch
+
+Phase E9 tests three online rolling rules against FIFO across 600 runs and 120 review periods. The dispatcher uses only arrived requests and carries backlog between periods. Rolling 3 removes the budget 14.05 service discontinuity, restores balanced destination completion, and matches the larger fair look-ahead window.
+
+[Review the Phase E9 online results and download the data](phase-e9.html)
+
 ## Discussion
 
-The Phase D results remain useful as proxy-model baselines. Phase E replaces the proxy increments with calibrated physical exposure calculations, but the network, demand, operations, and budgets remain scenarios. Monte Carlo intervals describe variation across the selected seeds. They do not include all empirical parameter uncertainty. Phase E8 adds operational workload, but policy ranking still requires rolling decisions from arrived requests and multi-period replication.
+The Phase D results remain useful as proxy-model baselines. Phase E replaces the proxy increments with calibrated physical exposure calculations, but the network, demand, operations, and budgets remain scenarios. Monte Carlo intervals describe variation across the selected seeds. They do not include all empirical parameter uncertainty. Phase E9 provides an online rolling operator rule. Policy ranking now requires reconnecting that rule to adaptive budgets under medium and high demand.
