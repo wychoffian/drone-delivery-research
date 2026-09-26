@@ -1,0 +1,182 @@
+{
+  "experiment": "Phase E matched-seed one-at-a-time acoustic sensitivity",
+  "generated_at": "2026-09-26T15:57:01.258Z",
+  "total_runs": 3900,
+  "unique_configurations": 130,
+  "paired_effect_configurations": 120,
+  "seeds": [
+    501,
+    530
+  ],
+  "runs_per_configuration": 30,
+  "demands": [
+    45,
+    80
+  ],
+  "policies": [
+    "P0",
+    "P1",
+    "P2",
+    "P3-U",
+    "P3-D"
+  ],
+  "settings": [
+    {
+      "id": "reference",
+      "factor": "reference",
+      "level": "reference",
+      "budget": 20,
+      "source": 0,
+      "validation": 0,
+      "altitude": 80,
+      "speed": 15,
+      "weight": 0.35
+    },
+    {
+      "id": "budget_10",
+      "factor": "budget",
+      "level": "10 missions",
+      "budget": 10,
+      "source": 0,
+      "validation": 0,
+      "altitude": 80,
+      "speed": 15,
+      "weight": 0.35
+    },
+    {
+      "id": "budget_30",
+      "factor": "budget",
+      "level": "30 missions",
+      "budget": 30,
+      "source": 0,
+      "validation": 0,
+      "altitude": 80,
+      "speed": 15,
+      "weight": 0.35
+    },
+    {
+      "id": "source_minus_1",
+      "factor": "source level",
+      "level": "-1 dB",
+      "budget": 20,
+      "source": -1,
+      "validation": 0,
+      "altitude": 80,
+      "speed": 15,
+      "weight": 0.35
+    },
+    {
+      "id": "source_plus_1",
+      "factor": "source level",
+      "level": "+1 dB",
+      "budget": 20,
+      "source": 1,
+      "validation": 0,
+      "altitude": 80,
+      "speed": 15,
+      "weight": 0.35
+    },
+    {
+      "id": "validation_minus_rmse",
+      "factor": "validation error",
+      "level": "-2.29 dB",
+      "budget": 20,
+      "source": 0,
+      "validation": -2.2863840116087695,
+      "altitude": 80,
+      "speed": 15,
+      "weight": 0.35
+    },
+    {
+      "id": "validation_plus_rmse",
+      "factor": "validation error",
+      "level": "+2.29 dB",
+      "budget": 20,
+      "source": 0,
+      "validation": 2.2863840116087695,
+      "altitude": 80,
+      "speed": 15,
+      "weight": 0.35
+    },
+    {
+      "id": "altitude_60",
+      "factor": "altitude",
+      "level": "60 m",
+      "budget": 20,
+      "source": 0,
+      "validation": 0,
+      "altitude": 60,
+      "speed": 15,
+      "weight": 0.35
+    },
+    {
+      "id": "altitude_120",
+      "factor": "altitude",
+      "level": "120 m",
+      "budget": 20,
+      "source": 0,
+      "validation": 0,
+      "altitude": 120,
+      "speed": 15,
+      "weight": 0.35
+    },
+    {
+      "id": "speed_10",
+      "factor": "speed",
+      "level": "10 m/s",
+      "budget": 20,
+      "source": 0,
+      "validation": 0,
+      "altitude": 80,
+      "speed": 10,
+      "weight": 0.35
+    },
+    {
+      "id": "speed_20",
+      "factor": "speed",
+      "level": "20 m/s",
+      "budget": 20,
+      "source": 0,
+      "validation": 0,
+      "altitude": 80,
+      "speed": 20,
+      "weight": 0.35
+    },
+    {
+      "id": "weight_0",
+      "factor": "route weight",
+      "level": "0 km",
+      "budget": 20,
+      "source": 0,
+      "validation": 0,
+      "altitude": 80,
+      "speed": 15,
+      "weight": 0
+    },
+    {
+      "id": "weight_0_70",
+      "factor": "route weight",
+      "level": "0.70 km",
+      "budget": 20,
+      "source": 0,
+      "validation": 0,
+      "altitude": 80,
+      "speed": 15,
+      "weight": 0.7
+    }
+  ],
+  "common_random_numbers": true,
+  "population": [
+    40,
+    40,
+    40,
+    220,
+    220,
+    220,
+    40,
+    40,
+    40
+  ],
+  "reference_budget_basis": "Nominal 80 m, 15 m/s, 88.4 dB(A) route energies remain fixed across sensitivity settings",
+  "validation_adjustment_interpretation": "Deterministic plus or minus one held-out NASA RMSE screening stress, not a prediction interval"
+}

@@ -1,6 +1,6 @@
 # Experiments and evidence
 
-The evidence includes implementation checks and a completed synthetic stochastic screening. Experiments with empirically anchored inputs have not yet been run.
+The evidence includes implementation checks, synthetic stochastic screening, and a Phase E matched-seed sensitivity experiment using calibrated acoustic route increments in synthetic geometry.
 
 ## Reproducible demonstration
 
@@ -40,6 +40,12 @@ The second Phase D module adds 19,440 joint-sensitivity runs. It crosses three d
 
 [Review the Phase D joint analysis and download the data](phase-d-joint.html)
 
+## Phase E acoustic sensitivity
+
+Phase E3 contains 3,900 runs from 130 configurations. It uses calibrated acoustic route increments in the synthetic physical network and varies reference-mission budgets, source level, held-out validation error, altitude, speed, and acoustic route weighting. Thirty common demand seeds support paired comparisons.
+
+[Review the Phase E3 sensitivity results and download the data](phase-e3.html)
+
 ## Discussion
 
-Proxy units cannot establish physical noise or health effects. Monte Carlo intervals describe variation across the selected seeds. Both Phase D modules show material dependence on exposure scaling, so the progression gate remains open pending calibration. The research work must define the exposure measure and audit the proposed datasets.
+The Phase D results remain useful as proxy-model baselines. Phase E replaces the proxy increments with calibrated physical exposure calculations, but the network, demand, operations, and budgets remain scenarios. Monte Carlo intervals describe variation across the selected seeds. They do not include all empirical parameter uncertainty. Phase E3 shows that P3-D needs a separate stability diagnosis before policy ranking.

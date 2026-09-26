@@ -82,7 +82,7 @@ Phase E2 closes the software connection between measured acoustics and the regul
 
 The module does not establish that the reference-mission budget is socially acceptable or legally meaningful. Its purpose is to test the integrated mechanism in coherent physical units. Demand, fleet performance, route geometry, background sound, and population remain synthetic.
 
-The next experiment should vary the declared budget, source-level uncertainty, altitude, speed, acoustic route-choice weight, and validation error across matched demand seeds. The Kawai et al. data can then add a separate short-term annoyance outcome without changing the physical energy ledger.
+[Phase E3](phase-e3.html) now varies the declared budget, source-level uncertainty, altitude, speed, acoustic route-choice weight, and validation error across matched demand seeds. Its results show that P3-D requires controller diagnosis before the Kawai et al. data add a separate short-term annoyance outcome.
 
 ## Reproducibility file
 

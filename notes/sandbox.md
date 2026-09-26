@@ -237,3 +237,9 @@ The gate remains open. Fleet capacity materially changes service outcomes, and p
 The second module executed 648 joint configurations across 30 matched seeds, for 19,440 runs. It crossed destination patterns, fleet size, charger capacity, exposure scaling, demand, and four policy variants. [Review the joint results](phase-d-joint.html).
 
 The fleet-capacity and exposure-scale findings persist across the three destination patterns. A single charger constrains larger fleets, while two chargers match unlimited charging for completion in the tested configurations. The gate remains open because the exposure scale and budget relationship is not empirically defined.
+
+## Phase E acoustic sensitivity result
+
+Phase E0 through E2 replace the proxy exposure increment with calibrated single-event and moving-route acoustic calculations, then connect the resulting nine-receiver energy vectors to fleet reservations and regulatory review. Phase E3 executes 130 configurations across 30 matched seeds, for 3,900 runs. [Review the Phase E3 results](phase-e3.html).
+
+The physical accounting gate is complete for the synthetic network. The controller gate remains open. P3-D performs worse than P3-U in the reference setting and responds non-monotonically to initial budget and acoustic-level changes. Controller trajectories and stability must be diagnosed before policy ranking or addition of the annoyance-response module.

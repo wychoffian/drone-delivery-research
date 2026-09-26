@@ -2,7 +2,7 @@
 
 Adaptive neighborhood exposure regulation for urban drone delivery.
 
-<div class="release"><span>Current stage</span><span>Phase E2 acoustic fleet integration implemented</span><span>Updated 26 September 2026</span></div>
+<div class="release"><span>Current stage</span><span>Phase E3 acoustic sensitivity published</span><span>Updated 26 September 2026</span></div>
 
 ## Ready to inspect
 
@@ -32,12 +32,17 @@ The milestones below distinguish completed prototypes from research work that re
 | Phase E0 acoustic module | Implemented | [Inspect the calibrated calculation and validation boundary](phase-e0.html) |
 | Phase E1 route-level acoustic exposure | Implemented | [Inspect the moving-source exposure calculation](phase-e1.html) |
 | Phase E2 acoustic fleet-policy integration | Implemented | [Inspect physical reservations and scenario budgets](phase-e2.html) |
-| Phase E acoustic sensitivity | Next | Test budgets, acoustic uncertainty, altitude, speed, and route weighting |
+| Phase E3 acoustic sensitivity | Complete, controller gate open | [Review 3,900 matched-seed runs](phase-e3.html) |
+| Adaptive controller diagnosis | Next | Inspect P3-D trajectories and stability before adding annoyance response |
 | Replicated policy comparisons | Planned | Compare fixed budgets at matched service levels |
 
 Table 1. Development status for the current research prototype. "Demonstrated" means that the stated mechanism runs with illustrative inputs.
 
 ## Development record
+
+### 26 September 2026: Phase E3 acoustic sensitivity
+
+Executed 130 configurations with 30 matched seeds, producing 3,900 runs. Physical mission duration makes fleet capacity binding, positive acoustic-error stress reduces regulated service, and speed affects both capacity and exposure. P3-D responds non-monotonically and performs worse than P3-U in the reference setting, so its progression gate remains open. [Review the Phase E3 results](phase-e3.html).
 
 ### 26 September 2026: Phase E2 acoustic fleet-policy integration
 
@@ -104,6 +109,6 @@ Implemented the four experimental factors and policy regimes P0 through P3. Veri
 - Which review window and policy-budget definition should govern the physical exposure account?
 - Which fleet interactions are necessary to answer the regulatory question?
 
-The next milestone is a matched-seed Phase E acoustic sensitivity experiment. It will vary the declared budget, source-level uncertainty, altitude, speed, validation error, and acoustic route-choice weight. Policy budgets remain scenarios until their basis is agreed.
+The next milestone is adaptive-controller diagnosis. The project should inspect P3-D budget trajectories, queue interactions, damping, and target formulation before adding the Kawai short-term annoyance response. Policy budgets remain scenarios until their basis is agreed.
 
 Progress entries are maintained with the project code. They change when a new version of the website is published.

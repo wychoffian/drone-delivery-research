@@ -1,0 +1,270 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="Research progress and executable prototypes for adaptive neighborhood exposure regulation of drone delivery."><title>Phase E3 sensitivity | Drone delivery research</title><link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23152b44'/%3E%3Cpath d='M7 22L16 8l9 14M7 22h18' fill='none' stroke='%23ffffff' stroke-width='2'/%3E%3C/svg%3E"><link rel="stylesheet" href="style.css"></head><body><a class="skip" href="#main">Skip to content</a><header><a class="brand" href="index.html"><span class="mark" aria-hidden="true">D</span>Drone delivery research</a><span class="meta">CECAN fellowship project · Prototype v0.14</span></header><div class="shell"><nav aria-label="Project navigation"><span class="label">Research notebook</span><a href="index.html">Progress</a><a href="overview.html">Project overview</a><a href="literature.html">Literature and gap</a><a href="model.html">Model and rules</a><a href="odd.html">ODD specification</a><a href="sandbox.html">Sandbox protocol</a><a href="integration.html">Integrated model</a><a href="pilot.html">Interactive pilot</a><a href="experiments.html">Experiments</a><a href="phase-c.html">Phase C results</a><a href="phase-d.html">Phase D sensitivity</a><a href="phase-d-joint.html">Phase D joint analysis</a><a href="empirical-calibration.html">Empirical calibration</a><a href="phase-e0.html">Phase E0 acoustics</a><a href="phase-e1.html">Phase E1 routes</a><a href="phase-e2.html">Phase E2 integration</a><a href="phase-e3.html" aria-current="page">Phase E3 sensitivity</a></nav><main id="main"><h1>Phase E3 acoustic sensitivity results</h1>
+<p>Phase E3 tests whether the Phase E2 policy comparison is stable when the declared budget and influential acoustic or operational assumptions change. The experiment contains 3,900 runs from 130 configurations, with 30 matched demand seeds per configuration.</p>
+<blockquote>
+<p>Evidence label: Sensitivity finding from a calibrated acoustic mechanism in a synthetic network. The results do not establish a real fleet requirement, community response, or legal exposure limit.</p>
+</blockquote>
+<h2>Design</h2>
+<p>The experiment uses one-at-a-time changes around the Phase E2 reference setting. Every setting is run under medium and high demand for P0, P1, P2, P3-U, and P3-D. Seeds 501 through 530 provide common request sequences across policies and sensitivity settings.</p>
+<p>Table 1 defines the thirteen settings.</p>
+<table>
+<thead>
+<tr>
+<th>Factor</th>
+<th>Levels</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Reference</td>
+<td>Budget 20 missions, 88.4 dB(A), no validation adjustment, 80 m, 15 m/s, route weight 0.35 km</td>
+</tr>
+<tr>
+<td>Initial budget</td>
+<td>10 and 30 reference missions</td>
+</tr>
+<tr>
+<td>Source reference level</td>
+<td>-1 and +1 dB from the calibrated mean</td>
+</tr>
+<tr>
+<td>Validation error stress</td>
+<td>-2.29 and +2.29 dB, equal to one held-out NASA RMSE</td>
+</tr>
+<tr>
+<td>Altitude</td>
+<td>60 and 120 m</td>
+</tr>
+<tr>
+<td>Speed</td>
+<td>10 and 20 m/s</td>
+</tr>
+<tr>
+<td>Acoustic route-choice weight</td>
+<td>0 and 0.70 km</td>
+</tr>
+</tbody></table>
+<p>Table 1. One-at-a-time Phase E3 settings around the reference acoustic fleet model.</p>
+<p>The physical budgets remain anchored to the nominal reference mission at 80 m, 15 m/s, and 88.4 dB(A). Varied source levels, altitude, and speed therefore change exposure relative to a fixed budget instead of redefining the budget.</p>
+<h2>Reference policy comparison</h2>
+<p>Table 2 reports means and 95 percent Monte Carlo intervals across the 30 seeds.</p>
+<table>
+<thead>
+<tr>
+<th>Demand</th>
+<th>Policy</th>
+<th align="right">Completion (%)</th>
+<th align="right">Final queue</th>
+<th align="right">Peak period LAE (dB)</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Medium</td>
+<td>P0</td>
+<td align="right">71.1 (70.6 to 71.6)</td>
+<td align="right">440.2 (429.3 to 451.1)</td>
+<td align="right">79.9 (79.9 to 79.9)</td>
+</tr>
+<tr>
+<td>Medium</td>
+<td>P1</td>
+<td align="right">69.3 (68.8 to 69.8)</td>
+<td align="right">468.4 (457.2 to 479.6)</td>
+<td align="right">79.4 (79.3 to 79.4)</td>
+</tr>
+<tr>
+<td>Medium</td>
+<td>P2</td>
+<td align="right">71.0 (70.5 to 71.5)</td>
+<td align="right">442.1 (431.2 to 453.1)</td>
+<td align="right">76.1 (76.1 to 76.1)</td>
+</tr>
+<tr>
+<td>Medium</td>
+<td>P3-U</td>
+<td align="right">67.2 (66.7 to 67.7)</td>
+<td align="right">499.7 (488.2 to 511.3)</td>
+<td align="right">76.5 (76.4 to 76.6)</td>
+</tr>
+<tr>
+<td>Medium</td>
+<td>P3-D</td>
+<td align="right">49.4 (49.0 to 49.8)</td>
+<td align="right">771.0 (758.8 to 783.2)</td>
+<td align="right">76.1 (76.1 to 76.2)</td>
+</tr>
+<tr>
+<td>High</td>
+<td>P0</td>
+<td align="right">41.2 (41.0 to 41.5)</td>
+<td align="right">1,573.4 (1,556.1 to 1,590.7)</td>
+<td align="right">79.9 (79.9 to 79.9)</td>
+</tr>
+<tr>
+<td>High</td>
+<td>P1</td>
+<td align="right">39.9 (39.7 to 40.2)</td>
+<td align="right">1,608.3 (1,591.0 to 1,625.6)</td>
+<td align="right">79.3 (79.3 to 79.4)</td>
+</tr>
+<tr>
+<td>High</td>
+<td>P2</td>
+<td align="right">41.2 (40.9 to 41.4)</td>
+<td align="right">1,575.5 (1,558.2 to 1,592.8)</td>
+<td align="right">76.1 (76.1 to 76.1)</td>
+</tr>
+<tr>
+<td>High</td>
+<td>P3-U</td>
+<td align="right">38.4 (38.2 to 38.7)</td>
+<td align="right">1,648.7 (1,631.3 to 1,666.1)</td>
+<td align="right">76.5 (76.5 to 76.6)</td>
+</tr>
+<tr>
+<td>High</td>
+<td>P3-D</td>
+<td align="right">28.1 (27.9 to 28.3)</td>
+<td align="right">1,924.9 (1,907.7 to 1,942.1)</td>
+<td align="right">76.1 (76.1 to 76.1)</td>
+</tr>
+</tbody></table>
+<p>Table 2. Reference Phase E2 outcomes under medium and high demand.</p>
+<p>Physical mission duration makes fleet capacity binding. P0 completes about 71 percent of medium-demand requests and 41 percent of high-demand requests, even though it has no exposure budget. This means policy comparisons must separate acoustic constraints from the two-drone capacity limit.</p>
+<p>P2 reduces peak LAE by about 3.8 dB relative to P0 without a material completion loss in the reference 20-mission setting. P3-U reduces service, while P3-D performs substantially worse than P3-U. Damping does not stabilize service in this configuration.</p>
+<h2>Fixed-budget response</h2>
+<p>Table 3 shows the high-demand P2 response to the three initial fixed budgets.</p>
+<table>
+<thead>
+<tr>
+<th>Budget</th>
+<th align="right">Completion (%)</th>
+<th align="right">Final queue</th>
+<th align="right">Peak period LAE (dB)</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>10 missions</td>
+<td align="right">24.1 (23.9 to 24.3)</td>
+<td align="right">2,032.0 (2,014.4 to 2,049.6)</td>
+<td align="right">73.0 (72.9 to 73.0)</td>
+</tr>
+<tr>
+<td>20 missions</td>
+<td align="right">41.2 (40.9 to 41.4)</td>
+<td align="right">1,575.5 (1,558.2 to 1,592.8)</td>
+<td align="right">76.1 (76.1 to 76.1)</td>
+</tr>
+<tr>
+<td>30 missions</td>
+<td align="right">41.2 (41.0 to 41.5)</td>
+<td align="right">1,573.7 (1,556.4 to 1,591.0)</td>
+<td align="right">77.9 (77.9 to 77.9)</td>
+</tr>
+</tbody></table>
+<p>Table 3. High-demand P2 outcomes across fixed reference-mission budgets.</p>
+<p>The 10-mission budget is strongly restrictive. Raising the budget from 20 to 30 missions does not improve completion because fleet capacity has already become the binding constraint. It increases allowable peak exposure by about 1.8 dB.</p>
+<h2>Acoustic and operational sensitivity</h2>
+<p>Table 4 reports paired changes in high-demand completion relative to each policy&#39;s reference setting. The confidence intervals use within-seed differences.</p>
+<table>
+<thead>
+<tr>
+<th>Change</th>
+<th align="right">P2 difference (percentage points)</th>
+<th align="right">P3-U difference</th>
+<th align="right">P3-D difference</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Source level -1 dB</td>
+<td align="right">+0.1</td>
+<td align="right">+2.3</td>
+<td align="right">+11.7</td>
+</tr>
+<tr>
+<td>Source level +1 dB</td>
+<td align="right">-0.8</td>
+<td align="right">-7.9</td>
+<td align="right">+3.1</td>
+</tr>
+<tr>
+<td>Validation stress -2.29 dB</td>
+<td align="right">+0.1</td>
+<td align="right">+1.4</td>
+<td align="right">+10.2</td>
+</tr>
+<tr>
+<td>Validation stress +2.29 dB</td>
+<td align="right">-11.6</td>
+<td align="right">-15.5</td>
+<td align="right">-4.9</td>
+</tr>
+<tr>
+<td>Altitude 60 m</td>
+<td align="right">-3.5</td>
+<td align="right">-9.8</td>
+<td align="right">+1.3</td>
+</tr>
+<tr>
+<td>Altitude 120 m</td>
+<td align="right">+0.1</td>
+<td align="right">-4.1</td>
+<td align="right">+4.4</td>
+</tr>
+<tr>
+<td>Speed 10 m/s</td>
+<td align="right">-10.7</td>
+<td align="right">-12.9</td>
+<td align="right">-2.5</td>
+</tr>
+<tr>
+<td>Speed 20 m/s</td>
+<td align="right">+7.3</td>
+<td align="right">+8.7</td>
+<td align="right">+16.4</td>
+</tr>
+</tbody></table>
+<p>Table 4. Paired high-demand completion-rate differences from the reference setting.</p>
+<p>Speed affects both mission capacity and sound-exposure duration, so it is the strongest operational sensitivity in this design. A positive 2.29 dB validation-error stress also causes a material reduction for every regulated policy.</p>
+<p>P3-D is non-monotonic. Both lower and higher initial budgets improve completion relative to its 20-mission reference, and both -1 and +1 dB source changes also improve it. This indicates feedback dynamics and queue interactions around the reference setting. P3-D should not advance as a preferred controller until its trajectories, stability, and target rule are diagnosed.</p>
+<h2>Population-weighted route choice</h2>
+<p>Table 5 isolates the high-demand P1 route-weight setting.</p>
+<table>
+<thead>
+<tr>
+<th>Route weight</th>
+<th align="right">Completion (%)</th>
+<th align="right">Population-weighted exposure equivalent</th>
+<th align="right">Route shares north / central / south (%)</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>0 km</td>
+<td align="right">41.2 (41.0 to 41.5)</td>
+<td align="right">810.5 (810.2 to 810.8)</td>
+<td align="right">0.0 / 100.0 / 0.0</td>
+</tr>
+<tr>
+<td>0.35 km</td>
+<td align="right">39.9 (39.7 to 40.2)</td>
+<td align="right">146.5 (146.4 to 146.5)</td>
+<td align="right">79.9 / 0.0 / 20.1</td>
+</tr>
+<tr>
+<td>0.70 km</td>
+<td align="right">39.9 (39.7 to 40.2)</td>
+<td align="right">146.5 (146.4 to 146.5)</td>
+<td align="right">79.9 / 0.0 / 20.1</td>
+</tr>
+</tbody></table>
+<p>Table 5. High-demand P1 outcomes across acoustic route-choice weights.</p>
+<p>Introducing the acoustic term changes route choice discontinuously between weights 0 and 0.35 km. The population-weighted exposure measure falls by about 82 percent, while completion falls by 1.3 percentage points because the selected routes take longer. Increasing the weight to 0.70 km causes no further change in this network, so later work should test values around the route-switching threshold.</p>
+<h2>Progression decision</h2>
+<p>Phase E3 passes the software and reproducibility gate, but it does not support selecting P3-D. The next development step should diagnose its budget trajectories and feedback stability before adding the Kawai annoyance response.</p>
+<p>The experiment remains limited to one synthetic network, concentrated population, two drones, two chargers, fixed demand structure, and one-at-a-time sensitivities. The validation-error levels are deterministic screening stresses equal to plus or minus one RMSE. They are not prediction intervals. The Monte Carlo intervals measure demand-seed variation and do not include empirical parameter-estimation uncertainty.</p>
+<h2>Reproducibility files</h2>
+<ul>
+<li><a href="results/phase_e_runs.csv">Run-level results</a></li>
+<li><a href="results/phase_e_summary.csv">Configuration summaries</a></li>
+<li><a href="results/phase_e_paired_effects.csv">Matched-seed paired effects</a></li>
+<li><a href="results/phase_e_metadata.json">Execution metadata</a></li>
+</ul>
+<p class="download"><a href="notes/phase-e3.md" download>Download this page as Markdown</a></p></main></div><footer><span>Mutlaq Aldajani · Research in development</span><span>Illustrative inputs · Last content update 26 September 2026</span></footer><script src="site.js"></script></body></html>
