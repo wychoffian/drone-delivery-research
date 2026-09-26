@@ -1,0 +1,28 @@
+{
+  "module": "phase_e1_route_acoustic_v1",
+  "coordinate_unit": "metre",
+  "depot": [0, 0],
+  "route_entry_x": 500,
+  "route_exit_x": 5500,
+  "destination_x": 6000,
+  "corridor_y": [-400, 0, 400],
+  "receiver_x": [1500, 3000, 4500],
+  "receiver_y": [-400, 0, 400],
+  "default_altitude_m": 80,
+  "default_speed_mps": 15,
+  "maximum_time_step_s": 1,
+  "accounting": "linear sound-exposure contributions summed over outbound and return paths, reported as LAE",
+  "status": {
+    "geometry": "synthetic scenario",
+    "acoustics": "DroneNoise calibrated with NASA held-out validation",
+    "policy_budget": "not specified"
+  },
+  "not_included": [
+    "buildings and shielding",
+    "ground effects",
+    "weather variation",
+    "background sound",
+    "maneuver-specific source levels",
+    "site-specific routes and population"
+  ]
+}

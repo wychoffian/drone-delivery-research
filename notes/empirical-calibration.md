@@ -87,8 +87,8 @@ The first empirical step is to replace the arbitrary exposure scale. It does not
 1. Freeze the current synthetic model and keep its results as a verification baseline.
 2. Reproduce the DroneNoise preprocessing and estimate the acoustic parameters with recorded units and uncertainty.
 3. Validate predictions against the held-out NASA flyovers by flight and microphone.
-4. Define route geometry, segment duration, slant distance, off-axis angle, and the review-period sound-exposure account.
-5. Replace the proxy route coefficients in a calibration branch and rerun the existing invariant checks.
+4. Define route geometry, segment duration, slant distance, off-axis angle, and the review-period sound-exposure account. Completed in [Phase E1](phase-e1.html).
+5. Replace the proxy route coefficients in a calibration branch and rerun the existing invariant checks. This is the next implementation step.
 6. Run a limited Phase E acoustic sensitivity experiment. Retain policy budgets as declared scenarios until a policy basis is agreed.
 7. Add demand, vehicle, charging, and population inputs only when their provenance and case definition are documented.
 

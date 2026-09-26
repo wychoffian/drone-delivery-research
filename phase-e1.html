@@ -1,0 +1,121 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="Research progress and executable prototypes for adaptive neighborhood exposure regulation of drone delivery."><title>Phase E1 routes | Drone delivery research</title><link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23152b44'/%3E%3Cpath d='M7 22L16 8l9 14M7 22h18' fill='none' stroke='%23ffffff' stroke-width='2'/%3E%3C/svg%3E"><link rel="stylesheet" href="style.css"></head><body><a class="skip" href="#main">Skip to content</a><header><a class="brand" href="index.html"><span class="mark" aria-hidden="true">D</span>Drone delivery research</a><span class="meta">CECAN fellowship project · Prototype v0.12</span></header><div class="shell"><nav aria-label="Project navigation"><span class="label">Research notebook</span><a href="index.html">Progress</a><a href="overview.html">Project overview</a><a href="literature.html">Literature and gap</a><a href="model.html">Model and rules</a><a href="odd.html">ODD specification</a><a href="sandbox.html">Sandbox protocol</a><a href="integration.html">Integrated model</a><a href="pilot.html">Interactive pilot</a><a href="experiments.html">Experiments</a><a href="phase-c.html">Phase C results</a><a href="phase-d.html">Phase D sensitivity</a><a href="phase-d-joint.html">Phase D joint analysis</a><a href="empirical-calibration.html">Empirical calibration</a><a href="phase-e0.html">Phase E0 acoustics</a><a href="phase-e1.html" aria-current="page">Phase E1 routes</a></nav><main id="main"><h1>Phase E1 route acoustic integration</h1>
+<p>Phase E1 applies the calibrated acoustic module to a moving outbound and return mission. It gives the nine neighborhood agents physical receiver coordinates and accumulates exposure from every route segment in the linear energy domain.</p>
+<blockquote>
+<p>Evidence label: Calibrated module in synthetic geometry. Acoustic parameters are evidence based, while the network coordinates, altitude, speed, and route layout remain declared scenarios.</p>
+</blockquote>
+<p><a href="route-acoustic.html">Run the route acoustic module</a></p>
+<h2>Synthetic physical geometry</h2>
+<p>The geometry retains the three-corridor structure used in the policy model. Coordinates are measured in metres. The depot is at <code>(0, 0)</code>, the route entry is 500 m east of the depot, the main corridor extends to 5,500 m, and the three destinations are at 6,000 m. Corridor and destination northings are -400, 0, and 400 m.</p>
+<p>Nine neighborhood receivers form a three-by-three grid. Their eastings are 1,500, 3,000, and 4,500 m, and their northings match the three corridor rows. Every mission contributes exposure to all nine receivers. A selected route therefore affects nearby corridors as well as the neighborhoods directly below it.</p>
+<p>Table 1 records the current physical scenario values.</p>
+<table>
+<thead>
+<tr>
+<th>Quantity</th>
+<th align="right">Current value</th>
+<th>Status</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Corridor length between entry and exit</td>
+<td align="right">5,000 m</td>
+<td>Synthetic geometry</td>
+</tr>
+<tr>
+<td>Corridor spacing</td>
+<td align="right">400 m</td>
+<td>Synthetic geometry</td>
+</tr>
+<tr>
+<td>Receiver spacing along corridor</td>
+<td align="right">1,500 m</td>
+<td>Synthetic geometry</td>
+</tr>
+<tr>
+<td>Default altitude</td>
+<td align="right">80 m</td>
+<td>Adjustable scenario</td>
+</tr>
+<tr>
+<td>Default speed</td>
+<td align="right">15 m/s</td>
+<td>Adjustable scenario</td>
+</tr>
+<tr>
+<td>Maximum integration time step</td>
+<td align="right">1 s</td>
+<td>Numerical setting</td>
+</tr>
+<tr>
+<td>Source reference level</td>
+<td align="right">88.4 dB(A) at 1 m</td>
+<td>DroneNoise calibrated</td>
+</tr>
+<tr>
+<td>Off-axis directivity</td>
+<td align="right"><code>-3.3114(sec(theta) - 1)</code> dB</td>
+<td>DroneNoise calibrated</td>
+</tr>
+</tbody></table>
+<p>Table 1. Geometry, operation, numerical settings, and calibrated inputs used by the Phase E1 route module.</p>
+<h2>Moving-source calculation</h2>
+<p>Each straight route segment is divided into time steps no longer than one second. The calculation evaluates the drone at the midpoint of each step. For every receiver, it calculates horizontal separation, slant distance, off-axis angle, and A-weighted received level. The step contributes:</p>
+<pre><code class="language-text">energy contribution = 10^(LpA / 10) x duration
+</code></pre>
+<p>The mission account sums all step contributions from the outbound and return paths. Reporting converts the final energy to LAE:</p>
+<pre><code class="language-text">mission LAE = 10 log10(sum of energy contributions)
+</code></pre>
+<p>The integration uses shorter final steps where a segment duration is not an exact multiple of one second. This prevents the numerical routine from adding excess flight time.</p>
+<h2>Agent mapping</h2>
+<p>Table 2 shows how this module changes the agent-based model.</p>
+<table>
+<thead>
+<tr>
+<th>Agent</th>
+<th>Phase D representation</th>
+<th>Phase E1 representation</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Drone</td>
+<td>Route identifier and proxy exposure coefficient</td>
+<td>Position along a physical path, altitude, speed, and calibrated source level</td>
+</tr>
+<tr>
+<td>Neighborhood</td>
+<td>One proxy account associated with one corridor</td>
+<td>Fixed receiver coordinate with energy received from every mission</td>
+</tr>
+<tr>
+<td>Operator</td>
+<td>Reserves three fixed coefficients</td>
+<td>Predicts and reserves a nine-receiver mission exposure vector</td>
+</tr>
+<tr>
+<td>Regulator</td>
+<td>Compares proxy account with proxy budget</td>
+<td>Receives a physical exposure vector, while the budget basis remains separate</td>
+</tr>
+</tbody></table>
+<p>Table 2. Change from proxy route accounting to moving-source acoustic accounting.</p>
+<h2>Verification</h2>
+<p>Automated checks cover the following properties:</p>
+<ul>
+<li>each mission returns nine finite positive exposure values;</li>
+<li>the reported route distance and flight time match the physical path and speed;</li>
+<li>outbound and reversed return paths contribute equal energy;</li>
+<li>a round trip adds 3.0103 dB to the identical outbound event;</li>
+<li>increasing altitude reduces the peak receiver exposure in the reference case;</li>
+<li>reducing speed increases exposure because the source remains audible longer;</li>
+<li>the central route produces symmetric exposure in the north and south receiver rows;</li>
+<li>all previous mission, policy, and Phase E0 checks continue to pass.</li>
+</ul>
+<h2>Progression gate</h2>
+<p>Phase E1 establishes a traceable route exposure vector, but it does not yet replace the proxy coefficients inside the fleet-policy controller. That replacement requires a declared review window and a consistent physical budget representation. The controller should compare linear exposure energy with a linear energy budget. LAE should be used for reporting because subtracting or adding dB values inside the reservation ledger would violate energy conservation.</p>
+<h2>Discussion</h2>
+<p>The moving-source calculation is a material change to the system map. Neighborhood exposure is no longer assigned only to the selected corridor. Every flight affects all receivers, with the contribution determined by geometry and directivity. This creates spatial spillovers that may alter route ranking and distributional outcomes.</p>
+<p>The current coordinates are synthetic and the source level does not change between cruise, turns, takeoff, or landing. Buildings, ground effects, weather, background sound, and shielding are omitted. These limits mean the module supports mechanism testing rather than a site prediction.</p>
+<p>The next step is to connect the nine-receiver energy vector to mission reservation and completion events in the fleet model. A later case study should replace the synthetic coordinates with a named area&#39;s route constraints and population data.</p>
+<h2>Reproducibility file</h2>
+<p>The <a href="results/route_acoustic_geometry_v1.json">route geometry record</a> documents the coordinates, default operating values, integration setting, and remaining exclusions.</p>
+<p class="download"><a href="notes/phase-e1.md" download>Download this page as Markdown</a></p></main></div><footer><span>Mutlaq Aldajani · Research in development</span><span>Illustrative inputs · Last content update 26 September 2026</span></footer><script src="site.js"></script></body></html>

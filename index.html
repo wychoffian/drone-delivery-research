@@ -1,6 +1,6 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="Research progress and executable prototypes for adaptive neighborhood exposure regulation of drone delivery."><title>Progress | Drone delivery research</title><link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23152b44'/%3E%3Cpath d='M7 22L16 8l9 14M7 22h18' fill='none' stroke='%23ffffff' stroke-width='2'/%3E%3C/svg%3E"><link rel="stylesheet" href="style.css"></head><body><a class="skip" href="#main">Skip to content</a><header><a class="brand" href="index.html"><span class="mark" aria-hidden="true">D</span>Drone delivery research</a><span class="meta">CECAN fellowship project · Prototype v0.11</span></header><div class="shell"><nav aria-label="Project navigation"><span class="label">Research notebook</span><a href="index.html" aria-current="page">Progress</a><a href="overview.html">Project overview</a><a href="literature.html">Literature and gap</a><a href="model.html">Model and rules</a><a href="odd.html">ODD specification</a><a href="sandbox.html">Sandbox protocol</a><a href="integration.html">Integrated model</a><a href="pilot.html">Interactive pilot</a><a href="experiments.html">Experiments</a><a href="phase-c.html">Phase C results</a><a href="phase-d.html">Phase D sensitivity</a><a href="phase-d-joint.html">Phase D joint analysis</a><a href="empirical-calibration.html">Empirical calibration</a><a href="phase-e0.html">Phase E0 acoustics</a></nav><main id="main"><h1>Research progress</h1>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="Research progress and executable prototypes for adaptive neighborhood exposure regulation of drone delivery."><title>Progress | Drone delivery research</title><link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23152b44'/%3E%3Cpath d='M7 22L16 8l9 14M7 22h18' fill='none' stroke='%23ffffff' stroke-width='2'/%3E%3C/svg%3E"><link rel="stylesheet" href="style.css"></head><body><a class="skip" href="#main">Skip to content</a><header><a class="brand" href="index.html"><span class="mark" aria-hidden="true">D</span>Drone delivery research</a><span class="meta">CECAN fellowship project · Prototype v0.12</span></header><div class="shell"><nav aria-label="Project navigation"><span class="label">Research notebook</span><a href="index.html" aria-current="page">Progress</a><a href="overview.html">Project overview</a><a href="literature.html">Literature and gap</a><a href="model.html">Model and rules</a><a href="odd.html">ODD specification</a><a href="sandbox.html">Sandbox protocol</a><a href="integration.html">Integrated model</a><a href="pilot.html">Interactive pilot</a><a href="experiments.html">Experiments</a><a href="phase-c.html">Phase C results</a><a href="phase-d.html">Phase D sensitivity</a><a href="phase-d-joint.html">Phase D joint analysis</a><a href="empirical-calibration.html">Empirical calibration</a><a href="phase-e0.html">Phase E0 acoustics</a><a href="phase-e1.html">Phase E1 routes</a></nav><main id="main"><h1>Research progress</h1>
 <p>Adaptive neighborhood exposure regulation for urban drone delivery.</p>
-<div class="release"><span>Current stage</span><span>Phase E0 acoustic module implemented</span><span>Updated 26 September 2026</span></div>
+<div class="release"><span>Current stage</span><span>Phase E1 route acoustics implemented</span><span>Updated 26 September 2026</span></div>
 
 <h2>Ready to inspect</h2>
 <div class="feature-grid"><a class="feature" href="mission.html"><span class="number">01</span><h3>Follow the small fleet</h3><p>Inspect two drones, three requests, concurrent reservations, queueing, and charging.</p><span class="link-label">Open fleet walkthrough</span></a><a class="feature" href="fleet-policy.html"><span class="number">02</span><h3>Run the integrated model</h3><p>Change the four dials and compare five policies with fleet capacity and queues.</p><span class="link-label">Open integrated experiment</span></a></div>
@@ -87,9 +87,14 @@
 <td><a href="phase-e0.html">Inspect the calibrated calculation and validation boundary</a></td>
 </tr>
 <tr>
-<td>Route-level acoustic exposure</td>
+<td>Phase E1 route-level acoustic exposure</td>
+<td>Implemented</td>
+<td><a href="phase-e1.html">Inspect the moving-source exposure calculation</a></td>
+</tr>
+<tr>
+<td>Acoustic fleet-policy integration</td>
 <td>Next</td>
-<td>Define physical network geometry and integrate moving-source exposure</td>
+<td>Replace proxy route coefficients with reserved energy vectors</td>
 </tr>
 <tr>
 <td>Replicated policy comparisons</td>
@@ -99,6 +104,8 @@
 </tbody></table>
 <p>Table 1. Development status for the current research prototype. &quot;Demonstrated&quot; means that the stated mechanism runs with illustrative inputs.</p>
 <h2>Development record</h2>
+<h3>26 September 2026: Phase E1 route acoustic integration</h3>
+<p>Assigned physical coordinates to the synthetic network and integrated each outbound and return flight in one-second maximum steps. Every mission now produces a nine-receiver energy vector, including cross-corridor exposure. Policy budgets remain separate. <a href="phase-e1.html">Inspect the Phase E1 module</a>.</p>
 <h3>26 September 2026: Phase E0 acoustic module</h3>
 <p>Implemented the calibrated received-level, directivity, event-exposure, and cumulative energy calculations. The module records the DroneNoise parameters and NASA validation results, exposes the geometry and duration assumptions, and leaves policy budgets unchanged. <a href="phase-e0.html">Inspect the Phase E0 module</a>.</p>
 <h3>26 September 2026: empirical dataset audit</h3>
@@ -130,6 +137,6 @@
 <li>Which review window and policy-budget definition should govern the physical exposure account?</li>
 <li>Which fleet interactions are necessary to answer the regulatory question?</li>
 </ul>
-<p>The next milestone is route-level acoustic integration. The project will assign physical coordinates to the synthetic network, discretize each mission, and accumulate exposure at neighborhood receivers in the energy domain. Policy budgets remain declared scenarios until their basis is agreed.</p>
+<p>The next milestone is acoustic fleet-policy integration. The project will reserve each mission&#39;s nine-receiver energy vector before dispatch and transfer it to the observed account at completion. Policy budgets remain declared scenarios until their basis is agreed.</p>
 <p>Progress entries are maintained with the project code. They change when a new version of the website is published.</p>
 <p class="download"><a href="notes/index.md" download>Download this page as Markdown</a></p></main></div><footer><span>Mutlaq Aldajani · Research in development</span><span>Illustrative inputs · Last content update 26 September 2026</span></footer><script src="site.js"></script></body></html>

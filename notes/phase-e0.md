@@ -81,7 +81,7 @@ These checks establish numerical consistency. They do not repeat the raw-signal 
 
 The module gives the project a physical exposure unit and a traceable boundary between acoustics and governance. It also exposes a design problem that the proxy model concealed: a route is a moving source, so its exposure must be integrated over time rather than represented by one constant level.
 
-The current demonstration assumes a steady equivalent level for a chosen duration. The next implementation step is to define physical coordinates for the synthetic network, discretize each outbound and return route, calculate segment exposure at every neighborhood receiver, and sum the contributions in the energy domain. Uncertainty in source level and validation error should be carried into a later sensitivity run.
+The current demonstration assumes a steady equivalent level for a chosen duration. [Phase E1](phase-e1.html) now defines physical coordinates for the synthetic network, discretizes each outbound and return route, calculates segment exposure at every neighborhood receiver, and sums the contributions in the energy domain. Uncertainty in source level and validation error should be carried into a later sensitivity run.
 
 The Kawai et al. annoyance data can be linked after this route integration. It should receive event exposure and operational descriptors as inputs. Policy budgets remain scenario values until their legal or participatory basis is documented.
 

@@ -2,7 +2,7 @@
 
 Adaptive neighborhood exposure regulation for urban drone delivery.
 
-<div class="release"><span>Current stage</span><span>Phase E0 acoustic module implemented</span><span>Updated 26 September 2026</span></div>
+<div class="release"><span>Current stage</span><span>Phase E1 route acoustics implemented</span><span>Updated 26 September 2026</span></div>
 
 ## Ready to inspect
 
@@ -30,12 +30,17 @@ The milestones below distinguish completed prototypes from research work that re
 | Phase D joint sensitivity | Complete, gate open | [Review 19,440 joint runs](phase-d-joint.html) |
 | Empirical dataset audit | Complete | [Review the calibration map and data gaps](empirical-calibration.html) |
 | Phase E0 acoustic module | Implemented | [Inspect the calibrated calculation and validation boundary](phase-e0.html) |
-| Route-level acoustic exposure | Next | Define physical network geometry and integrate moving-source exposure |
+| Phase E1 route-level acoustic exposure | Implemented | [Inspect the moving-source exposure calculation](phase-e1.html) |
+| Acoustic fleet-policy integration | Next | Replace proxy route coefficients with reserved energy vectors |
 | Replicated policy comparisons | Planned | Compare fixed budgets at matched service levels |
 
 Table 1. Development status for the current research prototype. "Demonstrated" means that the stated mechanism runs with illustrative inputs.
 
 ## Development record
+
+### 26 September 2026: Phase E1 route acoustic integration
+
+Assigned physical coordinates to the synthetic network and integrated each outbound and return flight in one-second maximum steps. Every mission now produces a nine-receiver energy vector, including cross-corridor exposure. Policy budgets remain separate. [Inspect the Phase E1 module](phase-e1.html).
 
 ### 26 September 2026: Phase E0 acoustic module
 
@@ -94,6 +99,6 @@ Implemented the four experimental factors and policy regimes P0 through P3. Veri
 - Which review window and policy-budget definition should govern the physical exposure account?
 - Which fleet interactions are necessary to answer the regulatory question?
 
-The next milestone is route-level acoustic integration. The project will assign physical coordinates to the synthetic network, discretize each mission, and accumulate exposure at neighborhood receivers in the energy domain. Policy budgets remain declared scenarios until their basis is agreed.
+The next milestone is acoustic fleet-policy integration. The project will reserve each mission's nine-receiver energy vector before dispatch and transfer it to the observed account at completion. Policy budgets remain declared scenarios until their basis is agreed.
 
 Progress entries are maintained with the project code. They change when a new version of the website is published.

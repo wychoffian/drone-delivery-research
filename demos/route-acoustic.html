@@ -1,0 +1,67 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Phase E1 route acoustic integration</title><link rel="stylesheet" href="demo.css"></head><body><div id="route-acoustic">
+ <h2>Phase E1 route acoustic integration</h2>
+ <div class="text-small text-muted">Synthetic physical geometry · Outbound and return mission · Nine receivers</div>
+ <div class="viz-controls">
+  <label class="form-label">Flight corridor
+   <select class="form-select" id="ra-corridor"><option value="0">North corridor</option><option value="1" selected>Central corridor</option><option value="2">South corridor</option></select>
+  </label>
+  <label class="form-label">Destination
+   <select class="form-select" id="ra-destination"><option value="0">North destination</option><option value="1" selected>Central destination</option><option value="2">South destination</option></select>
+  </label>
+  <label class="form-label">Altitude: <span id="ra-altitude-value" class="tabular-nums">80 m</span>
+   <input class="form-range" id="ra-altitude" type="range" min="30" max="150" value="80" step="5">
+  </label>
+  <label class="form-label">Speed: <span id="ra-speed-value" class="tabular-nums">15 m/s</span>
+   <input class="form-range" id="ra-speed" type="range" min="5" max="25" value="15" step="1">
+  </label>
+ </div>
+ <div class="ra-metrics" aria-live="polite"><span id="ra-distance"></span><span id="ra-duration"></span><span id="ra-peak"></span><span id="ra-spread"></span></div>
+ <svg id="ra-map" class="ra-svg" role="img" aria-label="Synthetic route and neighborhood acoustic exposure"></svg>
+ <div class="text-small text-muted">Circle fill and label: mission LAE at each receiver · Line: outbound and return route</div>
+ <h3>Receiver exposure</h3>
+ <svg id="ra-bars" class="ra-bars" role="img" aria-label="Mission sound exposure level at each neighborhood receiver"></svg>
+ <p id="ra-explanation" class="text-small"></p>
+ <p class="text-small text-muted">One-second maximum time steps are used, with shorter final steps on each segment. Policy budgets are not applied in this module.</p>
+</div>
+<style>
+ #route-acoustic{color:var(--foreground)}
+ #route-acoustic .ra-metrics{display:grid;grid-template-columns:repeat(4,minmax(120px,1fr));gap:1px;background:var(--border);margin:14px 0}
+ #route-acoustic .ra-metrics span{background:var(--background);padding:10px 8px;text-align:center}
+ #route-acoustic .ra-svg,#route-acoustic .ra-bars{display:block;width:100%;overflow:visible}
+ #route-acoustic .ra-svg text,#route-acoustic .ra-bars text{fill:var(--foreground);font-size:12px}
+ #route-acoustic #ra-explanation{min-height:3em}
+ @media(max-width:620px){#route-acoustic .ra-metrics{grid-template-columns:1fr 1fr}}
+</style>
+<script>
+(()=>{
+ const calibration={referenceLevel1mDba:88.4,spreadingCoefficient:20,absorptionDbPerM:.0015,directivityCoefficientDb:3.3113678365241337,maxValidatedAngleDeg:82.2,referenceDistanceM:1};
+ const geometry={corridorY:[-400,0,400],receiverX:[1500,3000,4500],destinationX:6000,entryX:500,exitX:5500,altitudeM:80,speedMps:15};
+ const receivers=geometry.corridorY.flatMap((y,row)=>geometry.receiverX.map((x,column)=>({id:`N${row*3+column+1}`,row,column,x,y})));
+ function offAxisDirectivityDb(angleDeg,c=calibration){if(angleDeg<0||angleDeg>=90)throw new RangeError('angleDeg must be in [0, 90)');const limited=Math.min(angleDeg,c.maxValidatedAngleDeg);return-c.directivityCoefficientDb*(1/Math.cos(limited*Math.PI/180)-1);}
+ function receivedLevelDba(slantDistanceM,angleDeg,c=calibration){const distance=Math.max(c.referenceDistanceM,slantDistanceM);return c.referenceLevel1mDba-c.spreadingCoefficient*Math.log10(distance/c.referenceDistanceM)-c.absorptionDbPerM*(distance-c.referenceDistanceM)+offAxisDirectivityDb(angleDeg,c);}
+ function pathPoints(corridor,destination){const corridorY=geometry.corridorY[corridor],destinationY=geometry.corridorY[destination],outbound=[[0,0],[geometry.entryX,corridorY],[geometry.exitX,corridorY],[geometry.destinationX,destinationY]];return{outbound,roundTrip:outbound.concat(outbound.slice(0,-1).reverse())};}
+ function integratePath(points,altitudeM,speedMps,maxStepS=1){if(altitudeM<=0||speedMps<=0||maxStepS<=0)throw new RangeError('altitude, speed, and time step must be positive');const energy=Array(receivers.length).fill(0);let distanceM=0,durationS=0;
+  for(let segment=0;segment<points.length-1;segment++){const [x0,y0]=points[segment],[x1,y1]=points[segment+1],length=Math.hypot(x1-x0,y1-y0);if(length===0)continue;const duration=length/speedMps,steps=Math.ceil(duration/maxStepS),dt=duration/steps;distanceM+=length;durationS+=duration;
+   for(let step=0;step<steps;step++){const fraction=(step+.5)/steps,x=x0+(x1-x0)*fraction,y=y0+(y1-y0)*fraction;for(const [index,receiver] of receivers.entries()){const horizontal=Math.hypot(x-receiver.x,y-receiver.y),slant=Math.hypot(horizontal,altitudeM),angle=Math.atan2(horizontal,altitudeM)*180/Math.PI,level=receivedLevelDba(slant,angle);energy[index]+=10**(level/10)*dt;}}
+  }
+  return{energy,distanceM,durationS,lae:energy.map(value=>10*Math.log10(value))};
+ }
+ function integrateMission(corridor,destination,altitudeM=geometry.altitudeM,speedMps=geometry.speedMps,maxStepS=1){const paths=pathPoints(corridor,destination),outbound=integratePath(paths.outbound,altitudeM,speedMps,maxStepS),roundTrip=integratePath(paths.roundTrip,altitudeM,speedMps,maxStepS);return{corridor,destination,altitudeM,speedMps,points:paths.roundTrip,receivers,outbound,energy:roundTrip.energy,lae:roundTrip.lae,distanceM:roundTrip.distanceM,durationS:roundTrip.durationS};}
+ const root=document.getElementById('route-acoustic'),get=id=>root.querySelector('#ra-'+id),map=get('map'),bars=get('bars'),ns='http://www.w3.org/2000/svg';
+ function add(svg,tag,attributes={},text=''){const node=document.createElementNS(ns,tag);for(const [key,value] of Object.entries(attributes))node.setAttribute(key,value);if(text)node.textContent=text;svg.appendChild(node);return node;}
+ function drawMap(result){const width=Math.max(580,map.clientWidth||760),height=340,margin={left:55,right:55,top:30,bottom:45},x=value=>margin.left+value/geometry.destinationX*(width-margin.left-margin.right),y=value=>margin.top+(value+550)/1100*(height-margin.top-margin.bottom),minimum=Math.min(...result.lae),maximum=Math.max(...result.lae),opacity=value=>.15+.75*(value-minimum)/Math.max(1e-9,maximum-minimum);map.setAttribute('viewBox',`0 0 ${width} ${height}`);map.setAttribute('height',height);map.replaceChildren();add(map,'title',{},`Round-trip corridor ${result.corridor+1} to destination ${result.destination+1}. Peak receiver exposure ${maximum.toFixed(1)} dB LAE.`);
+  for(const corridorY of geometry.corridorY)add(map,'line',{x1:x(geometry.entryX),y1:y(corridorY),x2:x(geometry.exitX),y2:y(corridorY),stroke:'var(--border)','stroke-width':2});
+  const route=result.points.map((point,index)=>`${index?'L':'M'}${x(point[0]).toFixed(1)},${y(point[1]).toFixed(1)}`).join(' ');add(map,'path',{d:route,fill:'none',stroke:'var(--viz-series-2)','stroke-width':3,'stroke-linejoin':'round'});add(map,'rect',{x:x(0)-5,y:y(0)-5,width:10,height:10,fill:'var(--foreground)'});add(map,'text',{x:x(0),y:y(0)+22,'text-anchor':'middle'},'Depot');
+  geometry.corridorY.forEach((destinationY,index)=>{add(map,'rect',{x:x(geometry.destinationX)-5,y:y(destinationY)-5,width:10,height:10,fill:index===result.destination?'var(--viz-series-2)':'var(--muted-foreground)'});add(map,'text',{x:x(geometry.destinationX),y:y(destinationY)-12,'text-anchor':'middle'},`Z${index+1}`);});
+  receivers.forEach((receiver,index)=>{add(map,'circle',{cx:x(receiver.x),cy:y(receiver.y),r:17,fill:'var(--viz-series-1)','fill-opacity':opacity(result.lae[index]),stroke:'var(--foreground)'});add(map,'text',{x:x(receiver.x),y:y(receiver.y)-23,'text-anchor':'middle'},receiver.id);add(map,'text',{x:x(receiver.x),y:y(receiver.y)+4,'text-anchor':'middle'},result.lae[index].toFixed(1));});
+  add(map,'text',{x:(margin.left+width-margin.right)/2,y:height-8,'text-anchor':'middle'},'East-west position (0 to 6 km)');
+ }
+ function drawBars(result){const width=Math.max(580,bars.clientWidth||760),height=265,margin={left:48,right:18,top:15,bottom:42},minimum=Math.floor(Math.min(...result.lae)/5)*5,maximum=Math.ceil(Math.max(...result.lae)/5)*5,x=index=>margin.left+index*(width-margin.left-margin.right)/9,y=value=>height-margin.bottom-(value-minimum)/Math.max(5,maximum-minimum)*(height-margin.top-margin.bottom),barWidth=(width-margin.left-margin.right)/9-8;bars.setAttribute('viewBox',`0 0 ${width} ${height}`);bars.setAttribute('height',height);bars.replaceChildren();
+  for(let value=minimum;value<=maximum;value+=5){add(bars,'line',{x1:margin.left,y1:y(value),x2:width-margin.right,y2:y(value),stroke:'var(--border)'});add(bars,'text',{x:margin.left-7,y:y(value)+4,'text-anchor':'end'},value);}
+  result.lae.forEach((value,index)=>{add(bars,'rect',{x:x(index)+4,y:y(value),width:barWidth,height:height-margin.bottom-y(value),fill:'var(--viz-series-1)','fill-opacity':.75});add(bars,'text',{x:x(index)+4+barWidth/2,y:height-margin.bottom+18,'text-anchor':'middle'},receivers[index].id);});add(bars,'text',{x:14,y:(margin.top+height-margin.bottom)/2,'text-anchor':'middle',transform:`rotate(-90 14 ${(margin.top+height-margin.bottom)/2})`},'Mission LAE (dB)');
+ }
+ function draw(){const corridor=+get('corridor').value,destination=+get('destination').value,altitude=+get('altitude').value,speed=+get('speed').value,result=integrateMission(corridor,destination,altitude,speed),peak=Math.max(...result.lae),minimum=Math.min(...result.lae),oneWayPeak=Math.max(...result.outbound.lae);get('altitude-value').textContent=`${altitude} m`;get('speed-value').textContent=`${speed} m/s`;get('distance').textContent=`Distance: ${(result.distanceM/1000).toFixed(2)} km`;get('duration').textContent=`Flight: ${(result.durationS/60).toFixed(1)} min`;get('peak').textContent=`Peak LAE: ${peak.toFixed(1)} dB`;get('spread').textContent=`Receiver spread: ${(peak-minimum).toFixed(1)} dB`;get('explanation').textContent=`The return flight adds ${(peak-oneWayPeak).toFixed(1)} dB at the most exposed receiver. All nine receivers accumulate energy, including those outside the selected corridor.`;drawMap(result);drawBars(result);root.dataset.ready='true';}
+ ['corridor','destination'].forEach(id=>get(id).addEventListener('change',draw));['altitude','speed'].forEach(id=>get(id).addEventListener('input',draw));this.api={calibration,geometry,receivers,offAxisDirectivityDb,receivedLevelDba,pathPoints,integratePath,integrateMission};draw();new ResizeObserver(draw).observe(root);
+})();
+</script>
+<script>new ResizeObserver(()=>{if(parent!==window)parent.postMessage({type:'demo-height',height:document.body.scrollHeight},location.origin);}).observe(document.body);</script></body></html>
