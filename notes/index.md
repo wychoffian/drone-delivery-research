@@ -2,7 +2,7 @@
 
 Adaptive neighborhood exposure regulation for urban drone delivery.
 
-<div class="release"><span>Current stage</span><span>Phase D sensitivity evidence published</span><span>Updated 26 September 2026</span></div>
+<div class="release"><span>Current stage</span><span>Phase D joint sensitivity published</span><span>Updated 26 September 2026</span></div>
 
 ## Ready to inspect
 
@@ -27,12 +27,17 @@ The milestones below distinguish completed prototypes from research work that re
 | Integrated fleet and policy periods | Demonstrated | [Integrated fleet and policy model](fleet-policy.html) |
 | Phase C matched-seed screening | Complete | [Review 4,140 runs with uncertainty](phase-c.html) |
 | Phase D targeted sensitivity | First module complete, gate open | [Review 6,780 sensitivity runs](phase-d.html) |
+| Phase D joint sensitivity | Complete, gate open | [Review 19,440 joint runs](phase-d-joint.html) |
 | Empirical acoustic exposure | Planned | Audit sources and define the exposure measure |
 | Replicated policy comparisons | Planned | Compare fixed budgets at matched service levels |
 
 Table 1. Development status for the current research prototype. "Demonstrated" means that the stated mechanism runs with illustrative inputs.
 
 ## Development record
+
+### 26 September 2026: Phase D joint sensitivity
+
+Executed 648 joint configurations with 30 matched seeds, producing 19,440 runs. The experiment combines destination patterns, fleet size, charger capacity, exposure scaling, demand, and four policy variants. Destination patterns have little effect on P2 and P3-D completion in the selected high-demand setting, while exposure scaling remains influential. [Review the joint sensitivity results](phase-d-joint.html).
 
 ### 26 September 2026: Phase D targeted sensitivity
 
@@ -79,6 +84,6 @@ Implemented the four experimental factors and policy regimes P0 through P3. Veri
 - Which acoustic measure and observation window should replace the exposure proxy?
 - Which fleet interactions are necessary to answer the regulatory question?
 
-The next development milestone is the second Phase D module. It will test destination probabilities and joint interactions among fleet capacity, charger capacity, and the exposure measure. Empirical calibration is required before Phase E.
+The next milestone is empirical calibration planning. The project must define the physical exposure measure, connect policy budgets to that measure, and document vehicle, charging, and destination-demand inputs before Phase E.
 
 Progress entries are maintained with the project code. They change when a new version of the website is published.

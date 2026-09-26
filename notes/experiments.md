@@ -36,6 +36,10 @@ The first Phase D module contains 6,780 runs from 226 configurations. It tests f
 
 [Review the Phase D sensitivity results and download the data](phase-d.html)
 
+The second Phase D module adds 19,440 joint-sensitivity runs. It crosses three destination patterns with fleet size, charger capacity, exposure scaling, demand, and four policy variants. This tests interactions that the first one-at-a-time module could not estimate.
+
+[Review the Phase D joint analysis and download the data](phase-d-joint.html)
+
 ## Discussion
 
-Proxy units cannot establish physical noise or health effects. Monte Carlo intervals describe variation across the selected seeds. Phase D shows material dependence on fleet capacity and exposure scaling, so its progression gate remains open. The research work must define the exposure measure and audit the proposed datasets.
+Proxy units cannot establish physical noise or health effects. Monte Carlo intervals describe variation across the selected seeds. Both Phase D modules show material dependence on exposure scaling, so the progression gate remains open pending calibration. The research work must define the exposure measure and audit the proposed datasets.

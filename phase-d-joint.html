@@ -1,0 +1,152 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="Research progress and executable prototypes for adaptive neighborhood exposure regulation of drone delivery."><title>Phase D joint analysis | Drone delivery research</title><link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23152b44'/%3E%3Cpath d='M7 22L16 8l9 14M7 22h18' fill='none' stroke='%23ffffff' stroke-width='2'/%3E%3C/svg%3E"><link rel="stylesheet" href="style.css"></head><body><a class="skip" href="#main">Skip to content</a><header><a class="brand" href="index.html"><span class="mark" aria-hidden="true">D</span>Drone delivery research</a><span class="meta">CECAN fellowship project · Prototype v0.8</span></header><div class="shell"><nav aria-label="Project navigation"><span class="label">Research notebook</span><a href="index.html">Progress</a><a href="overview.html">Project overview</a><a href="literature.html">Literature and gap</a><a href="model.html">Model and rules</a><a href="odd.html">ODD specification</a><a href="sandbox.html">Sandbox protocol</a><a href="integration.html">Integrated model</a><a href="pilot.html">Interactive pilot</a><a href="experiments.html">Experiments</a><a href="phase-c.html">Phase C results</a><a href="phase-d.html">Phase D sensitivity</a><a href="phase-d-joint.html" aria-current="page">Phase D joint analysis</a></nav><main id="main"><h1>Phase D joint sensitivity analysis</h1>
+<p>The second Phase D module tests destination probabilities, fleet size, charger capacity, and exposure scaling together. It contains 19,440 runs from 648 configurations, with 30 matched seeds per configuration.</p>
+<blockquote>
+<p>Evidence label: Sensitivity finding. These are synthetic model results. They do not specify a real fleet, exposure limit, or operational requirement.</p>
+</blockquote>
+<h2>Design</h2>
+<p>The design crosses medium and high demand with three destination patterns, fleet sizes of 2, 4, and 8 drones, charger capacities of 1, 2, and unlimited, and exposure scales of 0.75, 1.00, and 1.25. Four policies are included: P0, P1, P2 with budget 34, and P3-D with delay 1, gain 0.60, and damping 0.50. Population remains concentrated so the experiment can isolate the joint operational effects.</p>
+<p>Values below are means with 95 percent Monte Carlo intervals across seeds 421 through 450.</p>
+<h2>Fleet and destination interaction</h2>
+<p>Table 1 reports high-demand P3-D completion with two chargers and the reference exposure scale.</p>
+<table>
+<thead>
+<tr>
+<th>Destination pattern</th>
+<th align="right">2 drones</th>
+<th align="right">4 drones</th>
+<th align="right">8 drones</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>centered</td>
+<td align="right">55.6 (55.1 to 56.1)</td>
+<td align="right">69.3 (68.6 to 69.9)</td>
+<td align="right">69.3 (68.6 to 69.9)</td>
+</tr>
+<tr>
+<td>balanced</td>
+<td align="right">56.2 (55.7 to 56.7)</td>
+<td align="right">69.3 (68.6 to 69.9)</td>
+<td align="right">69.3 (68.6 to 69.9)</td>
+</tr>
+<tr>
+<td>edge-weighted</td>
+<td align="right">56.2 (55.7 to 56.8)</td>
+<td align="right">69.3 (68.6 to 69.9)</td>
+<td align="right">69.3 (68.6 to 69.9)</td>
+</tr>
+</tbody></table>
+<p>Table 1. Completion rate in percent for the joint fleet-size and destination-pattern sensitivity.</p>
+<p>For centered destinations, increasing the fleet from two to four drones changes completion from 55.6 to 69.3 percent. The other destination patterns show whether this capacity effect persists when requests are redistributed.</p>
+<h2>Exposure scale and destination interaction</h2>
+<p>Table 2 reports high-demand P3-D completion for four drones and two chargers.</p>
+<table>
+<thead>
+<tr>
+<th>Destination pattern</th>
+<th align="right">Scale 0.75</th>
+<th align="right">Scale 1.00</th>
+<th align="right">Scale 1.25</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>centered</td>
+<td align="right">89.3 (88.6 to 90.0)</td>
+<td align="right">69.3 (68.6 to 69.9)</td>
+<td align="right">55.3 (54.8 to 55.9)</td>
+</tr>
+<tr>
+<td>balanced</td>
+<td align="right">89.7 (89.0 to 90.5)</td>
+<td align="right">69.3 (68.6 to 69.9)</td>
+<td align="right">55.3 (54.8 to 55.9)</td>
+</tr>
+<tr>
+<td>edge-weighted</td>
+<td align="right">89.7 (89.0 to 90.5)</td>
+<td align="right">69.3 (68.6 to 69.9)</td>
+<td align="right">55.3 (54.8 to 55.9)</td>
+</tr>
+</tbody></table>
+<p>Table 2. Completion rate in percent for the joint exposure-scale and destination-pattern sensitivity.</p>
+<p>For centered destinations, completion changes from 89.3 percent at scale 0.75 to 55.3 percent at scale 1.25. This tests the exposure dependency while holding fleet and charger capacity fixed.</p>
+<h2>Policy comparison across destination patterns</h2>
+<p>Table 3 compares policies under high demand with four drones, two chargers, and the reference exposure scale.</p>
+<table>
+<thead>
+<tr>
+<th>Policy</th>
+<th align="right">Centered</th>
+<th align="right">Balanced</th>
+<th align="right">Edge-weighted</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>P0</td>
+<td align="right">99.6 (99.4 to 99.8)</td>
+<td align="right">99.0 (98.6 to 99.4)</td>
+<td align="right">98.6 (98.1 to 99.0)</td>
+</tr>
+<tr>
+<td>P1</td>
+<td align="right">92.2 (91.5 to 92.9)</td>
+<td align="right">94.5 (93.8 to 95.1)</td>
+<td align="right">95.8 (95.1 to 96.5)</td>
+</tr>
+<tr>
+<td>P2-B34</td>
+<td align="right">76.0 (75.4 to 76.6)</td>
+<td align="right">76.0 (75.4 to 76.6)</td>
+<td align="right">76.0 (75.4 to 76.6)</td>
+</tr>
+<tr>
+<td>P3-D</td>
+<td align="right">69.3 (68.6 to 69.9)</td>
+<td align="right">69.3 (68.6 to 69.9)</td>
+<td align="right">69.3 (68.6 to 69.9)</td>
+</tr>
+</tbody></table>
+<p>Table 3. Completion rate in percent across policies and destination patterns.</p>
+<p>The table is a structural comparison. Service performance must still be interpreted with peak exposure, population-weighted burden, queues, and waits contained in the downloadable summary.</p>
+<h2>Fleet and charger interaction</h2>
+<p>Table 4 reports high-demand P3-D completion for centered destinations at the reference exposure scale.</p>
+<table>
+<thead>
+<tr>
+<th>Charger capacity</th>
+<th align="right">2 drones</th>
+<th align="right">4 drones</th>
+<th align="right">8 drones</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td align="right">54.4 (53.9 to 54.9)</td>
+<td align="right">59.4 (58.8 to 59.9)</td>
+<td align="right">59.5 (59.0 to 60.1)</td>
+</tr>
+<tr>
+<td>2</td>
+<td align="right">55.6 (55.1 to 56.1)</td>
+<td align="right">69.3 (68.6 to 69.9)</td>
+<td align="right">69.3 (68.6 to 69.9)</td>
+</tr>
+<tr>
+<td>unlimited</td>
+<td align="right">55.6 (55.1 to 56.1)</td>
+<td align="right">69.3 (68.6 to 69.9)</td>
+<td align="right">69.3 (68.6 to 69.9)</td>
+</tr>
+</tbody></table>
+<p>Table 4. Completion rate in percent for the joint fleet-size and charger-capacity sensitivity.</p>
+<p>One charger limits the benefit from adding drones. Two chargers produce the same completion rate as unlimited parallel charging in these configurations, although the summary data show charging waits for larger fleets.</p>
+<h2>Reproducibility files</h2>
+<ul>
+<li><a href="results/phase_d_joint_runs.csv">Run-level results</a></li>
+<li><a href="results/phase_d_joint_summary.csv">Configuration summaries</a></li>
+<li><a href="results/phase_d_joint_metadata.json">Execution metadata</a></li>
+</ul>
+<h2>Discussion</h2>
+<p>This module tests interactions that the one-at-a-time analysis could not identify. It remains limited to one network, concentrated population, assumed demand, and proxy exposure. The Phase D gate can close only if the policy interpretation remains coherent across the joint settings and the remaining influential quantities are tied to evidence.</p>
+<p>Empirical readiness still requires a physical exposure measure, defensible policy budgets, vehicle and charging data, and documented destination demand. Joint sensitivity does not replace those inputs.</p>
+<p class="download"><a href="notes/phase-d-joint.md" download>Download this page as Markdown</a></p></main></div><footer><span>Mutlaq Aldajani · Research in development</span><span>Illustrative inputs · Last content update 26 September 2026</span></footer><script src="site.js"></script></body></html>

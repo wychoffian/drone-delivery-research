@@ -231,3 +231,9 @@ This Phase C result established the Phase D sensitivity agenda: fixed-budget spa
 The first targeted Phase D module executed 226 unique configurations across 30 matched seeds, for 6,780 runs. It tested fleet size, charging capacity, fixed budgets, exposure coefficient scaling, controller damping, and route tie-breaking. [Review the Phase D results](phase-d.html).
 
 The gate remains open. Fleet capacity materially changes service outcomes, and proportional scaling of the exposure coefficients changes P3-D completion under high demand from 89.3 to 55.3 percent. Destination probabilities and joint interactions among influential factors remain to be tested. The exposure measure and policy budgets require empirical calibration before Phase E.
+
+## Phase D joint sensitivity result
+
+The second module executed 648 joint configurations across 30 matched seeds, for 19,440 runs. It crossed destination patterns, fleet size, charger capacity, exposure scaling, demand, and four policy variants. [Review the joint results](phase-d-joint.html).
+
+The fleet-capacity and exposure-scale findings persist across the three destination patterns. A single charger constrains larger fleets, while two chargers match unlimited charging for completion in the tested configurations. The gate remains open because the exposure scale and budget relationship is not empirically defined.
