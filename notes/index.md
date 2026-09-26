@@ -2,7 +2,7 @@
 
 Adaptive neighborhood exposure regulation for urban drone delivery.
 
-<div class="release"><span>Current stage</span><span>Phase D joint sensitivity published</span><span>Updated 26 September 2026</span></div>
+<div class="release"><span>Current stage</span><span>Empirical dataset audit complete</span><span>Updated 26 September 2026</span></div>
 
 ## Ready to inspect
 
@@ -28,12 +28,17 @@ The milestones below distinguish completed prototypes from research work that re
 | Phase C matched-seed screening | Complete | [Review 4,140 runs with uncertainty](phase-c.html) |
 | Phase D targeted sensitivity | First module complete, gate open | [Review 6,780 sensitivity runs](phase-d.html) |
 | Phase D joint sensitivity | Complete, gate open | [Review 19,440 joint runs](phase-d-joint.html) |
-| Empirical acoustic exposure | Planned | Audit sources and define the exposure measure |
+| Empirical dataset audit | Complete | [Review the calibration map and data gaps](empirical-calibration.html) |
+| Empirical acoustic exposure | Next | Reproduce the acoustic processing and define the exposure account |
 | Replicated policy comparisons | Planned | Compare fixed budgets at matched service levels |
 
 Table 1. Development status for the current research prototype. "Demonstrated" means that the stated mechanism runs with illustrative inputs.
 
 ## Development record
+
+### 26 September 2026: empirical dataset audit
+
+Audited the supplied 1.8 GB research folder and mapped verified datasets to the current model. DroneNoise and NASA measurements can support the first acoustic calibration step. Delivery demand, vehicle energy, charging, target-area population, observed complaints, and policy budgets still need separate evidence. [Review the empirical calibration plan](empirical-calibration.html).
 
 ### 26 September 2026: Phase D joint sensitivity
 
@@ -84,6 +89,6 @@ Implemented the four experimental factors and policy regimes P0 through P3. Veri
 - Which acoustic measure and observation window should replace the exposure proxy?
 - Which fleet interactions are necessary to answer the regulatory question?
 
-The next milestone is empirical calibration planning. The project must define the physical exposure measure, connect policy budgets to that measure, and document vehicle, charging, and destination-demand inputs before Phase E.
+The next milestone is Phase E0 acoustic specification. The project will reproduce the acoustic preprocessing, validate it against the held-out NASA flyovers, and define an energy-consistent exposure account before replacing the proxy route coefficients. Policy budgets remain declared scenarios until their basis is agreed.
 
 Progress entries are maintained with the project code. They change when a new version of the website is published.

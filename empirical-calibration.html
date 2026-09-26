@@ -1,0 +1,163 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="Research progress and executable prototypes for adaptive neighborhood exposure regulation of drone delivery."><title>Empirical calibration | Drone delivery research</title><link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23152b44'/%3E%3Cpath d='M7 22L16 8l9 14M7 22h18' fill='none' stroke='%23ffffff' stroke-width='2'/%3E%3C/svg%3E"><link rel="stylesheet" href="style.css"></head><body><a class="skip" href="#main">Skip to content</a><header><a class="brand" href="index.html"><span class="mark" aria-hidden="true">D</span>Drone delivery research</a><span class="meta">CECAN fellowship project · Prototype v0.9</span></header><div class="shell"><nav aria-label="Project navigation"><span class="label">Research notebook</span><a href="index.html">Progress</a><a href="overview.html">Project overview</a><a href="literature.html">Literature and gap</a><a href="model.html">Model and rules</a><a href="odd.html">ODD specification</a><a href="sandbox.html">Sandbox protocol</a><a href="integration.html">Integrated model</a><a href="pilot.html">Interactive pilot</a><a href="experiments.html">Experiments</a><a href="phase-c.html">Phase C results</a><a href="phase-d.html">Phase D sensitivity</a><a href="phase-d-joint.html">Phase D joint analysis</a><a href="empirical-calibration.html" aria-current="page">Empirical calibration</a></nav><main id="main"><h1>Empirical calibration planning</h1>
+<p>The supplied <code>Drone Simulation 1</code> folder provides a usable acoustic calibration package and two optional behavioral datasets. It does not yet provide the operational demand, battery, charging, population, or complaint observations needed to calibrate the full agent-based model.</p>
+<blockquote>
+<p>Evidence label: Dataset audit. This page records verified file contents and their proposed use. No Phase E simulation has been run with these data.</p>
+</blockquote>
+<h2>Audit scope</h2>
+<p>The folder contains about 1.8 GB across 478 files. It includes 71 CSV files, 62 MATLAB files, 54 WAV recordings, four Excel workbooks, calibration scripts, reports, simulation outputs, and manuscript versions. The audit checked the original tables and measurement files where possible. Reports from the earlier project were treated as references, not as instructions for this project.</p>
+<p>The raw datasets remain outside the public repository. This keeps the website small and avoids redistributing files before every licence and attribution record is checked. The public record contains dataset names, uses, limitations, and file hashes for traceability.</p>
+<h2>Calibration map</h2>
+<p>Table 1 maps each verified source to the part of the model it can support.</p>
+<table>
+<thead>
+<tr>
+<th>Source</th>
+<th>Verified contents</th>
+<th>Proposed model use</th>
+<th>Readiness</th>
+<th>Main limitation</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>DroneNoise Matrice 300</td>
+<td>54 audio recordings and a flyover workbook with vehicle, height, speed, payload, direction, and microphone metrics</td>
+<td>Estimate source level, propagation, directionality, and route-segment sound exposure</td>
+<td>Ready for acoustic method specification</td>
+<td>One aircraft family and controlled measurement conditions</td>
+</tr>
+<tr>
+<td>NASA small UAS flyovers</td>
+<td>62 MATLAB files with microphone pressure, microphone position, aircraft position, weather, and flight metadata</td>
+<td>Independent validation of predicted levels by range and angle</td>
+<td>Ready as held-out validation</td>
+<td>Different aircraft and site; acquisition and positioning caveats are documented in the archive</td>
+</tr>
+<tr>
+<td>Berke delivery-choice survey</td>
+<td>36,297 long-format alternatives from 3,625 respondents</td>
+<td>Optional customer choice extension using cost, time, privacy, and free delivery</td>
+<td>Ready only if customer choice enters the research scope</td>
+<td>Does not identify request arrival rates, a no-order option, or complaint behavior</td>
+</tr>
+<tr>
+<td>Wasatch UAS perception survey</td>
+<td>200 respondent records and derived resident sensitivity scores</td>
+<td>Optional heterogeneity in resident sensitivity</td>
+<td>Ready for distribution shape only</td>
+<td>Does not identify an acoustic response coefficient or complaint probability</td>
+</tr>
+<tr>
+<td>Jafarov last-mile survey</td>
+<td>53 respondent records</td>
+<td>Descriptive context</td>
+<td>Not suitable for coefficient calibration</td>
+<td>Sample and design do not support the required behavioral model</td>
+</tr>
+<tr>
+<td>Complaint and annoyance literature files</td>
+<td>Laboratory response and stated complaint-intention material</td>
+<td>Inform a later response model and its sensitivity bounds</td>
+<td>Context only</td>
+<td>No observed complaints linked to measured neighborhood exposure</td>
+</tr>
+</tbody></table>
+<p>Table 1. Verified datasets and their proposed role in the current model.</p>
+<h2>Strongest evidence package</h2>
+<p>The DroneNoise measurements and NASA flyovers should be used first. The prior calibration material in the folder reports a Matrice 300 received level of 88.4 dB(A) at 1 m and the following propagation form:</p>
+<pre><code class="language-text">LpA(r, theta) = LpA,1m - 20 log10(r / 1 m)
+                 - 0.0015(r - 1)
+                 - 3.3114(sec(theta) - 1)
+</code></pre>
+<p>The directivity correction was fitted to DroneNoise and then checked on 56 held-out NASA observations from 14 flights and four microphones. The existing report gives a bias of -0.12 dB, a mean absolute error of 1.77 dB, and an RMSE of 2.29 dB. These values are promising, but this project must reproduce the calculation and document every processing choice before using them as validation results.</p>
+<p>The acoustic account must conserve energy. The model should calculate a sound-exposure quantity for every route segment, sum exposure in the linear energy domain over the review period, and convert to a logarithmic level only for reporting. It must not add decibel values directly.</p>
+<h2>Source integrity</h2>
+<p>Table 2 records identifiers that can be checked when the calibration pipeline is created.</p>
+<table>
+<thead>
+<tr>
+<th>File or dataset</th>
+<th>Integrity or provenance record</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>DroneNoise flyover workbook</td>
+<td>SHA-256 <code>6bf1a18f40b3b3da26f886815bbfc809f13efd371281e997d564e2c8da18e105</code></td>
+</tr>
+<tr>
+<td>Berke long-format choice file</td>
+<td>36,297 rows; no duplicate rows or missing cells; SHA-256 <code>97d966585fb4231b2243e90f4ccb9d0589777274e9b8a1665f0ba8312c632390</code></td>
+</tr>
+<tr>
+<td>Wasatch survey archive</td>
+<td>200 respondent rows after two metadata rows; SHA-256 <code>b14a2b9804db31dbd3301b921885922c59aae33e9efbe9dae8fa924c59ee7cc3</code></td>
+</tr>
+<tr>
+<td>Jafarov survey workbook</td>
+<td>SHA-256 <code>b958666faf83ad3f4e95a5c95871b2e6eab369bcc0e9a241b9445edfe80691e9</code></td>
+</tr>
+<tr>
+<td>NASA archive</td>
+<td>Flight metadata workbook plus 62 MATLAB measurement files; original data-description document retained locally</td>
+</tr>
+</tbody></table>
+<p>Table 2. File checks and provenance records retained for a reproducible calibration workflow.</p>
+<p>The local notes identify DroneNoise and Wasatch as CC BY 4.0 and the Berke repository contains an MIT licence. These records must be checked against the original distribution pages before any raw file is republished.</p>
+<h2>What the folder cannot calibrate</h2>
+<p>Table 3 identifies the remaining empirical gaps and the model decision each gap affects.</p>
+<table>
+<thead>
+<tr>
+<th>Missing evidence</th>
+<th>Model quantity affected</th>
+<th>Required next source</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Delivery request timestamps and destinations</td>
+<td>Arrival process, demand level, temporal peaks, and spatial demand</td>
+<td>Operator records or a documented synthetic demand design</td>
+</tr>
+<tr>
+<td>Vehicle energy and charging observations</td>
+<td>Energy per distance, reserve rule, charging duration, and charger queues</td>
+<td>Flight logs, manufacturer curves checked against tests, or controlled measurements</td>
+</tr>
+<tr>
+<td>Target-area population and geography</td>
+<td>Neighborhood agents, route geometry, and population-weighted burden</td>
+<td>Census population grid, boundaries, buildings, and route constraints for a named case area</td>
+</tr>
+<tr>
+<td>Measured background sound</td>
+<td>Detectability and total environmental exposure</td>
+<td>Monitoring data or a declared background scenario</td>
+</tr>
+<tr>
+<td>Complaints linked to exposure</td>
+<td>Resident response and reporting behavior</td>
+<td>Local complaint records with time and location, or a separate elicitation study</td>
+</tr>
+<tr>
+<td>Defensible exposure budgets</td>
+<td>Fixed and adaptive policy limits</td>
+<td>Regulatory interpretation and an explicit policy design process</td>
+</tr>
+</tbody></table>
+<p>Table 3. Data gaps that prevent full empirical calibration of the current model.</p>
+<h2>Phase E0 sequence</h2>
+<p>The first empirical step is to replace the arbitrary exposure scale. It does not require adding all available datasets to the model at once.</p>
+<ol>
+<li>Freeze the current synthetic model and keep its results as a verification baseline.</li>
+<li>Reproduce the DroneNoise preprocessing and estimate the acoustic parameters with recorded units and uncertainty.</li>
+<li>Validate predictions against the held-out NASA flyovers by flight and microphone.</li>
+<li>Define route geometry, segment duration, slant distance, off-axis angle, and the review-period sound-exposure account.</li>
+<li>Replace the proxy route coefficients in a calibration branch and rerun the existing invariant checks.</li>
+<li>Run a limited Phase E acoustic sensitivity experiment. Retain policy budgets as declared scenarios until a policy basis is agreed.</li>
+<li>Add demand, vehicle, charging, and population inputs only when their provenance and case definition are documented.</li>
+</ol>
+<p>The Berke and Wasatch datasets should remain outside the core experiment for now. They are useful if the study later introduces customer choice or resident-response agents. Adding them before those mechanisms are part of the research question would expand the model without resolving the current exposure problem.</p>
+<h2>Discussion</h2>
+<p>The dataset folder changes the immediate plan because acoustic calibration can now begin. The strongest defensible claim is narrower than full model validation: the data can support an empirically based route-exposure calculation and an independent acoustic check for a heavier multirotor reference case.</p>
+<p>The main limitation is transfer. Aircraft type, operating state, weather, background sound, and site geometry affect received levels. NASA and DroneNoise cannot establish a universal neighborhood budget, and neither source validates service demand or charging behavior. The model should carry parameter uncertainty into Phase E and keep the policy budgets separate from the physical exposure calculation.</p>
+<p>For the next mentor review, the project can present the acoustic equation, unit conversions, validation split, and proposed review-period account. Future work should then obtain a named case area and operational logs before interpreting results as a real deployment pilot.</p>
+<p class="download"><a href="notes/empirical-calibration.md" download>Download this page as Markdown</a></p></main></div><footer><span>Mutlaq Aldajani · Research in development</span><span>Illustrative inputs · Last content update 26 September 2026</span></footer><script src="site.js"></script></body></html>
