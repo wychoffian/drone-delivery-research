@@ -67,7 +67,7 @@ The budget 14.05 greedy allocation concentrates 60.9 percent of missions on the 
 
 Phase E6 closes the allocation diagnosis. The current greedy dispatcher is adequate at many tested budgets but can be substantially inefficient near discrete route thresholds. It should not be used for controller ranking without an allocation robustness check.
 
-The next development step is to add an optimization-guided period allocator to the research model while retaining the existing event simulator for mission timing, batteries, and charging. The implementation should define how a period plan responds to within-period arrivals and whether FIFO waiting time is an objective or a constraint. Controller experiments can then compare greedy and planned allocation as separate operator policies.
+[Phase E7](phase-e7.html) adds request-level optimized routes to the event model while retaining mission timing, batteries, charging, and acoustic reservations. It removes the discontinuity around budget 14, but it also shows that the fixed 46-mission cap is optimistic at higher budgets.
 
 ## Discussion
 

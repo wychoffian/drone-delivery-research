@@ -64,6 +64,12 @@ Phase E6 compares the greedy operator rule with a skip-blocked variant and an in
 
 [Review the Phase E6 allocation benchmark and download the data](phase-e6.html)
 
+## Phase E7 event integration
+
+Phase E7 converts each optimized allocation into request-level route assignments and executes it with within-period arrivals, two drones, charging, mission duration, and acoustic reservations. The planned method closes the allocation gap through budget 15. At higher budgets, some 45- and 46-mission plans cannot finish before the period boundary.
+
+[Review the Phase E7 event integration and download the data](phase-e7.html)
+
 ## Discussion
 
-The Phase D results remain useful as proxy-model baselines. Phase E replaces the proxy increments with calibrated physical exposure calculations, but the network, demand, operations, and budgets remain scenarios. Monte Carlo intervals describe variation across the selected seeds. They do not include all empirical parameter uncertainty. Phase E6 quantifies the greedy allocation gap. Policy ranking still requires integration of the planned allocation with event timing and fleet constraints.
+The Phase D results remain useful as proxy-model baselines. Phase E replaces the proxy increments with calibrated physical exposure calculations, but the network, demand, operations, and budgets remain scenarios. Monte Carlo intervals describe variation across the selected seeds. They do not include all empirical parameter uncertainty. Phase E7 integrates planned routes with the event model, but policy ranking still requires a time-aware rolling scheduler and multi-period replication.

@@ -1,0 +1,30 @@
+{
+  "experiment": "Phase E7 event-integrated planned allocation",
+  "generated_at": "2026-09-26T17:28:27.925Z",
+  "cases": 480,
+  "budgets": [
+    13,
+    13.5,
+    13.75,
+    14,
+    14.05,
+    14.1,
+    14.15,
+    14.2,
+    14.25,
+    14.5,
+    15,
+    16,
+    17,
+    18
+  ],
+  "methods": [
+    "Greedy event",
+    "Planned event"
+  ],
+  "run_rows": 13440,
+  "summary_rows": 28,
+  "mission_cap": 46,
+  "periods_per_case": 1,
+  "planning_assumption": "All requests in a review period are visible to the planner. The earliest requests within each destination receive the optimized route counts."
+}
