@@ -2,7 +2,7 @@
 
 Adaptive neighborhood exposure regulation for urban drone delivery.
 
-<div class="release"><span>Current stage</span><span>Phase E4 controller diagnosis published</span><span>Updated 26 September 2026</span></div>
+<div class="release"><span>Current stage</span><span>Phase E5 long-horizon threshold analysis published</span><span>Updated 26 September 2026</span></div>
 
 ## Ready to inspect
 
@@ -33,13 +33,18 @@ The milestones below distinguish completed prototypes from research work that re
 | Phase E1 route-level acoustic exposure | Implemented | [Inspect the moving-source exposure calculation](phase-e1.html) |
 | Phase E2 acoustic fleet-policy integration | Implemented | [Inspect physical reservations and scenario budgets](phase-e2.html) |
 | Phase E3 acoustic sensitivity | Complete | [Review 3,900 matched-seed runs](phase-e3.html) |
-| Phase E4 adaptive controller diagnosis | Complete, policy-selection gate open | [Review 1,170 diagnostic runs](phase-e4.html) |
-| Long-horizon threshold analysis | Next | Separate transient convergence from settled controller behavior |
-| Replicated policy comparisons | Planned | Compare fixed and adaptive budgets at matched service and exposure levels |
+| Phase E4 adaptive controller diagnosis | Complete | [Review 1,170 diagnostic runs](phase-e4.html) |
+| Phase E5 long-horizon threshold analysis | Complete, allocation gate open | [Review 2,100 long-horizon runs](phase-e5.html) |
+| Allocation benchmark | Next | Compare the greedy dispatcher with a period-level optimization benchmark |
+| Replicated policy comparisons | Planned | Repeat controller comparisons after allocation validation |
 
 Table 1. Development status for the current research prototype. "Demonstrated" means that the stated mechanism runs with illustrative inputs.
 
 ## Development record
+
+### 26 September 2026: Phase E5 long-horizon threshold analysis
+
+Executed 70 configurations with 30 matched seeds over 120 periods, producing 2,100 runs. The strong 24-period result for slow damping does not persist. The analysis also finds non-monotonic fixed-budget service around 14, caused by the greedy route allocator, residual nine-receiver capacity, and the carried FIFO queue. Controller ranking is paused until the allocation rule is benchmarked. [Review the Phase E5 results](phase-e5.html).
 
 ### 26 September 2026: Phase E4 adaptive controller diagnosis
 

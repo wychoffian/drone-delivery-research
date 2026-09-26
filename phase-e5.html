@@ -1,0 +1,197 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="Research progress and executable prototypes for adaptive neighborhood exposure regulation of drone delivery."><title>Phase E5 thresholds | Drone delivery research</title><link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23152b44'/%3E%3Cpath d='M7 22L16 8l9 14M7 22h18' fill='none' stroke='%23ffffff' stroke-width='2'/%3E%3C/svg%3E"><link rel="stylesheet" href="style.css"></head><body><a class="skip" href="#main">Skip to content</a><header><a class="brand" href="index.html"><span class="mark" aria-hidden="true">D</span>Drone delivery research</a><span class="meta">CECAN fellowship project · Prototype v0.16</span></header><div class="shell"><nav aria-label="Project navigation"><span class="label">Research notebook</span><a href="index.html">Progress</a><a href="overview.html">Project overview</a><a href="literature.html">Literature and gap</a><a href="model.html">Model and rules</a><a href="odd.html">ODD specification</a><a href="sandbox.html">Sandbox protocol</a><a href="integration.html">Integrated model</a><a href="pilot.html">Interactive pilot</a><a href="experiments.html">Experiments</a><a href="phase-c.html">Phase C results</a><a href="phase-d.html">Phase D sensitivity</a><a href="phase-d-joint.html">Phase D joint analysis</a><a href="empirical-calibration.html">Empirical calibration</a><a href="phase-e0.html">Phase E0 acoustics</a><a href="phase-e1.html">Phase E1 routes</a><a href="phase-e2.html">Phase E2 integration</a><a href="phase-e3.html">Phase E3 sensitivity</a><a href="phase-e4.html">Phase E4 diagnosis</a><a href="phase-e5.html" aria-current="page">Phase E5 thresholds</a></nav><main id="main"><h1>Phase E5 long-horizon threshold analysis</h1>
+<p>Phase E5 tests whether the 24-period controller comparisons persist over a longer horizon and maps the target region around the route-feasibility threshold. The experiment contains 2,100 high-demand runs from 70 configurations, with 30 matched demand seeds and 120 review periods per run.</p>
+<blockquote>
+<p>Evidence label: Long-horizon diagnostic finding from a calibrated acoustic mechanism in a synthetic network. The experiment identifies model behavior that must be resolved before policy selection.</p>
+</blockquote>
+<h2>Design</h2>
+<p>The analysis holds demand, population, observation delay, and controller gain constant. It varies fixed budgets and adaptive targets from 13 to 18, with dense coverage from 14.00 to 14.25. Every P3-D target is tested with damping 0.25, 0.50, and 0.75. P3-U and P2 provide adaptive and fixed comparisons.</p>
+<p>Table 1 summarizes the experiment.</p>
+<table>
+<thead>
+<tr>
+<th>Component</th>
+<th>Setting</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Horizon</td>
+<td>120 review periods</td>
+</tr>
+<tr>
+<td>Demand</td>
+<td>High demand, with the existing increase from period 9</td>
+</tr>
+<tr>
+<td>Targets and fixed budgets</td>
+<td>13, 13.5, 13.75, 14, 14.05, 14.10, 14.15, 14.20, 14.25, 14.5, 15, 16, 17, and 18</td>
+</tr>
+<tr>
+<td>Adaptive policies</td>
+<td>P3-U and P3-D</td>
+</tr>
+<tr>
+<td>P3-D damping</td>
+<td>0.25, 0.50, and 0.75</td>
+</tr>
+<tr>
+<td>Observation delay and gain</td>
+<td>Delay 1 and gain 0.60</td>
+</tr>
+<tr>
+<td>Replication</td>
+<td>Seeds 501 through 530</td>
+</tr>
+<tr>
+<td>Late window</td>
+<td>Periods 97 through 120</td>
+</tr>
+</tbody></table>
+<p>Table 1. Phase E5 long-horizon threshold design.</p>
+<p>The analysis reports completion over the full horizon, completion during periods 1 through 24, the late-window service ratio, budget variation, route shares, and final queue composition. The late window describes the end of the simulated horizon. It is not assumed to be a mathematical steady state.</p>
+<h2>The 24-period result does not persist</h2>
+<p>Table 2 compares the first and final 24 periods for selected target 14 and target 18 controllers.</p>
+<table>
+<thead>
+<tr>
+<th>Configuration</th>
+<th align="right">First 24 completion (%)</th>
+<th align="right">Late-window service ratio (%)</th>
+<th align="right">Late dispatch per period</th>
+<th align="right">Late central-route share (%)</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>P3-U, target 14</td>
+<td align="right">38.4</td>
+<td align="right">32.6</td>
+<td align="right">41.8</td>
+<td align="right">33.1</td>
+</tr>
+<tr>
+<td>P3-D 0.25, target 14</td>
+<td align="right">40.0</td>
+<td align="right">10.9</td>
+<td align="right">14.0</td>
+<td align="right">100.0</td>
+</tr>
+<tr>
+<td>P3-D 0.50, target 14</td>
+<td align="right">28.1</td>
+<td align="right">12.4</td>
+<td align="right">15.9</td>
+<td align="right">90.9</td>
+</tr>
+<tr>
+<td>P3-D 0.75, target 14</td>
+<td align="right">38.3</td>
+<td align="right">31.5</td>
+<td align="right">40.4</td>
+<td align="right">34.2</td>
+</tr>
+<tr>
+<td>P3-U, target 18</td>
+<td align="right">40.5</td>
+<td align="right">35.1</td>
+<td align="right">45.0</td>
+<td align="right">39.8</td>
+</tr>
+<tr>
+<td>P3-D 0.25, target 18</td>
+<td align="right">41.1</td>
+<td align="right">14.0</td>
+<td align="right">18.0</td>
+<td align="right">100.0</td>
+</tr>
+<tr>
+<td>P3-D 0.50, target 18</td>
+<td align="right">36.1</td>
+<td align="right">14.0</td>
+<td align="right">18.0</td>
+<td align="right">100.0</td>
+</tr>
+<tr>
+<td>P3-D 0.75, target 18</td>
+<td align="right">39.9</td>
+<td align="right">34.2</td>
+<td align="right">43.8</td>
+<td align="right">40.9</td>
+</tr>
+</tbody></table>
+<p>Table 2. Early and late service outcomes for selected adaptive controllers across 120 periods.</p>
+<p>The apparent advantage of damping 0.25 in Phase E4 is transient. At target 18, it falls from 41.1 percent completion during the first 24 periods to a late-window service ratio of 14.0 percent. It dispatches exactly 18 missions per late period, all through the central corridor. Damping 0.50 reaches the same route lock-in earlier.</p>
+<p>The 0.75 controller and P3-U avoid permanent lock-in in these cases, but their budgets and dispatch counts continue to vary. Their higher late service does not establish superiority because the route-allocation mechanism itself fails a monotonicity check.</p>
+<h2>Fixed-budget monotonicity failure</h2>
+<p>Table 3 maps the narrow fixed-budget region where a small budget increase changes the greedy allocation sequence.</p>
+<table>
+<thead>
+<tr>
+<th align="right">P2 budget</th>
+<th align="right">First 24 completion (%)</th>
+<th align="right">Late-window service ratio (%)</th>
+<th align="right">Late dispatch per period</th>
+<th align="right">Central-route share (%)</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="right">14.00</td>
+<td align="right">35.0</td>
+<td align="right">30.4</td>
+<td align="right">39.0</td>
+<td align="right">33.4</td>
+</tr>
+<tr>
+<td align="right">14.05</td>
+<td align="right">20.6</td>
+<td align="right">18.0</td>
+<td align="right">23.0</td>
+<td align="right">60.9</td>
+</tr>
+<tr>
+<td align="right">14.10</td>
+<td align="right">29.6</td>
+<td align="right">25.7</td>
+<td align="right">33.0</td>
+<td align="right">42.4</td>
+</tr>
+<tr>
+<td align="right">14.15</td>
+<td align="right">37.7</td>
+<td align="right">32.8</td>
+<td align="right">42.0</td>
+<td align="right">33.3</td>
+</tr>
+<tr>
+<td align="right">14.20</td>
+<td align="right">37.7</td>
+<td align="right">32.8</td>
+<td align="right">42.0</td>
+<td align="right">33.3</td>
+</tr>
+<tr>
+<td align="right">18.00</td>
+<td align="right">40.9</td>
+<td align="right">35.6</td>
+<td align="right">45.6</td>
+<td align="right">37.3</td>
+</tr>
+</tbody></table>
+<p>Table 3. Fixed-budget service and route allocation around the target 14 threshold.</p>
+<p>Increasing the fixed budget from 14.00 to 14.05 reduces late service from 30.4 to 18.0 percent. This is not a plausible general response to a relaxed constraint. It occurs because the operator uses a first-in, first-out queue and selects the shortest route that is feasible at each dispatch. A small budget change alters early route choices, leaving a different pattern of residual exposure capacity. When the first queued request no longer fits any route, later requests wait even if a different earlier allocation could have served more of the queue.</p>
+<p>The result is a property of the current greedy heuristic and continuous nine-receiver exposure vectors. It prevents a clean interpretation of target or damping effects.</p>
+<h2>Route lock-in</h2>
+<p>At target 14 with damping 0.25, the late central budget is 14.004 reference missions and the controller dispatches 14 missions per period, all through the central corridor. At target 18, the same controller converges to 18.004 and dispatches 18 central-corridor missions. Outer neighborhood budgets relax toward their upper bounds because they receive little exposure, but alternative routes still add some energy to central receivers after their accounts are nearly exhausted.</p>
+<p>The queue remains dominated by central-destination requests because the demand distribution assigns 60 percent of requests to that destination. However, queue composition alone does not explain the loss. The decisive mechanism is the combination of greedy route order, residual capacity across all nine receivers, and a carried first-in, first-out backlog.</p>
+<h2>Progression decision</h2>
+<p>Phase E5 closes the question raised by the 24-period horizon: slow damping does not preserve service after convergence. It also opens a more fundamental allocation gate. Controller ranking must pause until the operator rule passes a monotonicity and order-sensitivity audit.</p>
+<p>The next development step is to compare the current greedy dispatcher with a transparent period-level allocation benchmark. Candidate benchmarks include exhaustive allocation for a small request set or a mixed-integer optimization that maximizes served missions subject to fleet and nine-receiver exposure constraints. The benchmark should measure the optimality gap and identify whether FIFO fairness requires a separate constraint.</p>
+<h2>Discussion</h2>
+<p>The 120-period horizon is five times longer than the earlier experiment, but it does not prove convergence for controllers that continue to vary. The network has only three corridors, demand is synthetic, and the operator uses one deterministic route-order rule. The result identifies an implementation-dependent mechanism rather than a real policy response.</p>
+<p>The implication is methodological. Feedback control cannot be evaluated independently of the decision rule that converts a budget into authorized missions. Future research should validate that allocation layer first, then repeat the controller experiment at matched exposure and service. Empirical annoyance calibration can proceed as a separate outcome-model task, but it should not be used to justify a controller whose operational allocation rule remains unresolved.</p>
+<h2>Reproducibility files</h2>
+<ul>
+<li><a href="results/phase_e5_long_horizon_runs.csv">Run-level results</a></li>
+<li><a href="results/phase_e5_long_horizon_summary.csv">Configuration summaries</a></li>
+<li><a href="results/phase_e5_period_summary.csv">Period summaries</a></li>
+<li><a href="results/phase_e5_metadata.json">Execution metadata</a></li>
+</ul>
+<p class="download"><a href="notes/phase-e5.md" download>Download this page as Markdown</a></p></main></div><footer><span>Mutlaq Aldajani · Research in development</span><span>Illustrative inputs · Last content update 26 September 2026</span></footer><script src="site.js"></script></body></html>

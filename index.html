@@ -1,6 +1,6 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="Research progress and executable prototypes for adaptive neighborhood exposure regulation of drone delivery."><title>Progress | Drone delivery research</title><link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23152b44'/%3E%3Cpath d='M7 22L16 8l9 14M7 22h18' fill='none' stroke='%23ffffff' stroke-width='2'/%3E%3C/svg%3E"><link rel="stylesheet" href="style.css"></head><body><a class="skip" href="#main">Skip to content</a><header><a class="brand" href="index.html"><span class="mark" aria-hidden="true">D</span>Drone delivery research</a><span class="meta">CECAN fellowship project · Prototype v0.15</span></header><div class="shell"><nav aria-label="Project navigation"><span class="label">Research notebook</span><a href="index.html" aria-current="page">Progress</a><a href="overview.html">Project overview</a><a href="literature.html">Literature and gap</a><a href="model.html">Model and rules</a><a href="odd.html">ODD specification</a><a href="sandbox.html">Sandbox protocol</a><a href="integration.html">Integrated model</a><a href="pilot.html">Interactive pilot</a><a href="experiments.html">Experiments</a><a href="phase-c.html">Phase C results</a><a href="phase-d.html">Phase D sensitivity</a><a href="phase-d-joint.html">Phase D joint analysis</a><a href="empirical-calibration.html">Empirical calibration</a><a href="phase-e0.html">Phase E0 acoustics</a><a href="phase-e1.html">Phase E1 routes</a><a href="phase-e2.html">Phase E2 integration</a><a href="phase-e3.html">Phase E3 sensitivity</a><a href="phase-e4.html">Phase E4 diagnosis</a></nav><main id="main"><h1>Research progress</h1>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="Research progress and executable prototypes for adaptive neighborhood exposure regulation of drone delivery."><title>Progress | Drone delivery research</title><link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23152b44'/%3E%3Cpath d='M7 22L16 8l9 14M7 22h18' fill='none' stroke='%23ffffff' stroke-width='2'/%3E%3C/svg%3E"><link rel="stylesheet" href="style.css"></head><body><a class="skip" href="#main">Skip to content</a><header><a class="brand" href="index.html"><span class="mark" aria-hidden="true">D</span>Drone delivery research</a><span class="meta">CECAN fellowship project · Prototype v0.16</span></header><div class="shell"><nav aria-label="Project navigation"><span class="label">Research notebook</span><a href="index.html" aria-current="page">Progress</a><a href="overview.html">Project overview</a><a href="literature.html">Literature and gap</a><a href="model.html">Model and rules</a><a href="odd.html">ODD specification</a><a href="sandbox.html">Sandbox protocol</a><a href="integration.html">Integrated model</a><a href="pilot.html">Interactive pilot</a><a href="experiments.html">Experiments</a><a href="phase-c.html">Phase C results</a><a href="phase-d.html">Phase D sensitivity</a><a href="phase-d-joint.html">Phase D joint analysis</a><a href="empirical-calibration.html">Empirical calibration</a><a href="phase-e0.html">Phase E0 acoustics</a><a href="phase-e1.html">Phase E1 routes</a><a href="phase-e2.html">Phase E2 integration</a><a href="phase-e3.html">Phase E3 sensitivity</a><a href="phase-e4.html">Phase E4 diagnosis</a><a href="phase-e5.html">Phase E5 thresholds</a></nav><main id="main"><h1>Research progress</h1>
 <p>Adaptive neighborhood exposure regulation for urban drone delivery.</p>
-<div class="release"><span>Current stage</span><span>Phase E4 controller diagnosis published</span><span>Updated 26 September 2026</span></div>
+<div class="release"><span>Current stage</span><span>Phase E5 long-horizon threshold analysis published</span><span>Updated 26 September 2026</span></div>
 
 <h2>Ready to inspect</h2>
 <div class="feature-grid"><a class="feature" href="mission.html"><span class="number">01</span><h3>Follow the small fleet</h3><p>Inspect two drones, three requests, concurrent reservations, queueing, and charging.</p><span class="link-label">Open fleet walkthrough</span></a><a class="feature" href="fleet-policy.html"><span class="number">02</span><h3>Run the integrated model</h3><p>Change the four dials and compare five policies with fleet capacity and queues.</p><span class="link-label">Open integrated experiment</span></a></div>
@@ -103,22 +103,29 @@
 </tr>
 <tr>
 <td>Phase E4 adaptive controller diagnosis</td>
-<td>Complete, policy-selection gate open</td>
+<td>Complete</td>
 <td><a href="phase-e4.html">Review 1,170 diagnostic runs</a></td>
 </tr>
 <tr>
-<td>Long-horizon threshold analysis</td>
+<td>Phase E5 long-horizon threshold analysis</td>
+<td>Complete, allocation gate open</td>
+<td><a href="phase-e5.html">Review 2,100 long-horizon runs</a></td>
+</tr>
+<tr>
+<td>Allocation benchmark</td>
 <td>Next</td>
-<td>Separate transient convergence from settled controller behavior</td>
+<td>Compare the greedy dispatcher with a period-level optimization benchmark</td>
 </tr>
 <tr>
 <td>Replicated policy comparisons</td>
 <td>Planned</td>
-<td>Compare fixed and adaptive budgets at matched service and exposure levels</td>
+<td>Repeat controller comparisons after allocation validation</td>
 </tr>
 </tbody></table>
 <p>Table 1. Development status for the current research prototype. &quot;Demonstrated&quot; means that the stated mechanism runs with illustrative inputs.</p>
 <h2>Development record</h2>
+<h3>26 September 2026: Phase E5 long-horizon threshold analysis</h3>
+<p>Executed 70 configurations with 30 matched seeds over 120 periods, producing 2,100 runs. The strong 24-period result for slow damping does not persist. The analysis also finds non-monotonic fixed-budget service around 14, caused by the greedy route allocator, residual nine-receiver capacity, and the carried FIFO queue. Controller ranking is paused until the allocation rule is benchmarked. <a href="phase-e5.html">Review the Phase E5 results</a>.</p>
 <h3>26 September 2026: Phase E4 adaptive controller diagnosis</h3>
 <p>Executed 39 configurations with 30 matched seeds, producing 1,170 runs. P3-D with damping 0.50 is stable in the reference case, but its budget crosses a discrete route-feasibility threshold near the target of 14. First-in-line blocking is negligible. Slower damping preserves service during the 24-period horizon because it has not settled, so the next experiment must extend the horizon and map the threshold. <a href="phase-e4.html">Review the Phase E4 diagnosis</a>.</p>
 <h3>26 September 2026: Phase E3 acoustic sensitivity</h3>

@@ -245,3 +245,9 @@ Phase E0 through E2 replace the proxy exposure increment with calibrated single-
 The physical accounting gate is complete for the synthetic network. Phase E4 executes 1,170 controller-diagnosis runs across targets, delays, and damping values. [Review the Phase E4 diagnosis](phase-e4.html).
 
 P3-D with damping 0.50 is stable in the reference case, but the budget converges through a discrete route-feasibility threshold near target 14. The slower 0.25 controller retains high service during the 24-period horizon because it has not settled. First-in-line blocking is negligible. The policy-selection gate remains open until a long-horizon experiment separates transient behavior from the settled response and compares policies at matched service and exposure.
+
+## Phase E long-horizon result
+
+Phase E5 extends the experiment to 120 periods and maps 14 fixed budgets and targets from 13 to 18. [Review the Phase E5 results](phase-e5.html).
+
+The slower controller's early service advantage does not persist. At target 18, P3-D with damping 0.25 falls from 41.1 percent completion in the first 24 periods to a 14.0 percent late-window service ratio. Fixed P2 service is also non-monotonic around budget 14. The allocation gate is therefore open: the greedy sequential dispatcher must be benchmarked before further controller ranking.

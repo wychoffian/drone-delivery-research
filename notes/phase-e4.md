@@ -67,7 +67,7 @@ The blocking mechanism is therefore system-wide exposure feasibility at the curr
 
 Phase E4 closes the controller-stability diagnosis but does not identify a preferred policy. The earlier description of P3-D as non-monotonic around the reference setting is replaced by a more specific explanation: continuous budget updates cross discrete mission-feasibility thresholds, and the 24-period horizon can make a slowly converging controller appear better because it has not reached its target.
 
-The next controller experiment should extend the horizon and test target values densely around the route thresholds. It should report both transient and steady-state behavior. The annoyance-response module should remain separate until the policy target has an empirical or explicitly normative basis.
+[Phase E5](phase-e5.html) extends the horizon to 120 periods and tests target values densely around the route thresholds. It shows that the apparent advantage of slow damping does not persist and identifies a non-monotonicity in the greedy route allocator. The annoyance-response module should remain separate until the policy target has an empirical or explicitly normative basis.
 
 ## Discussion
 

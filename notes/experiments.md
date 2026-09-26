@@ -52,6 +52,12 @@ Phase E4 contains 1,170 runs from 39 configurations. It varies adaptive targets,
 
 [Review the Phase E4 controller diagnosis and download the data](phase-e4.html)
 
+## Phase E5 long-horizon thresholds
+
+Phase E5 contains 2,100 runs from 70 configurations over 120 periods. It maps fixed budgets and adaptive targets from 13 to 18, with dense coverage around 14. Slow damping loses its early service advantage after convergence. The fixed-budget comparison also fails monotonicity around 14, which identifies the greedy route allocator as the next validation target.
+
+[Review the Phase E5 long-horizon results and download the data](phase-e5.html)
+
 ## Discussion
 
-The Phase D results remain useful as proxy-model baselines. Phase E replaces the proxy increments with calibrated physical exposure calculations, but the network, demand, operations, and budgets remain scenarios. Monte Carlo intervals describe variation across the selected seeds. They do not include all empirical parameter uncertainty. Phase E4 closes the immediate stability diagnosis, but policy ranking still requires a longer horizon and matched service-exposure comparisons.
+The Phase D results remain useful as proxy-model baselines. Phase E replaces the proxy increments with calibrated physical exposure calculations, but the network, demand, operations, and budgets remain scenarios. Monte Carlo intervals describe variation across the selected seeds. They do not include all empirical parameter uncertainty. Phase E5 shows that policy ranking must wait until the greedy route allocator is compared with an allocation benchmark.
