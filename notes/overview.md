@@ -12,7 +12,7 @@ The comparison includes a shortest-path baseline, population-weighted noise-awar
 
 The model contains one delivery operator and one regulator. The planned drone fleet carries parcels through a route network, with exposure accumulated by neighborhood. Population and socioeconomic attributes support distributional analysis.
 
-The present prototypes cover routing and feedback, plus a separate event model with two drones, three requests, simultaneous reservations, and charging. The operational and policy prototypes are not yet integrated. Empirical acoustics and socioeconomic group analysis remain planned.
+The current integrated prototype connects 24 policy periods with within-period request arrivals, two drones, charging, queues, and simultaneous reservations. The earlier allocation-only and controlled fleet demonstrations remain available for verification. Empirical acoustics and socioeconomic group analysis remain planned.
 
 ## Intended evidence
 

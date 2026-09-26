@@ -1,0 +1,143 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Integrated fleet and policy model</title><link rel="stylesheet" href="demo.css"></head><body><div id="fleet-policy">
+ <h2>Integrated fleet and policy model</h2>
+ <div class="text-small text-muted">24 review periods · 480 operational minutes per period · Two drones · Proxy exposure units</div>
+ <div class="viz-controls">
+  <label class="form-label">1. Demand
+   <select class="form-select" id="fp-demand"><option value="18">Low: 18 requests / period</option><option value="45" selected>Medium: 45 requests / period</option><option value="80">High: 80 requests / period</option></select>
+  </label>
+  <label class="form-label">2. Population distribution
+   <select class="form-select" id="fp-form"><option value="dispersed">Dispersed</option><option value="concentrated" selected>Concentrated</option></select>
+  </label>
+  <label class="form-label">3. Information delay
+   <select class="form-select" id="fp-delay"><option value="0">0 review periods</option><option value="1" selected>1 review period</option><option value="3">3 review periods</option></select>
+  </label>
+  <label class="form-label">4. Regulatory responsiveness
+   <select class="form-select" id="fp-gain"><option value="0.15">Slow: 0.15</option><option value="0.6" selected>Moderate: 0.60</option><option value="1.5">Aggressive: 1.50</option></select>
+  </label>
+ </div>
+ <div class="viz-controls">
+  <label class="form-label">Policy
+   <select class="form-select" id="fp-policy"><option value="0">P0: shortest path</option><option value="1">P1: population-weighted route</option><option value="2">P2: fixed exposure budget</option><option value="3" selected>P3-U: adaptive budget</option><option value="4">P3-D: damped adaptive budget</option></select>
+  </label>
+  <label class="form-label">Review period: <span id="fp-period-value" class="tabular-nums">12 / 24</span>
+   <input class="form-range" id="fp-period" type="range" min="1" max="24" value="12" step="1">
+  </label>
+ </div>
+ <div class="fp-metrics" aria-live="polite">
+  <span id="fp-received"></span><span id="fp-completed"></span><span id="fp-queue"></span><span id="fp-wait"></span><span id="fp-exposure"></span>
+ </div>
+ <svg id="fp-network" class="fp-svg" role="img" aria-label="Integrated fleet route network and neighborhood exposure"></svg>
+ <div class="text-small text-muted">Circle size: population · Fill: exposure · Route width: completed missions</div>
+ <div id="fp-observation" class="text-small" aria-live="polite"></div>
+ <h3>Queue at the end of each review period</h3>
+ <svg id="fp-trend" class="fp-svg" role="img" aria-label="End-of-period queues for five policy regimes"></svg>
+ <div class="text-small text-muted">Common request seed: 421 · Demand increases by 60 percent from period 9 · Dispatch cutoff: final 10 minutes</div>
+</div>
+<style>
+ #fleet-policy{color:var(--foreground)}
+ #fleet-policy .fp-metrics{display:grid;grid-template-columns:repeat(5,minmax(110px,1fr));gap:1px;background:var(--border);margin:14px 0}
+ #fleet-policy .fp-metrics span{background:var(--background);padding:10px 8px;text-align:center}
+ #fleet-policy .fp-svg{display:block;width:100%;overflow:visible}
+ #fleet-policy .fp-svg text{fill:var(--foreground);font-size:12px}
+ #fleet-policy #fp-observation{margin-top:12px;min-height:2.5em}
+ @media(max-width:620px){#fleet-policy .fp-metrics{grid-template-columns:1fr 1fr}}
+</style>
+<script src="https://cdn.jsdelivr.net/npm/d3@7.9.0/dist/d3.min.js"></script>
+<script>
+(()=>{
+ const root=document.getElementById('fleet-policy'),get=id=>root.querySelector('#fp-'+id);
+ const coefficient=[1.1,.8,1,1,1.4,1.1,.9,1,.8];
+ const totalPeriods=24,periodLength=480,dispatchCutoff=10,target=28,initialBudget=40,budgetMin=6,budgetMax=70,damping=.5;
+ let results,population,extentMax;
+ function random(seed){return()=>{seed|=0;seed=seed+0x6D2B79F5|0;let t=Math.imul(seed^seed>>>15,1|seed);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296;};}
+ function makeDemand(mean){
+  const rng=random(421),periods=[];let id=0;
+  for(let p=0;p<totalPeriods;p++){
+   const rate=mean*(p>=8?1.6:1),threshold=Math.exp(-rate);let product=1,n=0;
+   do{n++;product*=rng();}while(product>threshold);
+   const requests=[];
+   for(let j=0;j<n-1;j++){const u=rng(),destination=u<.2?0:u<.8?1:2;requests.push({id:'Q'+(++id),destination,offset:Math.floor(rng()*periodLength)});}
+   requests.sort((a,b)=>a.offset-b.offset||a.id.localeCompare(b.id));periods.push(requests);
+  }
+  return periods;
+ }
+ function run(policy,cfg,demand,pop){
+  let budgets=Array(9).fill(initialBudget),exposure=Array(9).fill(0),reserved=Array(9).fill(0),trips=[0,0,0],distance=0,energy=0,current=0,sequence=0;
+  let received=0,dispatched=0,completed=0,busyMinutes=0,waits=[],queue=[],history=[];
+  const drones=['D1','D2'].map(id=>({id,status:'available',battery:100,request:null}));
+  const events=[];
+  const schedule=(time,priority,type,data={})=>{events.push({time,priority,type,data,sequence:sequence++});events.sort((a,b)=>a.time-b.time||a.priority-b.priority||a.sequence-b.sequence);};
+  for(let p=0;p<totalPeriods;p++){for(const request of demand[p])schedule(p*periodLength+request.offset,30,'arrival',{request:{...request,period:p,arrival:p*periodLength+request.offset}});schedule((p+1)*periodLength,20,'boundary');}
+  const routesFor=(destination,policyCode)=>[0,1,2].map(row=>{const length=2*(6+Math.abs(row-1)+Math.abs(row-destination)),burden=coefficient.slice(row*3,row*3+3).reduce((sum,c,j)=>sum+c*pop[row*3+j],0)/100;return{row,length,cost:length+(policyCode===1?.75*burden:0)};}).sort((a,b)=>a.cost-b.cost||a.row-b.row);
+  const dispatch=time=>{
+   if(current>=totalPeriods||time>(current+1)*periodLength-dispatchCutoff)return;
+   while(queue.length){
+    const drone=drones.find(d=>d.status==='available');if(!drone)return;
+    const request=queue[0],route=routesFor(request.destination,policy).find(r=>time+r.length/2+1<=(current+1)*periodLength&&(policy<2||[0,1,2].every(j=>{const i=r.row*3+j;return exposure[i]+reserved[i]+coefficient[i]<=budgets[i]+1e-9;})));
+    if(!route)return;
+    queue.shift();request.dispatch=time;request.route=route;drone.status='mission';drone.request=request.id;drone.battery=100-route.length*2;
+    for(let j=0;j<3;j++)reserved[route.row*3+j]+=coefficient[route.row*3+j];
+    dispatched++;waits.push(time-request.arrival);trips[route.row]++;distance+=route.length;energy+=route.length*2;busyMinutes+=route.length/2+1;
+    schedule(time+route.length/2+1,10,'complete',{drone:drone.id,request,route});
+   }
+  };
+  while(events.length){
+   const event=events.shift(),time=event.time,data=event.data;
+   if(event.type==='arrival'){queue.push(data.request);received++;dispatch(time);continue;}
+   if(event.type==='complete'){
+    const drone=drones.find(d=>d.id===data.drone);for(let j=0;j<3;j++){const i=data.route.row*3+j;reserved[i]-=coefficient[i];exposure[i]+=coefficient[i];}
+    completed++;drone.status='charging';const charge=(100-drone.battery)/4;schedule(time+charge,15,'charged',{drone:drone.id});continue;
+   }
+   if(event.type==='charged'){const drone=drones.find(d=>d.id===data.drone);drone.status='available';drone.battery=100;drone.request=null;dispatch(time);continue;}
+   if(event.type==='boundary'){
+    const observation=current-cfg.delay,source=observation===current?exposure:observation>=0?history[observation].exposure:null,effectiveGain=policy===4?cfg.gain*damping:cfg.gain;
+    const next=policy>=3&&source?budgets.map((b,i)=>Math.max(budgetMin,Math.min(budgetMax,b-effectiveGain*(source[i]-target)))):budgets.slice();
+    history.push({period:current+1,received,dispatched,completed,queueEnd:queue.length,meanWait:waits.length?waits.reduce((a,b)=>a+b,0)/waits.length:0,distance,energy,utilization:busyMinutes/(2*periodLength),exposure:exposure.slice(),reserved:reserved.slice(),trips:trips.slice(),budgets:budgets.slice(),next,observation:policy>=3&&source?observation+1:null,max:Math.max(...exposure)});
+    budgets=next;exposure=Array(9).fill(0);reserved=Array(9).fill(0);trips=[0,0,0];distance=0;energy=0;received=0;dispatched=0;completed=0;busyMinutes=0;waits=[];current++;dispatch(time);
+   }
+  }
+  history.finalQueue=queue.length;return history;
+ }
+ function recalculate(){
+  const cfg={delay:+get('delay').value,gain:+get('gain').value},mean=+get('demand').value;
+  population=get('form').value==='concentrated'?[40,40,40,220,220,220,40,40,40]:Array(9).fill(100);
+  const demand=makeDemand(mean);results=[0,1,2,3,4].map(policy=>run(policy,cfg,demand,population));
+  extentMax=Math.max(target,...results.flat().map(s=>s.max));draw();
+ }
+ function svgText(svg,x,y,text,anchor='middle'){return svg.append('text').attr('x',x).attr('y',y).attr('text-anchor',anchor).text(text);}
+ function drawNetwork(state,policy){
+  const el=get('network'),svg=d3.select(el),w=el.clientWidth,h=330;svg.attr('viewBox',`0 0 ${w} ${h}`).attr('height',h);svg.selectAll('*').remove();
+  svg.append('title').text(`Period ${state.period}: ${state.completed} completed missions, queue ${state.queueEnd}, maximum exposure ${state.max.toFixed(1)} units.`);
+  const left=24,right=w-24,ys=[53,153,253],xs=[w*.28,w*.50,w*.72];
+  svg.append('path').attr('d',`M${right},${ys[0]}V${ys[2]}`).attr('stroke','var(--border)').attr('fill','none');
+  for(let row=0;row<3;row++){
+   const y=ys[row];svg.append('path').attr('d',`M${left},153 L${w*.16},${y} H${right}`).attr('stroke','var(--border)').attr('fill','none');
+   if(state.trips[row])svg.append('path').attr('d',`M${left},153 L${w*.16},${y} H${right}`).attr('stroke','var(--viz-series-1)').attr('stroke-opacity',.5).attr('stroke-width',1+state.trips[row]*.1).attr('fill','none');
+   for(let col=0;col<3;col++){
+    const i=row*3+col,x=xs[col],r=9+Math.sqrt(population[i]/220)*12;svg.append('circle').attr('cx',x).attr('cy',y).attr('r',r).attr('fill','var(--viz-series-1)').attr('fill-opacity',.12+.78*state.exposure[i]/extentMax).attr('stroke','var(--border)');
+    svgText(svg,x,y-27,`N${i+1}`);svgText(svg,x,y+38,`${state.exposure[i].toFixed(1)} u`);
+   }
+   svg.append('rect').attr('x',right-5).attr('y',y-5).attr('width',10).attr('height',10).attr('fill','var(--foreground)');svgText(svg,right,y-15,`Z${row+1}`);svgText(svg,w/2,y+57,`${state.trips[row]} missions`);
+  }
+  svg.append('rect').attr('x',left-6).attr('y',147).attr('width',12).attr('height',12).attr('fill','var(--foreground)');svgText(svg,left,177,'Depot');
+ }
+ function drawTrend(){
+  const el=get('trend'),svg=d3.select(el),w=el.clientWidth,h=240,m={left:58,right:16,top:18,bottom:46};svg.attr('viewBox',`0 0 ${w} ${h}`).attr('height',h);svg.selectAll('*').remove();
+  const maxQueue=Math.max(1,...results.flat().map(s=>s.queueEnd)),x=d3.scaleLinear().domain([1,24]).range([m.left,w-m.right]),y=d3.scaleLinear().domain([0,maxQueue]).nice().range([h-m.bottom,m.top]);
+  svg.append('g').attr('transform',`translate(0,${h-m.bottom})`).call(d3.axisBottom(x).tickValues([1,4,8,12,16,20,24]).tickFormat(d3.format('d')));
+  svg.append('g').attr('transform',`translate(${m.left},0)`).call(d3.axisLeft(y).ticks(5));
+  const colors=['#152b44','#6b7785','#be4e23','#286bc2','#6f4aa8'],labels=['P0','P1','P2','P3-U','P3-D'];
+  results.forEach((series,p)=>{svg.append('path').datum(series).attr('d',d3.line().x(d=>x(d.period)).y(d=>y(d.queueEnd))).attr('fill','none').attr('stroke',colors[p]).attr('stroke-width',p===+get('policy').value?3:1.4).attr('opacity',p===+get('policy').value?1:.55);svgText(svg,m.left+8+p*46,m.top+12,labels[p],'start').attr('fill',colors[p]);});
+  svgText(svg,(m.left+w-m.right)/2,h-7,'Review period');svgText(svg,13,(m.top+h-m.bottom)/2,'Queued requests').attr('transform',`rotate(-90,13,${(m.top+h-m.bottom)/2})`);
+ }
+ function draw(){
+  const policy=+get('policy').value,t=+get('period').value-1,state=results[policy][t];get('period-value').textContent=`${t+1} / 24`;
+  get('received').textContent=`Received: ${state.received}`;get('completed').textContent=`Completed: ${state.completed}`;get('queue').textContent=`Queue: ${state.queueEnd}`;get('wait').textContent=`Mean wait: ${state.meanWait.toFixed(1)} min`;get('exposure').textContent=`Peak: ${state.max.toFixed(1)} u`;
+  const policyText=policy>=3?`N5 budget ${state.budgets[4].toFixed(1)} now and ${state.next[4].toFixed(1)} next. ${state.observation===null?'No delayed observation is available.':`The regulator uses period ${state.observation}.`}`:policy===2?'Budgets remain fixed at 40 units.':'This regime has no exposure budget.';
+  get('observation').textContent=`${policyText} Fleet utilization: ${(100*state.utilization).toFixed(1)} percent.`;drawNetwork(state,policy);drawTrend();root.dataset.ready='true';
+ }
+ ['demand','form','delay','gain'].forEach(id=>get(id).addEventListener('change',recalculate));get('policy').addEventListener('change',draw);get('period').addEventListener('input',draw);
+ window.fleetPolicy={makeDemand,run,coefficient,totalPeriods,periodLength,getResults:()=>results};recalculate();new ResizeObserver(draw).observe(root);
+})();
+</script>
+<script>new ResizeObserver(()=>{if(parent!==window)parent.postMessage({type:'demo-height',height:document.body.scrollHeight},location.origin);}).observe(document.body);</script></body></html>

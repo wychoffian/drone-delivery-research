@@ -2,7 +2,7 @@
 
 ## Adaptive neighborhood exposure regulation for urban drone delivery
 
-Version 0.3, 26 September 2026
+Version 0.4, 26 September 2026
 
 This model description follows the Overview, Design concepts, and Details protocol described by [Grimm et al. (2020)](https://doi.org/10.18564/jasss.4259). It specifies the target integrated research model. The current browser prototypes implement parts of this specification but do not yet constitute the complete agent-based model.
 
@@ -17,12 +17,12 @@ Table 1 distinguishes executable behavior from planned model components.
 | One drone mission, battery, timing, and return exposure | Implemented separately | Event-based mission walkthrough |
 | Two-request queue and drone availability | Implemented separately | Controlled Phase B event sequence |
 | Two-drone fleet, simultaneous reservations, and charging | Implemented separately | Controlled three-request event sequence |
-| Integrated operational and policy periods | Planned | Next model integration |
+| Integrated operational and policy periods | Implemented | Two-drone, 24-period browser prototype with five regimes |
 | Damped adaptive controller | Specified, not implemented | Added following the regulation and control literature review |
 | Empirical acoustic exposure | Planned | Current exposure values are proxy units |
 | Socioeconomic equity attributes | Planned | Current population patterns are synthetic |
 
-Table 1. Implementation status of the ODD components. "Implemented separately" means that the behavior runs in a prototype but has not been integrated with the multi-period policy model.
+Table 1. Implementation status of the ODD components. "Implemented separately" identifies controlled verification cases retained alongside the integrated multi-period prototype.
 
 # Overview
 
@@ -43,7 +43,7 @@ The target patterns are outcomes that the model should be able to generate and e
 - queue growth or service loss when exposure and fleet constraints interact;
 - differences between physical exposure, population-weighted burden, and distributional equity.
 
-The model will compare four policy regimes. P0 uses shortest feasible paths without exposure regulation. P1 adds a population-weighted exposure term to route cost. P2 enforces fixed neighborhood exposure budgets. P3 updates those budgets using delayed exposure observations. A damped P3 variant will be included to test whether smoothing reduces oscillation.
+The model compares five policy regimes. P0 uses shortest feasible paths without exposure regulation. P1 adds a population-weighted exposure term to route cost. P2 enforces fixed neighborhood exposure budgets. P3-U updates those budgets using delayed exposure observations. P3-D applies damping factor 0.50 to the same update.
 
 ## Entities, state variables, and scales
 
@@ -277,6 +277,6 @@ The synthetic graph predetermines a small set of exposure-transfer options. Prox
 
 The operational prototype now contains two drones, three requests, overlapping missions, simultaneous exposure reservations, and charging. R3 encounters fleet unavailability and waits until D1 completes charging. The controlled sequence connects queueing, availability, battery state, and exposure accounting in operational time.
 
-The next test connects these events to the multi-period policy model. That comparison will determine whether individual agents add explanatory value and whether Phase C screening should retain the full event representation. Later versions can add empirical exposure, socioeconomic attributes, and replicated policy experiments.
+The operational events are now connected to the multi-period policy model. The next test is Phase C matched-seed screening, which will determine whether individual fleet states materially change policy comparisons across the approved factor grid. Later versions can add empirical exposure and socioeconomic attributes.
 
 [Read the simulation sandbox protocol](sandbox.html)

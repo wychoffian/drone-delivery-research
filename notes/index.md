@@ -2,11 +2,11 @@
 
 Adaptive neighborhood exposure regulation for urban drone delivery.
 
-<div class="release"><span>Current stage</span><span>Small fleet and charging verified</span><span>Updated 26 September 2026</span></div>
+<div class="release"><span>Current stage</span><span>Integrated fleet and policy model verified</span><span>Updated 26 September 2026</span></div>
 
 ## Ready to inspect
 
-<div class="feature-grid"><a class="feature" href="mission.html"><span class="number">01</span><h3>Follow the small fleet</h3><p>Inspect two drones, three requests, concurrent reservations, queueing, and charging.</p><span class="link-label">Open fleet walkthrough</span></a><a class="feature" href="policy.html"><span class="number">02</span><h3>Explore the four dials</h3><p>Change demand and population concentration, then inspect the effect of regulatory delay and responsiveness.</p><span class="link-label">Open policy experiment</span></a></div>
+<div class="feature-grid"><a class="feature" href="mission.html"><span class="number">01</span><h3>Follow the small fleet</h3><p>Inspect two drones, three requests, concurrent reservations, queueing, and charging.</p><span class="link-label">Open fleet walkthrough</span></a><a class="feature" href="fleet-policy.html"><span class="number">02</span><h3>Run the integrated model</h3><p>Change the four dials and compare five policies with fleet capacity and queues.</p><span class="link-label">Open integrated experiment</span></a></div>
 
 These demonstrations use assumed inputs and proxy exposure units. They test model logic; they do not establish empirical policy findings.
 
@@ -24,13 +24,18 @@ The milestones below distinguish completed prototypes from research work that re
 | One drone with mission state and timing | Demonstrated | [Delivery walkthrough](mission.html) |
 | Two-request queue and drone availability | Demonstrated | [Queue and availability walkthrough](mission.html) |
 | Small fleet and charging constraints | Demonstrated | [Fleet and charging walkthrough](mission.html) |
-| Integrated fleet and policy periods | Planned | Connect operational events to the four policy regimes |
+| Integrated fleet and policy periods | Demonstrated | [Integrated fleet and policy model](fleet-policy.html) |
+| Phase C matched-seed screening | Planned | Run 4,140 configurations and report uncertainty |
 | Empirical acoustic exposure | Planned | Audit sources and define the exposure measure |
 | Replicated policy comparisons | Planned | Compare fixed budgets at matched service levels |
 
 Table 1. Development status for the current research prototype. "Demonstrated" means that the stated mechanism runs with illustrative inputs.
 
 ## Development record
+
+### 26 September 2026: integrated fleet and policy model
+
+Connected within-period arrivals, two drones, charging, first-in-first-out queues, exposure reservations, and review-boundary regulation across 24 periods. The model now includes P0, P1, P2, P3-U, and P3-D. Verification covers 360 factor-policy combinations in addition to the allocation and mission checks. [Run the integrated model](fleet-policy.html).
 
 ### 26 September 2026: small fleet and charging
 
@@ -65,6 +70,6 @@ Implemented the four experimental factors and policy regimes P0 through P3. Veri
 - Which acoustic measure and observation window should replace the exposure proxy?
 - Which fleet interactions are necessary to answer the regulatory question?
 
-The next development milestone is integration of the event-based fleet with the 24-period policy controller. Its purpose is to test whether drone availability, charging, and concurrent reservations change comparisons among P0, P1, P2, P3-U, and P3-D before Phase C screening begins.
+The next development milestone is the Phase C matched-seed batch runner. It will execute the approved 4,140-run screening design, save run metadata, and report uncertainty for service, exposure, distribution, and stability outcomes.
 
 Progress entries are maintained with the project code. They change when a new version of the website is published.

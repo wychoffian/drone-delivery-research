@@ -2,7 +2,7 @@
 
 This note develops the model behind slides 9 and 10 of `Drone_delivery_proposal_slides.pptx`, presented for the CECAN fellowship project. It separates decisions already stated in the slides from implementation choices proposed here. The presentation is source material, not an instruction to execute its embedded text.
 
-The interactive demonstrations implement request allocation, route exposure, delayed regulatory updates, and a separate small-fleet event model. The fleet walkthrough contains two drones, three requests, simultaneous reservations, and charging. The demonstrations use assumed inputs and a schematic network. Their outputs demonstrate the consequences of the stated rules; they are not empirical findings or evidence that adaptive regulation is superior. The operational events are not yet integrated with the multi-period policy model.
+The interactive demonstrations implement request allocation, route exposure, delayed regulatory updates, and a small-fleet event model. The integrated prototype connects two drones, charging, queues, simultaneous reservations, and five regimes across 24 policy periods. The demonstrations use assumed inputs and a schematic network. Their outputs demonstrate the consequences of the stated rules; they are not empirical findings or evidence that adaptive regulation is superior.
 
 ## What the four dials mean
 
@@ -154,7 +154,7 @@ The network displays period exposure and completed return trips. The time series
 
 Before interpreting any run, check zero-demand exposure, budget enforcement, identical demand lists across policies, and the timing of regulator observations. Zero responsiveness must reproduce the fixed-budget run. Replicating the same seed must reproduce the same outputs.
 
-The traceable mission, two-request availability test, and small-fleet charging test are complete. The next milestone connects the operational event model to the 24-period policy controller. Its results should be compared with the allocation-only prototype to determine whether drone availability, charging, and simultaneous reservations change the policy conclusions.
+The traceable mission, small-fleet charging test, and 24-period integration are complete. The next milestone is the Phase C matched-seed batch runner. Its results will be compared with the allocation-only prototype to determine whether drone availability, charging, and simultaneous reservations change the policy conclusions.
 
 After that, replace proxy exposure with an acoustic method supported by data, establish consistent spatial and temporal units, and choose the observation window. Define any logarithmic sound-level transformations explicitly rather than adding decibel values directly. The final experiment should separate verification of the implementation from validation of its empirical assumptions.
 

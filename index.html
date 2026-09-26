@@ -1,9 +1,9 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="Research progress and executable prototypes for adaptive neighborhood exposure regulation of drone delivery."><title>Progress | Drone delivery research</title><link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23152b44'/%3E%3Cpath d='M7 22L16 8l9 14M7 22h18' fill='none' stroke='%23ffffff' stroke-width='2'/%3E%3C/svg%3E"><link rel="stylesheet" href="style.css"></head><body><a class="skip" href="#main">Skip to content</a><header><a class="brand" href="index.html"><span class="mark" aria-hidden="true">D</span>Drone delivery research</a><span class="meta">CECAN fellowship project · Prototype v0.4</span></header><div class="shell"><nav aria-label="Project navigation"><span class="label">Research notebook</span><a href="index.html" aria-current="page">Progress</a><a href="overview.html">Project overview</a><a href="literature.html">Literature and gap</a><a href="model.html">Model and rules</a><a href="odd.html">ODD specification</a><a href="sandbox.html">Sandbox protocol</a><a href="pilot.html">Interactive pilot</a><a href="experiments.html">Experiments</a></nav><main id="main"><h1>Research progress</h1>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="Research progress and executable prototypes for adaptive neighborhood exposure regulation of drone delivery."><title>Progress | Drone delivery research</title><link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23152b44'/%3E%3Cpath d='M7 22L16 8l9 14M7 22h18' fill='none' stroke='%23ffffff' stroke-width='2'/%3E%3C/svg%3E"><link rel="stylesheet" href="style.css"></head><body><a class="skip" href="#main">Skip to content</a><header><a class="brand" href="index.html"><span class="mark" aria-hidden="true">D</span>Drone delivery research</a><span class="meta">CECAN fellowship project · Prototype v0.5</span></header><div class="shell"><nav aria-label="Project navigation"><span class="label">Research notebook</span><a href="index.html" aria-current="page">Progress</a><a href="overview.html">Project overview</a><a href="literature.html">Literature and gap</a><a href="model.html">Model and rules</a><a href="odd.html">ODD specification</a><a href="sandbox.html">Sandbox protocol</a><a href="integration.html">Integrated model</a><a href="pilot.html">Interactive pilot</a><a href="experiments.html">Experiments</a></nav><main id="main"><h1>Research progress</h1>
 <p>Adaptive neighborhood exposure regulation for urban drone delivery.</p>
-<div class="release"><span>Current stage</span><span>Small fleet and charging verified</span><span>Updated 26 September 2026</span></div>
+<div class="release"><span>Current stage</span><span>Integrated fleet and policy model verified</span><span>Updated 26 September 2026</span></div>
 
 <h2>Ready to inspect</h2>
-<div class="feature-grid"><a class="feature" href="mission.html"><span class="number">01</span><h3>Follow the small fleet</h3><p>Inspect two drones, three requests, concurrent reservations, queueing, and charging.</p><span class="link-label">Open fleet walkthrough</span></a><a class="feature" href="policy.html"><span class="number">02</span><h3>Explore the four dials</h3><p>Change demand and population concentration, then inspect the effect of regulatory delay and responsiveness.</p><span class="link-label">Open policy experiment</span></a></div>
+<div class="feature-grid"><a class="feature" href="mission.html"><span class="number">01</span><h3>Follow the small fleet</h3><p>Inspect two drones, three requests, concurrent reservations, queueing, and charging.</p><span class="link-label">Open fleet walkthrough</span></a><a class="feature" href="fleet-policy.html"><span class="number">02</span><h3>Run the integrated model</h3><p>Change the four dials and compare five policies with fleet capacity and queues.</p><span class="link-label">Open integrated experiment</span></a></div>
 
 <p>These demonstrations use assumed inputs and proxy exposure units. They test model logic; they do not establish empirical policy findings.</p>
 <h2>Development milestones</h2>
@@ -58,8 +58,13 @@
 </tr>
 <tr>
 <td>Integrated fleet and policy periods</td>
+<td>Demonstrated</td>
+<td><a href="fleet-policy.html">Integrated fleet and policy model</a></td>
+</tr>
+<tr>
+<td>Phase C matched-seed screening</td>
 <td>Planned</td>
-<td>Connect operational events to the four policy regimes</td>
+<td>Run 4,140 configurations and report uncertainty</td>
 </tr>
 <tr>
 <td>Empirical acoustic exposure</td>
@@ -74,6 +79,8 @@
 </tbody></table>
 <p>Table 1. Development status for the current research prototype. &quot;Demonstrated&quot; means that the stated mechanism runs with illustrative inputs.</p>
 <h2>Development record</h2>
+<h3>26 September 2026: integrated fleet and policy model</h3>
+<p>Connected within-period arrivals, two drones, charging, first-in-first-out queues, exposure reservations, and review-boundary regulation across 24 periods. The model now includes P0, P1, P2, P3-U, and P3-D. Verification covers 360 factor-policy combinations in addition to the allocation and mission checks. <a href="fleet-policy.html">Run the integrated model</a>.</p>
 <h3>26 September 2026: small fleet and charging</h3>
 <p>Added D2, R3, concurrent exposure reservations, deterministic drone selection, and charging. R3 arrives while D1 is charging and D2 is returning, waits seven minutes, and dispatches when D1 becomes available. Verification covers simultaneous reservations, assignment uniqueness, queue state, charging completion, battery reserve, and exposure conservation. <a href="mission.html">Inspect the fleet sequence</a>.</p>
 <h3>26 September 2026: two-request integration</h3>
@@ -93,6 +100,6 @@
 <li>Which acoustic measure and observation window should replace the exposure proxy?</li>
 <li>Which fleet interactions are necessary to answer the regulatory question?</li>
 </ul>
-<p>The next development milestone is integration of the event-based fleet with the 24-period policy controller. Its purpose is to test whether drone availability, charging, and concurrent reservations change comparisons among P0, P1, P2, P3-U, and P3-D before Phase C screening begins.</p>
+<p>The next development milestone is the Phase C matched-seed batch runner. It will execute the approved 4,140-run screening design, save run metadata, and report uncertainty for service, exposure, distribution, and stability outcomes.</p>
 <p>Progress entries are maintained with the project code. They change when a new version of the website is published.</p>
 <p class="download"><a href="notes/index.md" download>Download this page as Markdown</a></p></main></div><footer><span>Mutlaq Aldajani · Research in development</span><span>Illustrative inputs · Last content update 26 September 2026</span></footer><script src="site.js"></script></body></html>
