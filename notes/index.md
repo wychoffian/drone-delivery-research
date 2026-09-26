@@ -2,7 +2,7 @@
 
 Adaptive neighborhood exposure regulation for urban drone delivery.
 
-<div class="release"><span>Current stage</span><span>Empirical dataset audit complete</span><span>Updated 26 September 2026</span></div>
+<div class="release"><span>Current stage</span><span>Acoustic and annoyance datasets assessed</span><span>Updated 26 September 2026</span></div>
 
 ## Ready to inspect
 
@@ -38,7 +38,7 @@ Table 1. Development status for the current research prototype. "Demonstrated" m
 
 ### 26 September 2026: empirical dataset audit
 
-Audited the supplied 1.8 GB research folder and mapped verified datasets to the current model. DroneNoise and NASA measurements can support the first acoustic calibration step. Delivery demand, vehicle energy, charging, target-area population, observed complaints, and policy budgets still need separate evidence. [Review the empirical calibration plan](empirical-calibration.html).
+Audited the supplied 1.8 GB research folder and mapped verified datasets to the current model. DroneNoise and NASA measurements can support the first acoustic calibration step. The Kawai et al. JASA dataset adds 2,340 laboratory annoyance ratings, including 1,440 drone ratings, for a later event-response model. Delivery demand, vehicle energy, charging, target-area population, observed complaints, and policy budgets still need separate evidence. [Review the empirical calibration plan](empirical-calibration.html).
 
 ### 26 September 2026: Phase D joint sensitivity
 
