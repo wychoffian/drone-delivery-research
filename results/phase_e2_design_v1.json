@@ -1,0 +1,33 @@
+{
+  "module": "phase_e2_acoustic_fleet_policy_v1",
+  "accounting_unit": "normalized linear A-weighted sound-exposure energy",
+  "reporting_unit": "LAE in dB",
+  "reservation_rule": "reserve the complete nine-receiver outbound and return energy vector before dispatch",
+  "reference_mission": {
+    "definition": "round trip on each receiver's own corridor",
+    "altitude_m": 80,
+    "speed_mps": 15
+  },
+  "budget_scenarios_reference_missions": [10, 20, 30],
+  "adaptive_target_reference_missions": 14,
+  "adaptive_bounds_reference_missions": [5, 40],
+  "damping": 0.5,
+  "review_period_minutes": 480,
+  "fleet_size": 2,
+  "charger_capacity": 2,
+  "route_acoustic_weight_km": 0.35,
+  "status": {
+    "acoustic_parameters": "calibrated",
+    "route_geometry": "synthetic",
+    "policy_budgets": "declared scenario",
+    "demand_and_operations": "synthetic"
+  },
+  "next_sensitivity_factors": [
+    "budget scenario",
+    "source reference level",
+    "validation error",
+    "altitude",
+    "speed",
+    "acoustic route-choice weight"
+  ]
+}

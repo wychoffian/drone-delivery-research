@@ -156,7 +156,7 @@ Before interpreting any run, check zero-demand exposure, budget enforcement, ide
 
 The traceable mission, small-fleet charging test, 24-period integration, Phase C screening, and two Phase D sensitivity modules are complete. The [Phase E0 acoustic module](phase-e0.html) now defines the received-level equation, event LAE, and energy-consistent accumulation rule using calibrated parameters and held-out validation results.
 
-Phase E1 assigns physical coordinates to the synthetic network and integrates moving-source exposure across every route segment. The next milestone is to connect each nine-receiver energy vector to the fleet model's reservation and completion events. That work must preserve the current reservation logic while replacing proxy coefficients with linear sound-exposure contributions. The final experiment should continue to separate implementation verification from validation of empirical assumptions.
+Phase E1 assigns physical coordinates to the synthetic network and integrates moving-source exposure across every route segment. Phase E2 connects each nine-receiver energy vector to the fleet model's reservation and completion events while preserving the current accounting rules. The next milestone is a matched-seed sensitivity experiment covering acoustic uncertainty and declared budget scenarios. That experiment should continue to separate implementation verification from validation of empirical assumptions.
 
 ## Discussion
 

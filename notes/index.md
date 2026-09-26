@@ -2,7 +2,7 @@
 
 Adaptive neighborhood exposure regulation for urban drone delivery.
 
-<div class="release"><span>Current stage</span><span>Phase E1 route acoustics implemented</span><span>Updated 26 September 2026</span></div>
+<div class="release"><span>Current stage</span><span>Phase E2 acoustic fleet integration implemented</span><span>Updated 26 September 2026</span></div>
 
 ## Ready to inspect
 
@@ -31,12 +31,17 @@ The milestones below distinguish completed prototypes from research work that re
 | Empirical dataset audit | Complete | [Review the calibration map and data gaps](empirical-calibration.html) |
 | Phase E0 acoustic module | Implemented | [Inspect the calibrated calculation and validation boundary](phase-e0.html) |
 | Phase E1 route-level acoustic exposure | Implemented | [Inspect the moving-source exposure calculation](phase-e1.html) |
-| Acoustic fleet-policy integration | Next | Replace proxy route coefficients with reserved energy vectors |
+| Phase E2 acoustic fleet-policy integration | Implemented | [Inspect physical reservations and scenario budgets](phase-e2.html) |
+| Phase E acoustic sensitivity | Next | Test budgets, acoustic uncertainty, altitude, speed, and route weighting |
 | Replicated policy comparisons | Planned | Compare fixed budgets at matched service levels |
 
 Table 1. Development status for the current research prototype. "Demonstrated" means that the stated mechanism runs with illustrative inputs.
 
 ## Development record
+
+### 26 September 2026: Phase E2 acoustic fleet-policy integration
+
+Replaced proxy increments in a separate integration prototype with nine-receiver acoustic energy vectors. Dispatch now reserves the complete physical vector, completion transfers it to observed exposure, and regulated policies compare energy against declared reference-mission budgets. [Inspect the Phase E2 model](phase-e2.html).
 
 ### 26 September 2026: Phase E1 route acoustic integration
 
@@ -99,6 +104,6 @@ Implemented the four experimental factors and policy regimes P0 through P3. Veri
 - Which review window and policy-budget definition should govern the physical exposure account?
 - Which fleet interactions are necessary to answer the regulatory question?
 
-The next milestone is acoustic fleet-policy integration. The project will reserve each mission's nine-receiver energy vector before dispatch and transfer it to the observed account at completion. Policy budgets remain declared scenarios until their basis is agreed.
+The next milestone is a matched-seed Phase E acoustic sensitivity experiment. It will vary the declared budget, source-level uncertainty, altitude, speed, validation error, and acoustic route-choice weight. Policy budgets remain scenarios until their basis is agreed.
 
 Progress entries are maintained with the project code. They change when a new version of the website is published.

@@ -10,7 +10,7 @@ This protocol defines how the model will be used before empirical or field testi
 
 The simulation sandbox will test whether adaptive neighborhood exposure budgets behave as intended when delivery demand, population distribution, observation delay, and controller responsiveness vary.
 
-The sandbox supports model development and policy learning. It does not establish a legal noise limit, predict commercial performance, or demonstrate health effects. The operational policy model still uses proxy exposure values. The separate [Phase E0 acoustic module](phase-e0.html) defines a calibrated physical calculation that has not yet been integrated into its routes and budgets.
+The sandbox supports model development and policy learning. It does not establish a legal noise limit, predict commercial performance, or demonstrate health effects. The Phase D policy model retains proxy exposure values as a baseline. The [Phase E2 integration](phase-e2.html) uses calibrated acoustic route increments with declared reference-mission budget scenarios.
 
 ## Decision question
 

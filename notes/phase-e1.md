@@ -71,7 +71,7 @@ Automated checks cover the following properties:
 
 ## Progression gate
 
-Phase E1 establishes a traceable route exposure vector, but it does not yet replace the proxy coefficients inside the fleet-policy controller. That replacement requires a declared review window and a consistent physical budget representation. The controller should compare linear exposure energy with a linear energy budget. LAE should be used for reporting because subtracting or adding dB values inside the reservation ledger would violate energy conservation.
+Phase E1 establishes a traceable route exposure vector. [Phase E2](phase-e2.html) now connects that vector to the fleet-policy controller using a declared review window and reference-mission budget scenarios. The controller compares linear exposure energy with linear energy budgets. LAE is used for reporting because subtracting or adding dB values inside the reservation ledger would violate energy conservation.
 
 ## Discussion
 
@@ -79,7 +79,7 @@ The moving-source calculation is a material change to the system map. Neighborho
 
 The current coordinates are synthetic and the source level does not change between cruise, turns, takeoff, or landing. Buildings, ground effects, weather, background sound, and shielding are omitted. These limits mean the module supports mechanism testing rather than a site prediction.
 
-The next step is to connect the nine-receiver energy vector to mission reservation and completion events in the fleet model. A later case study should replace the synthetic coordinates with a named area's route constraints and population data.
+The nine-receiver vector is now connected to mission reservation and completion events in Phase E2. The next experiment should test acoustic and policy uncertainty across matched demand seeds. A later case study should replace the synthetic coordinates with a named area's route constraints and population data.
 
 ## Reproducibility file
 

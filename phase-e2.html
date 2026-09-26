@@ -1,0 +1,117 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="Research progress and executable prototypes for adaptive neighborhood exposure regulation of drone delivery."><title>Phase E2 integration | Drone delivery research</title><link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23152b44'/%3E%3Cpath d='M7 22L16 8l9 14M7 22h18' fill='none' stroke='%23ffffff' stroke-width='2'/%3E%3C/svg%3E"><link rel="stylesheet" href="style.css"></head><body><a class="skip" href="#main">Skip to content</a><header><a class="brand" href="index.html"><span class="mark" aria-hidden="true">D</span>Drone delivery research</a><span class="meta">CECAN fellowship project · Prototype v0.13</span></header><div class="shell"><nav aria-label="Project navigation"><span class="label">Research notebook</span><a href="index.html">Progress</a><a href="overview.html">Project overview</a><a href="literature.html">Literature and gap</a><a href="model.html">Model and rules</a><a href="odd.html">ODD specification</a><a href="sandbox.html">Sandbox protocol</a><a href="integration.html">Integrated model</a><a href="pilot.html">Interactive pilot</a><a href="experiments.html">Experiments</a><a href="phase-c.html">Phase C results</a><a href="phase-d.html">Phase D sensitivity</a><a href="phase-d-joint.html">Phase D joint analysis</a><a href="empirical-calibration.html">Empirical calibration</a><a href="phase-e0.html">Phase E0 acoustics</a><a href="phase-e1.html">Phase E1 routes</a><a href="phase-e2.html" aria-current="page">Phase E2 integration</a></nav><main id="main"><h1>Phase E2 acoustic fleet-policy integration</h1>
+<p>Phase E2 connects the Phase E1 mission exposure vectors to drone dispatch, exposure reservation, mission completion, queues, charging, and regulatory review periods. The Phase D proxy model remains unchanged as a reproducible baseline.</p>
+<blockquote>
+<p>Evidence label: Integrated calibrated mechanism in a synthetic scenario. Acoustic route increments use calibrated parameters. Network geometry, demand, operations, and policy budgets remain declared scenarios.</p>
+</blockquote>
+<p><a href="acoustic-fleet.html">Run the acoustic fleet-policy model</a></p>
+<h2>Integration decision</h2>
+<p>The ledger stores normalized linear sound-exposure energy. It does not store or add dB values. A candidate mission returns nine energy increments, one for each neighborhood receiver. Before dispatch, the operator checks and reserves the complete outbound and return vector. Mission completion removes the reservation and adds the same vector to observed exposure.</p>
+<p>LAE is calculated only when results are displayed:</p>
+<pre><code class="language-text">LAE = 10 log10(accumulated normalized sound-exposure energy)
+</code></pre>
+<p>This design preserves the reservation and completion rules tested in Phases B through D while replacing the arbitrary exposure coefficients.</p>
+<h2>Budget scenario</h2>
+<p>No legal or community exposure limit has been established. Phase E2 therefore uses a declared reference-mission equivalent for model experiments.</p>
+<p>For each receiver, one reference mission is a round trip on that receiver&#39;s own corridor at 80 m altitude and 15 m/s. A budget of 20 reference missions means 20 times that receiver-specific linear energy. The budget is stored as energy and may be reported as an equivalent mission count or as LAE.</p>
+<p>Table 1 records the scenario parameters.</p>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Value or range</th>
+<th>Status</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Initial budget</td>
+<td>10, 20, or 30 reference missions</td>
+<td>User-selected scenario</td>
+</tr>
+<tr>
+<td>Adaptive target</td>
+<td>14 reference missions per review period</td>
+<td>Declared controller target</td>
+</tr>
+<tr>
+<td>Adaptive bounds</td>
+<td>5 to 40 reference missions</td>
+<td>Declared controller bounds</td>
+</tr>
+<tr>
+<td>P3-D damping</td>
+<td>0.50</td>
+<td>Phase D design choice</td>
+</tr>
+<tr>
+<td>Review period</td>
+<td>480 operational minutes</td>
+<td>Phase D design choice</td>
+</tr>
+<tr>
+<td>Fleet</td>
+<td>Two drones and two chargers</td>
+<td>Controlled prototype</td>
+</tr>
+<tr>
+<td>Altitude and speed</td>
+<td>80 m and 15 m/s</td>
+<td>Synthetic operating scenario</td>
+</tr>
+</tbody></table>
+<p>Table 1. Policy and operating scenarios used by the Phase E2 integration prototype.</p>
+<p>These equivalent counts make the experiment interpretable without suggesting that one mission has the same exposure at every receiver. Each receiver has its own physical reference energy. A later policy process must replace this normalization with a defensible exposure budget.</p>
+<h2>Policy regimes</h2>
+<p>Table 2 shows how the earlier regimes are translated into physical exposure accounting.</p>
+<table>
+<thead>
+<tr>
+<th>Policy</th>
+<th>Phase E2 rule</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>P0</td>
+<td>Select the shortest feasible operational route and record acoustic exposure without a budget</td>
+</tr>
+<tr>
+<td>P1</td>
+<td>Add population-weighted physical exposure to route cost and record exposure without a budget</td>
+</tr>
+<tr>
+<td>P2</td>
+<td>Select the shortest route whose nine-value energy vector fits the fixed budget</td>
+</tr>
+<tr>
+<td>P3-U</td>
+<td>Apply the adaptive controller to reference-mission equivalent budgets without damping</td>
+</tr>
+<tr>
+<td>P3-D</td>
+<td>Apply the same controller with damping factor 0.50</td>
+</tr>
+</tbody></table>
+<p>Table 2. Policy regimes after replacing proxy route coefficients with acoustic energy vectors.</p>
+<p>P1 normalizes each route increment by the corresponding receiver reference energy, weights it by population, and adds the resulting burden to distance. The current weight is a declared route-choice parameter and requires sensitivity analysis.</p>
+<h2>Event sequence</h2>
+<p>The event order remains completion, charging completion, review boundary, arrival, and dispatch. The dispatch cutoff is calculated from the longest physical mission rather than fixed from the old schematic route length. This ensures that an accepted mission completes before its review boundary.</p>
+<p>The regulator observes completed mission exposure only. Reserved energy is unavailable to other dispatch decisions but is not counted as observed exposure until the mission completes.</p>
+<h2>Verification</h2>
+<p>Automated checks confirm that:</p>
+<ul>
+<li>demand streams remain identical across policies;</li>
+<li>every request is dispatched or retained in the final queue;</li>
+<li>every mission reserves nine positive energy increments;</li>
+<li>P2, P3-U, and P3-D remain within all nine energy budgets;</li>
+<li>no reservation remains at a review boundary;</li>
+<li>zero demand produces zero exposure;</li>
+<li>zero responsiveness makes both adaptive policies reproduce P2;</li>
+<li>exposure display uses energy-to-LAE conversion;</li>
+<li>Phase B through E1 checks still pass.</li>
+</ul>
+<h2>Discussion</h2>
+<p>Phase E2 closes the software connection between measured acoustics and the regulatory agent. It also changes the interpretation of route feasibility. A route can fail because its contribution would exceed any one of nine neighborhood energy budgets, including a receiver outside the selected corridor.</p>
+<p>The module does not establish that the reference-mission budget is socially acceptable or legally meaningful. Its purpose is to test the integrated mechanism in coherent physical units. Demand, fleet performance, route geometry, background sound, and population remain synthetic.</p>
+<p>The next experiment should vary the declared budget, source-level uncertainty, altitude, speed, acoustic route-choice weight, and validation error across matched demand seeds. The Kawai et al. data can then add a separate short-term annoyance outcome without changing the physical energy ledger.</p>
+<h2>Reproducibility file</h2>
+<p>The <a href="results/phase_e2_design_v1.json">Phase E2 design record</a> documents the accounting rule, controller scenarios, and current exclusions.</p>
+<p class="download"><a href="notes/phase-e2.md" download>Download this page as Markdown</a></p></main></div><footer><span>Mutlaq Aldajani · Research in development</span><span>Illustrative inputs · Last content update 26 September 2026</span></footer><script src="site.js"></script></body></html>
