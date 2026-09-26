@@ -1,0 +1,67 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Phase E0 acoustic module</title><link rel="stylesheet" href="demo.css"></head><body><div id="acoustic">
+ <h2>Phase E0 acoustic module</h2>
+ <div class="text-small text-muted">Matrice 300 reference level · DroneNoise directivity · NASA held-out validation</div>
+ <div class="viz-controls">
+  <label class="form-label">Flight altitude: <span id="ac-altitude-value" class="tabular-nums">80 m</span>
+   <input class="form-range" id="ac-altitude" type="range" min="20" max="150" value="80" step="5">
+  </label>
+  <label class="form-label">Lateral offset: <span id="ac-offset-value" class="tabular-nums">50 m</span>
+   <input class="form-range" id="ac-offset" type="range" min="0" max="300" value="50" step="5">
+  </label>
+  <label class="form-label">Equivalent event duration: <span id="ac-duration-value" class="tabular-nums">10 s</span>
+   <input class="form-range" id="ac-duration" type="range" min="1" max="60" value="10" step="1">
+  </label>
+  <label class="form-label">Identical events in account: <span id="ac-events-value" class="tabular-nums">20</span>
+   <input class="form-range" id="ac-events" type="range" min="1" max="100" value="20" step="1">
+  </label>
+ </div>
+ <div class="ac-metrics" aria-live="polite">
+  <span id="ac-distance"></span><span id="ac-angle"></span><span id="ac-level"></span><span id="ac-event"></span><span id="ac-total"></span>
+ </div>
+ <h3>Cross-track received level</h3>
+ <svg id="ac-profile" class="ac-svg" role="img" aria-label="Predicted A-weighted received level by lateral offset"></svg>
+ <div class="text-small text-muted">Solid line: directivity-corrected prediction · Dashed line: isotropic spreading · Marker: selected offset</div>
+ <p id="ac-explanation" class="text-small"></p>
+ <h3>Held-out validation</h3>
+ <div class="ac-validation"><span>56 observations</span><span>Bias -0.12 dB</span><span>MAE 1.77 dB</span><span>RMSE 2.29 dB</span></div>
+ <p class="text-small text-muted">The event calculation assumes a steady equivalent level over the selected duration. Route integration will replace this with time-segment energy summation. Policy budgets remain unspecified.</p>
+</div>
+<style>
+ #acoustic{color:var(--foreground)}
+ #acoustic .ac-metrics,#acoustic .ac-validation{display:grid;grid-template-columns:repeat(5,minmax(105px,1fr));gap:1px;background:var(--border);margin:14px 0}
+ #acoustic .ac-metrics span,#acoustic .ac-validation span{background:var(--background);padding:10px 8px;text-align:center}
+ #acoustic .ac-validation{grid-template-columns:repeat(4,minmax(110px,1fr))}
+ #acoustic .ac-svg{display:block;width:100%;height:300px;overflow:visible}
+ #acoustic .ac-svg text{fill:var(--foreground);font-size:12px}
+ #acoustic #ac-explanation{min-height:3em}
+ @media(max-width:620px){#acoustic .ac-metrics{grid-template-columns:1fr 1fr}#acoustic .ac-validation{grid-template-columns:1fr 1fr}}
+</style>
+<script>
+(()=>{
+ const calibration={referenceLevel1mDba:88.4,spreadingCoefficient:20,absorptionDbPerM:.0015,directivityCoefficientDb:3.3113678365241337,maxValidatedAngleDeg:82.2,referenceDistanceM:1};
+ function geometry(altitudeM,lateralOffsetM){const distanceM=Math.hypot(altitudeM,lateralOffsetM),angleDeg=Math.atan2(Math.abs(lateralOffsetM),altitudeM)*180/Math.PI;return{distanceM,angleDeg};}
+ function offAxisDirectivityDb(angleDeg,c=calibration){if(angleDeg<0||angleDeg>=90)throw new RangeError('angleDeg must be in [0, 90)');const limited=Math.min(angleDeg,c.maxValidatedAngleDeg),secantMinusOne=1/Math.cos(limited*Math.PI/180)-1;return-c.directivityCoefficientDb*secantMinusOne;}
+ function receivedLevelDba(distanceM,angleDeg=0,c=calibration,includeDirectivity=true){const distance=Math.max(c.referenceDistanceM,distanceM),spreading=c.spreadingCoefficient*Math.log10(distance/c.referenceDistanceM),absorption=c.absorptionDbPerM*(distance-c.referenceDistanceM),directivity=includeDirectivity?offAxisDirectivityDb(angleDeg,c):0;return c.referenceLevel1mDba-spreading-absorption+directivity;}
+ function eventExposureLae(levelDba,durationS){if(durationS<=0)throw new RangeError('durationS must be positive');return levelDba+10*Math.log10(durationS);}
+ function cumulativeExposureLae(eventLevelsLae){if(!eventLevelsLae.length)return-Infinity;const maximum=Math.max(...eventLevelsLae),relative=eventLevelsLae.reduce((sum,level)=>sum+10**((level-maximum)/10),0);return maximum+10*Math.log10(relative);}
+ function calculate(altitudeM,lateralOffsetM,durationS,eventCount){const g=geometry(altitudeM,lateralOffsetM),levelDba=receivedLevelDba(g.distanceM,g.angleDeg),eventLae=eventExposureLae(levelDba,durationS),totalLae=cumulativeExposureLae(Array(eventCount).fill(eventLae));return{...g,levelDba,eventLae,totalLae,directivityDb:offAxisDirectivityDb(g.angleDeg)};}
+ const root=document.getElementById('acoustic'),get=id=>root.querySelector('#ac-'+id),svg=get('profile'),ns='http://www.w3.org/2000/svg';
+ function add(tag,attributes={},text=''){const node=document.createElementNS(ns,tag);for(const [key,value] of Object.entries(attributes))node.setAttribute(key,value);if(text)node.textContent=text;svg.appendChild(node);return node;}
+ function draw(){
+  const altitude=+get('altitude').value,offset=+get('offset').value,duration=+get('duration').value,eventCount=+get('events').value,result=calculate(altitude,offset,duration,eventCount);
+  get('altitude-value').textContent=`${altitude} m`;get('offset-value').textContent=`${offset} m`;get('duration-value').textContent=`${duration} s`;get('events-value').textContent=eventCount;
+  get('distance').textContent=`Slant: ${result.distanceM.toFixed(1)} m`;get('angle').textContent=`Angle: ${result.angleDeg.toFixed(1)}°`;get('level').textContent=`Level: ${result.levelDba.toFixed(1)} dB(A)`;get('event').textContent=`Event LAE: ${result.eventLae.toFixed(1)} dB`;get('total').textContent=`Account LAE: ${result.totalLae.toFixed(1)} dB`;
+  get('explanation').textContent=`Directivity changes the selected prediction by ${result.directivityDb.toFixed(1)} dB. ${eventCount} identical events add ${(result.totalLae-result.eventLae).toFixed(1)} dB to one event through energy summation.`;
+  const width=Math.max(560,svg.clientWidth||760),height=300,margin={left:56,right:18,top:18,bottom:45},x=v=>margin.left+v/300*(width-margin.left-margin.right),levels=[];
+  for(let value=0;value<=300;value+=5){const g=geometry(altitude,value);levels.push({offset:value,direct:receivedLevelDba(g.distanceM,g.angleDeg),isotropic:receivedLevelDba(g.distanceM,g.angleDeg,calibration,false)});}
+  const minimum=Math.floor(Math.min(...levels.map(d=>d.direct))/5)*5,maximum=Math.ceil(Math.max(...levels.map(d=>d.isotropic))/5)*5,y=v=>height-margin.bottom-(v-minimum)/(maximum-minimum)*(height-margin.top-margin.bottom);
+  svg.setAttribute('viewBox',`0 0 ${width} ${height}`);svg.replaceChildren();add('title',{},`Altitude ${altitude} metres. Selected offset ${offset} metres gives ${result.levelDba.toFixed(1)} dB A-weighted.`);
+  for(let value=Math.ceil(minimum/5)*5;value<=maximum;value+=5){add('line',{x1:margin.left,y1:y(value),x2:width-margin.right,y2:y(value),stroke:'var(--border)'});add('text',{x:margin.left-8,y:y(value)+4,'text-anchor':'end'},value);}
+  for(const value of [0,50,100,150,200,250,300]){add('line',{x1:x(value),y1:height-margin.bottom,x2:x(value),y2:height-margin.bottom+5,stroke:'var(--foreground)'});add('text',{x:x(value),y:height-margin.bottom+20,'text-anchor':'middle'},value);}
+  const path=key=>levels.map((d,index)=>`${index?'L':'M'}${x(d.offset).toFixed(1)},${y(d[key]).toFixed(1)}`).join(' ');add('path',{d:path('isotropic'),fill:'none',stroke:'var(--muted-foreground)','stroke-dasharray':'5 4','stroke-width':'1.5'});add('path',{d:path('direct'),fill:'none',stroke:'var(--viz-series-1)','stroke-width':'2.5'});add('circle',{cx:x(offset),cy:y(result.levelDba),r:5,fill:'var(--viz-series-2)'});
+  add('text',{x:(margin.left+width-margin.right)/2,y:height-7,'text-anchor':'middle'},'Lateral offset (m)');add('text',{x:14,y:(margin.top+height-margin.bottom)/2,'text-anchor':'middle',transform:`rotate(-90 14 ${(margin.top+height-margin.bottom)/2})`},'Received level dB(A)');root.dataset.ready='true';
+ }
+ ['altitude','offset','duration','events'].forEach(id=>get(id).addEventListener('input',draw));this.api={calibration,geometry,offAxisDirectivityDb,receivedLevelDba,eventExposureLae,cumulativeExposureLae,calculate};draw();new ResizeObserver(draw).observe(root);
+})();
+</script>
+<script>new ResizeObserver(()=>{if(parent!==window)parent.postMessage({type:'demo-height',height:document.body.scrollHeight},location.origin);}).observe(document.body);</script></body></html>

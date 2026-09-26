@@ -1,0 +1,33 @@
+{
+  "module": "phase_e0_acoustic_v1",
+  "scope": "A-weighted physical acoustic exposure for comparative screening",
+  "calibration": {
+    "vehicle": "DJI Matrice 300",
+    "reference_level_1m_dba": 88.4,
+    "reference_level_sd_db": 1.0,
+    "geometric_spreading_coefficient": 20.0,
+    "atmospheric_absorption_db_per_m": 0.0015,
+    "directivity_model": "D(theta) = -k(sec(theta) - 1)",
+    "directivity_coefficient_db": 3.3113678365241337,
+    "maximum_validated_off_axis_angle_deg": 82.2,
+    "directivity_fit_rmse_db": 0.6588226940309502
+  },
+  "validation": {
+    "dataset": "NASA Small UAS Flyover Acoustics Data",
+    "vehicle": "Prioria Hex Flyer",
+    "flights": 14,
+    "microphone_observations": 56,
+    "bias_db": -0.11650399389178519,
+    "mae_db": 1.7720889657998096,
+    "rmse_db": 2.2863840116087695,
+    "flight_level_bias_95_ci_db": [-1.1385196702237164, 0.905511682440146]
+  },
+  "not_calibrated": [
+    "route geometry",
+    "time-varying maneuver source levels",
+    "background sound",
+    "annoyance accumulation",
+    "complaint probability",
+    "policy exposure budgets"
+  ]
+}

@@ -154,12 +154,12 @@ The network displays period exposure and completed return trips. The time series
 
 Before interpreting any run, check zero-demand exposure, budget enforcement, identical demand lists across policies, and the timing of regulator observations. Zero responsiveness must reproduce the fixed-budget run. Replicating the same seed must reproduce the same outputs.
 
-The traceable mission, small-fleet charging test, and 24-period integration are complete. The next milestone is the Phase C matched-seed batch runner. Its results will be compared with the allocation-only prototype to determine whether drone availability, charging, and simultaneous reservations change the policy conclusions.
+The traceable mission, small-fleet charging test, 24-period integration, Phase C screening, and two Phase D sensitivity modules are complete. The [Phase E0 acoustic module](phase-e0.html) now defines the received-level equation, event LAE, and energy-consistent accumulation rule using calibrated parameters and held-out validation results.
 
-After that, replace proxy exposure with an acoustic method supported by data, establish consistent spatial and temporal units, and choose the observation window. Define any logarithmic sound-level transformations explicitly rather than adding decibel values directly. The final experiment should separate verification of the implementation from validation of its empirical assumptions.
+The next milestone is to assign physical coordinates to the synthetic network and integrate moving-source exposure across every route segment. That work must preserve the current reservation logic while replacing proxy coefficients with linear sound-exposure contributions. The final experiment should continue to separate implementation verification from validation of empirical assumptions.
 
 ## Discussion
 
 The demonstrations isolate routing, feedback, and small-fleet operations. Their assumed corridor geometry and exposure coefficients constrain the patterns they can produce. Charging has no capacity limit, and the models omit exposure outside the corridor neighborhoods, delivery deadlines, and socioeconomic group differences. One seed is insufficient for inference, and the target is an experimental parameter rather than a regulatory recommendation.
 
-The immediate implication is methodological: the four dials need explicit intervention points and a recorded decision sequence. The mentors can evaluate those choices before the project invests in detailed spatial inputs or a full fleet model. Future development should retain that traceability as empirical acoustics and drone resource constraints are introduced.
+The immediate implication is methodological: the four dials need explicit intervention points and a recorded decision sequence. The mentors can evaluate those choices before the project commits to a case area. Route-level acoustic integration should retain that traceability and keep physical exposure separate from the normative policy budget.

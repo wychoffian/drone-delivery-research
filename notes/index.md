@@ -2,7 +2,7 @@
 
 Adaptive neighborhood exposure regulation for urban drone delivery.
 
-<div class="release"><span>Current stage</span><span>Acoustic and annoyance datasets assessed</span><span>Updated 26 September 2026</span></div>
+<div class="release"><span>Current stage</span><span>Phase E0 acoustic module implemented</span><span>Updated 26 September 2026</span></div>
 
 ## Ready to inspect
 
@@ -29,12 +29,17 @@ The milestones below distinguish completed prototypes from research work that re
 | Phase D targeted sensitivity | First module complete, gate open | [Review 6,780 sensitivity runs](phase-d.html) |
 | Phase D joint sensitivity | Complete, gate open | [Review 19,440 joint runs](phase-d-joint.html) |
 | Empirical dataset audit | Complete | [Review the calibration map and data gaps](empirical-calibration.html) |
-| Empirical acoustic exposure | Next | Reproduce the acoustic processing and define the exposure account |
+| Phase E0 acoustic module | Implemented | [Inspect the calibrated calculation and validation boundary](phase-e0.html) |
+| Route-level acoustic exposure | Next | Define physical network geometry and integrate moving-source exposure |
 | Replicated policy comparisons | Planned | Compare fixed budgets at matched service levels |
 
 Table 1. Development status for the current research prototype. "Demonstrated" means that the stated mechanism runs with illustrative inputs.
 
 ## Development record
+
+### 26 September 2026: Phase E0 acoustic module
+
+Implemented the calibrated received-level, directivity, event-exposure, and cumulative energy calculations. The module records the DroneNoise parameters and NASA validation results, exposes the geometry and duration assumptions, and leaves policy budgets unchanged. [Inspect the Phase E0 module](phase-e0.html).
 
 ### 26 September 2026: empirical dataset audit
 
@@ -86,9 +91,9 @@ Implemented the four experimental factors and policy regimes P0 through P3. Veri
 
 ## Decisions for the next mentor meeting
 
-- Which acoustic measure and observation window should replace the exposure proxy?
+- Which review window and policy-budget definition should govern the physical exposure account?
 - Which fleet interactions are necessary to answer the regulatory question?
 
-The next milestone is Phase E0 acoustic specification. The project will reproduce the acoustic preprocessing, validate it against the held-out NASA flyovers, and define an energy-consistent exposure account before replacing the proxy route coefficients. Policy budgets remain declared scenarios until their basis is agreed.
+The next milestone is route-level acoustic integration. The project will assign physical coordinates to the synthetic network, discretize each mission, and accumulate exposure at neighborhood receivers in the energy domain. Policy budgets remain declared scenarios until their basis is agreed.
 
 Progress entries are maintained with the project code. They change when a new version of the website is published.

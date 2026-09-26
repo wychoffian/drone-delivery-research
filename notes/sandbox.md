@@ -10,7 +10,7 @@ This protocol defines how the model will be used before empirical or field testi
 
 The simulation sandbox will test whether adaptive neighborhood exposure budgets behave as intended when delivery demand, population distribution, observation delay, and controller responsiveness vary.
 
-The sandbox supports model development and policy learning. It does not establish a legal noise limit, predict commercial performance, or demonstrate health effects. Current exposure values are proxy units until an empirical acoustic method is selected and validated.
+The sandbox supports model development and policy learning. It does not establish a legal noise limit, predict commercial performance, or demonstrate health effects. The operational policy model still uses proxy exposure values. The separate [Phase E0 acoustic module](phase-e0.html) defines a calibrated physical calculation that has not yet been integrated into its routes and budgets.
 
 ## Decision question
 
@@ -230,7 +230,7 @@ This Phase C result established the Phase D sensitivity agenda: fixed-budget spa
 
 The first targeted Phase D module executed 226 unique configurations across 30 matched seeds, for 6,780 runs. It tested fleet size, charging capacity, fixed budgets, exposure coefficient scaling, controller damping, and route tie-breaking. [Review the Phase D results](phase-d.html).
 
-The gate remains open. Fleet capacity materially changes service outcomes, and proportional scaling of the exposure coefficients changes P3-D completion under high demand from 89.3 to 55.3 percent. Destination probabilities and joint interactions among influential factors remain to be tested. The exposure measure and policy budgets require empirical calibration before Phase E.
+The gate remains open. Fleet capacity materially changes service outcomes, and proportional scaling of the exposure coefficients changes P3-D completion under high demand from 89.3 to 55.3 percent. Destination probabilities and joint interactions among influential factors remain to be tested. Phase E0 now defines the single-event acoustic measure, but route integration and the policy-budget basis remain incomplete.
 
 ## Phase D joint sensitivity result
 
