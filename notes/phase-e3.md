@@ -45,7 +45,7 @@ Table 2. Reference Phase E2 outcomes under medium and high demand.
 
 Physical mission duration makes fleet capacity binding. P0 completes about 71 percent of medium-demand requests and 41 percent of high-demand requests, even though it has no exposure budget. This means policy comparisons must separate acoustic constraints from the two-drone capacity limit.
 
-P2 reduces peak LAE by about 3.8 dB relative to P0 without a material completion loss in the reference 20-mission setting. P3-U reduces service, while P3-D performs substantially worse than P3-U. Damping does not stabilize service in this configuration.
+P2 reduces peak LAE by about 3.8 dB relative to P0 without a material completion loss in the reference 20-mission setting. P3-U reduces service, while P3-D performs substantially worse than P3-U. The later Phase E4 diagnosis shows that P3-D's budget is stable in this configuration, but it crosses a discrete mission-feasibility threshold near its target.
 
 ## Fixed-budget response
 
@@ -80,7 +80,7 @@ Table 4. Paired high-demand completion-rate differences from the reference setti
 
 Speed affects both mission capacity and sound-exposure duration, so it is the strongest operational sensitivity in this design. A positive 2.29 dB validation-error stress also causes a material reduction for every regulated policy.
 
-P3-D is non-monotonic. Both lower and higher initial budgets improve completion relative to its 20-mission reference, and both -1 and +1 dB source changes also improve it. This indicates feedback dynamics and queue interactions around the reference setting. P3-D should not advance as a preferred controller until its trajectories, stability, and target rule are diagnosed.
+P3-D appears non-monotonic in these one-at-a-time outcomes. Both lower and higher initial budgets improve completion relative to its 20-mission reference, and both -1 and +1 dB source changes also improve it. [Phase E4](phase-e4.html) shows that the reference budget path itself is monotonic. Continuous budget changes cross discrete mission-feasibility thresholds, so small acoustic changes can alter when the controller enters a lower-throughput regime.
 
 ## Population-weighted route choice
 
@@ -98,7 +98,7 @@ Introducing the acoustic term changes route choice discontinuously between weigh
 
 ## Progression decision
 
-Phase E3 passes the software and reproducibility gate, but it does not support selecting P3-D. The next development step should diagnose its budget trajectories and feedback stability before adding the Kawai annoyance response.
+Phase E3 passes the software and reproducibility gate, but it does not support selecting P3-D. Phase E4 now provides the required trajectory diagnosis. The remaining step before policy selection is a longer-horizon threshold experiment that distinguishes transient convergence from settled behavior.
 
 The experiment remains limited to one synthetic network, concentrated population, two drones, two chargers, fixed demand structure, and one-at-a-time sensitivities. The validation-error levels are deterministic screening stresses equal to plus or minus one RMSE. They are not prediction intervals. The Monte Carlo intervals measure demand-seed variation and do not include empirical parameter-estimation uncertainty.
 

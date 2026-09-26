@@ -2,7 +2,7 @@
 
 Adaptive neighborhood exposure regulation for urban drone delivery.
 
-<div class="release"><span>Current stage</span><span>Phase E3 acoustic sensitivity published</span><span>Updated 26 September 2026</span></div>
+<div class="release"><span>Current stage</span><span>Phase E4 controller diagnosis published</span><span>Updated 26 September 2026</span></div>
 
 ## Ready to inspect
 
@@ -32,17 +32,22 @@ The milestones below distinguish completed prototypes from research work that re
 | Phase E0 acoustic module | Implemented | [Inspect the calibrated calculation and validation boundary](phase-e0.html) |
 | Phase E1 route-level acoustic exposure | Implemented | [Inspect the moving-source exposure calculation](phase-e1.html) |
 | Phase E2 acoustic fleet-policy integration | Implemented | [Inspect physical reservations and scenario budgets](phase-e2.html) |
-| Phase E3 acoustic sensitivity | Complete, controller gate open | [Review 3,900 matched-seed runs](phase-e3.html) |
-| Adaptive controller diagnosis | Next | Inspect P3-D trajectories and stability before adding annoyance response |
-| Replicated policy comparisons | Planned | Compare fixed budgets at matched service levels |
+| Phase E3 acoustic sensitivity | Complete | [Review 3,900 matched-seed runs](phase-e3.html) |
+| Phase E4 adaptive controller diagnosis | Complete, policy-selection gate open | [Review 1,170 diagnostic runs](phase-e4.html) |
+| Long-horizon threshold analysis | Next | Separate transient convergence from settled controller behavior |
+| Replicated policy comparisons | Planned | Compare fixed and adaptive budgets at matched service and exposure levels |
 
 Table 1. Development status for the current research prototype. "Demonstrated" means that the stated mechanism runs with illustrative inputs.
 
 ## Development record
 
+### 26 September 2026: Phase E4 adaptive controller diagnosis
+
+Executed 39 configurations with 30 matched seeds, producing 1,170 runs. P3-D with damping 0.50 is stable in the reference case, but its budget crosses a discrete route-feasibility threshold near the target of 14. First-in-line blocking is negligible. Slower damping preserves service during the 24-period horizon because it has not settled, so the next experiment must extend the horizon and map the threshold. [Review the Phase E4 diagnosis](phase-e4.html).
+
 ### 26 September 2026: Phase E3 acoustic sensitivity
 
-Executed 130 configurations with 30 matched seeds, producing 3,900 runs. Physical mission duration makes fleet capacity binding, positive acoustic-error stress reduces regulated service, and speed affects both capacity and exposure. P3-D responds non-monotonically and performs worse than P3-U in the reference setting, so its progression gate remains open. [Review the Phase E3 results](phase-e3.html).
+Executed 130 configurations with 30 matched seeds, producing 3,900 runs. Physical mission duration makes fleet capacity binding, positive acoustic-error stress reduces regulated service, and speed affects both capacity and exposure. Phase E4 later traced the P3-D result to the target and discrete mission-feasibility thresholds. [Review the Phase E3 results](phase-e3.html).
 
 ### 26 September 2026: Phase E2 acoustic fleet-policy integration
 

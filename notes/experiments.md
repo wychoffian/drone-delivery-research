@@ -1,6 +1,6 @@
 # Experiments and evidence
 
-The evidence includes implementation checks, synthetic stochastic screening, and a Phase E matched-seed sensitivity experiment using calibrated acoustic route increments in synthetic geometry.
+The evidence includes implementation checks, synthetic stochastic screening, acoustic sensitivity, and a matched-seed controller diagnosis using calibrated acoustic route increments in synthetic geometry.
 
 ## Reproducible demonstration
 
@@ -46,6 +46,12 @@ Phase E3 contains 3,900 runs from 130 configurations. It uses calibrated acousti
 
 [Review the Phase E3 sensitivity results and download the data](phase-e3.html)
 
+## Phase E4 controller diagnosis
+
+Phase E4 contains 1,170 runs from 39 configurations. It varies adaptive targets, observation delays, and damping under high demand, and adds fixed-budget benchmarks plus queue-blocking diagnostics. The experiment shows that the original P3-D loss comes from crossing a discrete route-feasibility threshold near target 14. First-in-line blocking is negligible.
+
+[Review the Phase E4 controller diagnosis and download the data](phase-e4.html)
+
 ## Discussion
 
-The Phase D results remain useful as proxy-model baselines. Phase E replaces the proxy increments with calibrated physical exposure calculations, but the network, demand, operations, and budgets remain scenarios. Monte Carlo intervals describe variation across the selected seeds. They do not include all empirical parameter uncertainty. Phase E3 shows that P3-D needs a separate stability diagnosis before policy ranking.
+The Phase D results remain useful as proxy-model baselines. Phase E replaces the proxy increments with calibrated physical exposure calculations, but the network, demand, operations, and budgets remain scenarios. Monte Carlo intervals describe variation across the selected seeds. They do not include all empirical parameter uncertainty. Phase E4 closes the immediate stability diagnosis, but policy ranking still requires a longer horizon and matched service-exposure comparisons.

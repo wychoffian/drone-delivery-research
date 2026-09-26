@@ -242,4 +242,6 @@ The fleet-capacity and exposure-scale findings persist across the three destinat
 
 Phase E0 through E2 replace the proxy exposure increment with calibrated single-event and moving-route acoustic calculations, then connect the resulting nine-receiver energy vectors to fleet reservations and regulatory review. Phase E3 executes 130 configurations across 30 matched seeds, for 3,900 runs. [Review the Phase E3 results](phase-e3.html).
 
-The physical accounting gate is complete for the synthetic network. The controller gate remains open. P3-D performs worse than P3-U in the reference setting and responds non-monotonically to initial budget and acoustic-level changes. Controller trajectories and stability must be diagnosed before policy ranking or addition of the annoyance-response module.
+The physical accounting gate is complete for the synthetic network. Phase E4 executes 1,170 controller-diagnosis runs across targets, delays, and damping values. [Review the Phase E4 diagnosis](phase-e4.html).
+
+P3-D with damping 0.50 is stable in the reference case, but the budget converges through a discrete route-feasibility threshold near target 14. The slower 0.25 controller retains high service during the 24-period horizon because it has not settled. First-in-line blocking is negligible. The policy-selection gate remains open until a long-horizon experiment separates transient behavior from the settled response and compares policies at matched service and exposure.

@@ -156,7 +156,7 @@ Before interpreting any run, check zero-demand exposure, budget enforcement, ide
 
 The traceable mission, small-fleet charging test, 24-period integration, Phase C screening, and two Phase D sensitivity modules are complete. The [Phase E0 acoustic module](phase-e0.html) now defines the received-level equation, event LAE, and energy-consistent accumulation rule using calibrated parameters and held-out validation results.
 
-Phase E1 assigns physical coordinates to the synthetic network and integrates moving-source exposure across every route segment. Phase E2 connects each nine-receiver energy vector to the fleet model's reservation and completion events while preserving the current accounting rules. Phase E3 completes the first matched-seed sensitivity experiment covering acoustic uncertainty and declared budget scenarios. The next milestone is controller diagnosis because P3-D responds non-monotonically around the reference setting.
+Phase E1 assigns physical coordinates to the synthetic network and integrates moving-source exposure across every route segment. Phase E2 connects each nine-receiver energy vector to the fleet model's reservation and completion events while preserving the current accounting rules. Phase E3 completes the first matched-seed sensitivity experiment covering acoustic uncertainty and declared budget scenarios. Phase E4 diagnoses the P3-D reference result as a stable budget trajectory crossing a discrete route-feasibility threshold near target 14. The next milestone is a long-horizon threshold analysis.
 
 ## Discussion
 
