@@ -75,7 +75,7 @@ The queue remains dominated by central-destination requests because the demand d
 
 Phase E5 closes the question raised by the 24-period horizon: slow damping does not preserve service after convergence. It also opens a more fundamental allocation gate. Controller ranking must pause until the operator rule passes a monotonicity and order-sensitivity audit.
 
-The next development step is to compare the current greedy dispatcher with a transparent period-level allocation benchmark. Candidate benchmarks include exhaustive allocation for a small request set or a mixed-integer optimization that maximizes served missions subject to fleet and nine-receiver exposure constraints. The benchmark should measure the optimality gap and identify whether FIFO fairness requires a separate constraint.
+[Phase E6](phase-e6.html) compares the current greedy dispatcher with a mixed-integer optimization that maximizes served missions under a 46-mission cap and nine-receiver exposure constraints. It measures a 16-mission gap at budget 14.05 and shows that skipping blocked requests does not close the gap.
 
 ## Discussion
 

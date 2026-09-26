@@ -1,0 +1,31 @@
+{
+  "experiment": "Phase E6 allocation benchmark",
+  "generated_at": "2026-09-26T17:21:04.086579+00:00",
+  "cases": 480,
+  "budgets": [
+    13,
+    13.5,
+    13.75,
+    14,
+    14.05,
+    14.1,
+    14.15,
+    14.2,
+    14.25,
+    14.5,
+    15,
+    16,
+    17,
+    18
+  ],
+  "methods": [
+    "FIFO-stop",
+    "FIFO-skip",
+    "MILP-upper-bound"
+  ],
+  "run_rows": 20160,
+  "summary_rows": 42,
+  "mission_cap": 46,
+  "scope": "Exposure allocation benchmark with a 46-mission cap. It omits within-period arrival times, charging, and mission scheduling.",
+  "scipy_version": "1.9.3"
+}

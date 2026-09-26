@@ -1,0 +1,156 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="Research progress and executable prototypes for adaptive neighborhood exposure regulation of drone delivery."><title>Phase E6 allocation | Drone delivery research</title><link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23152b44'/%3E%3Cpath d='M7 22L16 8l9 14M7 22h18' fill='none' stroke='%23ffffff' stroke-width='2'/%3E%3C/svg%3E"><link rel="stylesheet" href="style.css"></head><body><a class="skip" href="#main">Skip to content</a><header><a class="brand" href="index.html"><span class="mark" aria-hidden="true">D</span>Drone delivery research</a><span class="meta">CECAN fellowship project · Prototype v0.17</span></header><div class="shell"><nav aria-label="Project navigation"><span class="label">Research notebook</span><a href="index.html">Progress</a><a href="overview.html">Project overview</a><a href="literature.html">Literature and gap</a><a href="model.html">Model and rules</a><a href="odd.html">ODD specification</a><a href="sandbox.html">Sandbox protocol</a><a href="integration.html">Integrated model</a><a href="pilot.html">Interactive pilot</a><a href="experiments.html">Experiments</a><a href="phase-c.html">Phase C results</a><a href="phase-d.html">Phase D sensitivity</a><a href="phase-d-joint.html">Phase D joint analysis</a><a href="empirical-calibration.html">Empirical calibration</a><a href="phase-e0.html">Phase E0 acoustics</a><a href="phase-e1.html">Phase E1 routes</a><a href="phase-e2.html">Phase E2 integration</a><a href="phase-e3.html">Phase E3 sensitivity</a><a href="phase-e4.html">Phase E4 diagnosis</a><a href="phase-e5.html">Phase E5 thresholds</a><a href="phase-e6.html" aria-current="page">Phase E6 allocation</a></nav><main id="main"><h1>Phase E6 allocation benchmark</h1>
+<p>Phase E6 tests whether the non-monotonic service found in Phase E5 comes from the exposure budget or from the operator&#39;s greedy route-allocation rule. It compares the current first-in, first-out dispatcher with a skip-blocked variant and an integer optimization benchmark across 480 high-demand cases.</p>
+<blockquote>
+<p>Evidence label: Allocation-method diagnostic using calibrated acoustic route vectors in a synthetic network. The optimization is a period-level upper bound, not a replacement operational scheduler.</p>
+</blockquote>
+<h2>Design</h2>
+<p>Each case uses the request destinations generated for periods 9 through 24 from seeds 501 through 530. The benchmark applies the same nine-receiver acoustic vectors and the same 14 budget values used in Phase E5. A 46-mission cap reflects the approximate two-drone period capacity observed in the event model.</p>
+<p>Table 1 defines the three allocation methods.</p>
+<table>
+<thead>
+<tr>
+<th>Method</th>
+<th>Rule</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>FIFO-stop</td>
+<td>Process requests in arrival order, choose the shortest feasible route, and stop when the first request has no feasible route.</td>
+</tr>
+<tr>
+<td>FIFO-skip</td>
+<td>Use the same greedy route rule, but skip an infeasible request and continue scanning later requests.</td>
+</tr>
+<tr>
+<td>MILP upper bound</td>
+<td>Choose integer mission counts for all nine destination-route combinations to maximize served missions under destination availability, exposure budgets, and the 46-mission cap.</td>
+</tr>
+</tbody></table>
+<p>Table 1. Allocation methods compared in Phase E6.</p>
+<p>The mixed-integer linear program uses one integer decision variable for each destination-route combination. It maximizes the sum of assigned missions subject to:</p>
+<p><code>sum(x[d,r] * exposure[d,r,i]) &lt;= budget[i]</code> for every receiver <code>i</code></p>
+<p><code>sum(x[d,r] over r) &lt;= available requests[d]</code> for every destination <code>d</code></p>
+<p><code>sum(x[d,r]) &lt;= 46</code></p>
+<p>The optimization omits arrival times, charging, and mission scheduling. Its result is therefore an exposure-allocation upper bound for the current fleet capacity, not a directly executable dispatch plan.</p>
+<h2>Allocation gap around budget 14</h2>
+<p>Table 2 reports mean missions served per case. Each budget-method cell contains 480 cases.</p>
+<table>
+<thead>
+<tr>
+<th align="right">Budget</th>
+<th align="right">FIFO-stop</th>
+<th align="right">FIFO-skip</th>
+<th align="right">MILP upper bound</th>
+<th align="right">FIFO gap</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="right">14.00</td>
+<td align="right">39.0</td>
+<td align="right">39.0</td>
+<td align="right">39.0</td>
+<td align="right">0.1</td>
+</tr>
+<tr>
+<td align="right">14.05</td>
+<td align="right">23.0</td>
+<td align="right">23.0</td>
+<td align="right">39.0</td>
+<td align="right">16.0</td>
+</tr>
+<tr>
+<td align="right">14.10</td>
+<td align="right">33.0</td>
+<td align="right">33.0</td>
+<td align="right">41.0</td>
+<td align="right">8.0</td>
+</tr>
+<tr>
+<td align="right">14.15</td>
+<td align="right">42.0</td>
+<td align="right">42.0</td>
+<td align="right">42.0</td>
+<td align="right">0.0</td>
+</tr>
+<tr>
+<td align="right">14.20</td>
+<td align="right">42.0</td>
+<td align="right">42.0</td>
+<td align="right">42.0</td>
+<td align="right">0.0</td>
+</tr>
+<tr>
+<td align="right">18.00</td>
+<td align="right">46.0</td>
+<td align="right">46.0</td>
+<td align="right">46.0</td>
+<td align="right">0.0</td>
+</tr>
+</tbody></table>
+<p>Table 2. Mean missions served by the two greedy rules and the optimization upper bound.</p>
+<p>At budget 14.05, the greedy dispatcher serves 23 missions while the benchmark serves 39. The greedy result is 41 percent below the upper bound. At budget 14.10, the gap is eight missions. The benchmark result is non-decreasing as the budget rises, while the greedy result falls sharply between 14.00 and 14.05.</p>
+<p>FIFO-skip produces the same mean as FIFO-stop at every tested budget. The isolated cases therefore do not support the hypothesis that stopping at the first blocked request causes the non-monotonicity. The decisive loss occurs earlier, when shortest-feasible route choices consume a combination of receiver capacity that prevents later allocations.</p>
+<h2>Route-balance evidence</h2>
+<p>Table 3 shows how route shares change in the problematic range.</p>
+<table>
+<thead>
+<tr>
+<th>Budget and method</th>
+<th align="right">North (%)</th>
+<th align="right">Central (%)</th>
+<th align="right">South (%)</th>
+<th align="right">Peak budget use</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>14.00 FIFO-stop</td>
+<td align="right">33.3</td>
+<td align="right">33.5</td>
+<td align="right">33.2</td>
+<td align="right">0.938</td>
+</tr>
+<tr>
+<td>14.05 FIFO-stop</td>
+<td align="right">31.4</td>
+<td align="right">60.9</td>
+<td align="right">7.7</td>
+<td align="right">1.000</td>
+</tr>
+<tr>
+<td>14.05 MILP</td>
+<td align="right">33.3</td>
+<td align="right">33.3</td>
+<td align="right">33.3</td>
+<td align="right">0.935</td>
+</tr>
+<tr>
+<td>14.10 FIFO-stop</td>
+<td align="right">41.6</td>
+<td align="right">42.4</td>
+<td align="right">16.0</td>
+<td align="right">1.000</td>
+</tr>
+<tr>
+<td>14.15 FIFO-stop</td>
+<td align="right">33.3</td>
+<td align="right">33.3</td>
+<td align="right">33.3</td>
+<td align="right">0.999</td>
+</tr>
+</tbody></table>
+<p>Table 3. Route allocation and peak receiver-budget use around the discontinuity.</p>
+<p>The budget 14.05 greedy allocation concentrates 60.9 percent of missions on the central corridor and exhausts at least one receiver account. The optimization allocates 39 missions without exhausting the same combination of accounts. This confirms that the service loss is an allocation inefficiency rather than an unavoidable consequence of the budget value.</p>
+<h2>Progression decision</h2>
+<p>Phase E6 closes the allocation diagnosis. The current greedy dispatcher is adequate at many tested budgets but can be substantially inefficient near discrete route thresholds. It should not be used for controller ranking without an allocation robustness check.</p>
+<p>The next development step is to add an optimization-guided period allocator to the research model while retaining the existing event simulator for mission timing, batteries, and charging. The implementation should define how a period plan responds to within-period arrivals and whether FIFO waiting time is an objective or a constraint. Controller experiments can then compare greedy and planned allocation as separate operator policies.</p>
+<h2>Discussion</h2>
+<p>The benchmark is deliberately narrower than the event model. It assumes that all requests for a period are visible together and uses a fixed 46-mission cap. It does not prove that 39 optimized missions can be scheduled with the exact arrival, battery, and charging sequence. It measures the exposure-allocation gap under a common capacity ceiling.</p>
+<p>The implication is that the operator needs its own explicit decision model. Future research should test rolling-horizon allocation, include mission durations and drone availability, and report computation time alongside service, exposure, and waiting-time outcomes. The empirical pilot milestone remains dependent on that operational validation and on documented real-world inputs.</p>
+<h2>Reproducibility files</h2>
+<ul>
+<li><a href="results/phase_e6_benchmark_input.json">Benchmark cases and route vectors</a></li>
+<li><a href="results/phase_e6_allocation_runs.csv">Case-level results</a></li>
+<li><a href="results/phase_e6_allocation_summary.csv">Budget-method summaries</a></li>
+<li><a href="results/phase_e6_metadata.json">Execution metadata</a></li>
+</ul>
+<p class="download"><a href="notes/phase-e6.md" download>Download this page as Markdown</a></p></main></div><footer><span>Mutlaq Aldajani · Research in development</span><span>Illustrative inputs · Last content update 26 September 2026</span></footer><script src="site.js"></script></body></html>

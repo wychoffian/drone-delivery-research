@@ -2,7 +2,7 @@
 
 Adaptive neighborhood exposure regulation for urban drone delivery.
 
-<div class="release"><span>Current stage</span><span>Phase E5 long-horizon threshold analysis published</span><span>Updated 26 September 2026</span></div>
+<div class="release"><span>Current stage</span><span>Phase E6 allocation benchmark published</span><span>Updated 26 September 2026</span></div>
 
 ## Ready to inspect
 
@@ -34,13 +34,18 @@ The milestones below distinguish completed prototypes from research work that re
 | Phase E2 acoustic fleet-policy integration | Implemented | [Inspect physical reservations and scenario budgets](phase-e2.html) |
 | Phase E3 acoustic sensitivity | Complete | [Review 3,900 matched-seed runs](phase-e3.html) |
 | Phase E4 adaptive controller diagnosis | Complete | [Review 1,170 diagnostic runs](phase-e4.html) |
-| Phase E5 long-horizon threshold analysis | Complete, allocation gate open | [Review 2,100 long-horizon runs](phase-e5.html) |
-| Allocation benchmark | Next | Compare the greedy dispatcher with a period-level optimization benchmark |
-| Replicated policy comparisons | Planned | Repeat controller comparisons after allocation validation |
+| Phase E5 long-horizon threshold analysis | Complete | [Review 2,100 long-horizon runs](phase-e5.html) |
+| Phase E6 allocation benchmark | Complete, integration gate open | [Review 20,160 allocation results](phase-e6.html) |
+| Optimization-guided dispatcher | Next | Connect period planning to within-period arrivals and drone operations |
+| Replicated policy comparisons | Planned | Repeat controller comparisons with greedy and planned operator policies |
 
 Table 1. Development status for the current research prototype. "Demonstrated" means that the stated mechanism runs with illustrative inputs.
 
 ## Development record
+
+### 26 September 2026: Phase E6 allocation benchmark
+
+Compared FIFO-stop, FIFO-skip, and an integer optimization upper bound across 480 demand cases and 14 budgets, producing 20,160 case-method-budget rows. At budget 14.05, the greedy rule serves 23 missions and the benchmark serves 39. Skipping blocked requests does not close the gap. The benchmark restores monotonic service, so the next step is an optimization-guided dispatcher linked to the event model. [Review the Phase E6 results](phase-e6.html).
 
 ### 26 September 2026: Phase E5 long-horizon threshold analysis
 

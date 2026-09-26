@@ -58,6 +58,12 @@ Phase E5 contains 2,100 runs from 70 configurations over 120 periods. It maps fi
 
 [Review the Phase E5 long-horizon results and download the data](phase-e5.html)
 
+## Phase E6 allocation benchmark
+
+Phase E6 compares the greedy operator rule with a skip-blocked variant and an integer optimization upper bound across 480 high-demand cases and 14 budgets. The benchmark confirms a 16-mission allocation gap at budget 14.05 and restores the expected non-decreasing service response as budgets rise.
+
+[Review the Phase E6 allocation benchmark and download the data](phase-e6.html)
+
 ## Discussion
 
-The Phase D results remain useful as proxy-model baselines. Phase E replaces the proxy increments with calibrated physical exposure calculations, but the network, demand, operations, and budgets remain scenarios. Monte Carlo intervals describe variation across the selected seeds. They do not include all empirical parameter uncertainty. Phase E5 shows that policy ranking must wait until the greedy route allocator is compared with an allocation benchmark.
+The Phase D results remain useful as proxy-model baselines. Phase E replaces the proxy increments with calibrated physical exposure calculations, but the network, demand, operations, and budgets remain scenarios. Monte Carlo intervals describe variation across the selected seeds. They do not include all empirical parameter uncertainty. Phase E6 quantifies the greedy allocation gap. Policy ranking still requires integration of the planned allocation with event timing and fleet constraints.

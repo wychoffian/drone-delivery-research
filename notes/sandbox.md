@@ -251,3 +251,9 @@ P3-D with damping 0.50 is stable in the reference case, but the budget converges
 Phase E5 extends the experiment to 120 periods and maps 14 fixed budgets and targets from 13 to 18. [Review the Phase E5 results](phase-e5.html).
 
 The slower controller's early service advantage does not persist. At target 18, P3-D with damping 0.25 falls from 41.1 percent completion in the first 24 periods to a 14.0 percent late-window service ratio. Fixed P2 service is also non-monotonic around budget 14. The allocation gate is therefore open: the greedy sequential dispatcher must be benchmarked before further controller ranking.
+
+## Phase E allocation benchmark result
+
+Phase E6 compares the greedy dispatcher with a skip-blocked variant and an integer optimization upper bound. [Review the Phase E6 results](phase-e6.html).
+
+At budget 14.05, both greedy variants serve 23 missions per high-demand case while the benchmark serves 39. Skipping blocked requests does not improve the result. The optimization restores monotonic service across the tested budgets, confirming that route-allocation order causes the Phase E5 discontinuity. The integration gate remains open until a planned allocation is connected to within-period arrivals, mission timing, batteries, and charging.
