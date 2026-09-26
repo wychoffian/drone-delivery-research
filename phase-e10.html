@@ -1,0 +1,260 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="Research progress and executable prototypes for adaptive neighborhood exposure regulation of drone delivery."><title>Phase E10 controllers | Drone delivery research</title><link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23152b44'/%3E%3Cpath d='M7 22L16 8l9 14M7 22h18' fill='none' stroke='%23ffffff' stroke-width='2'/%3E%3C/svg%3E"><link rel="stylesheet" href="style.css"></head><body><a class="skip" href="#main">Skip to content</a><header><a class="brand" href="index.html"><span class="mark" aria-hidden="true">D</span>Drone delivery research</a><span class="meta">CECAN fellowship project · Prototype v0.21</span></header><div class="shell"><nav aria-label="Project navigation"><span class="label">Research notebook</span><a href="index.html">Progress</a><a href="overview.html">Project overview</a><a href="literature.html">Literature and gap</a><a href="model.html">Model and rules</a><a href="odd.html">ODD specification</a><a href="sandbox.html">Sandbox protocol</a><a href="integration.html">Integrated model</a><a href="pilot.html">Interactive pilot</a><a href="experiments.html">Experiments</a><a href="phase-c.html">Phase C results</a><a href="phase-d.html">Phase D sensitivity</a><a href="phase-d-joint.html">Phase D joint analysis</a><a href="empirical-calibration.html">Empirical calibration</a><a href="phase-e0.html">Phase E0 acoustics</a><a href="phase-e1.html">Phase E1 routes</a><a href="phase-e2.html">Phase E2 integration</a><a href="phase-e3.html">Phase E3 sensitivity</a><a href="phase-e4.html">Phase E4 diagnosis</a><a href="phase-e5.html">Phase E5 thresholds</a><a href="phase-e6.html">Phase E6 allocation</a><a href="phase-e7.html">Phase E7 event plan</a><a href="phase-e8.html">Phase E8 workload</a><a href="phase-e9.html">Phase E9 rolling</a><a href="phase-e10.html" aria-current="page">Phase E10 controllers</a></nav><main id="main"><h1>Phase E10 rolling adaptive controllers</h1>
+<p>Phase E10 reconnects the Rolling 3 dispatcher to the fixed P2 policy and the adaptive P3-U and P3-D controllers. The experiment contains 1,380 runs from 46 configurations and 30 matched demand seeds. Each run covers 120 review periods and carries the queue between periods.</p>
+<blockquote>
+<p>Evidence label: Long-horizon controller comparison in a synthetic network. The acoustic route increments are calibrated, but demand, fleet size, controller targets, and policy budgets remain scenario assumptions.</p>
+</blockquote>
+<h2>Experiment design</h2>
+<p>Table 1 defines the controller comparison.</p>
+<table>
+<thead>
+<tr>
+<th>Element</th>
+<th>Values</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Demand</td>
+<td>Medium 45 and high 80 requests per period before the period 9 increase</td>
+</tr>
+<tr>
+<td>Fleet</td>
+<td>Two drones and two chargers</td>
+</tr>
+<tr>
+<td>Dispatcher</td>
+<td>Rolling 3 fair</td>
+</tr>
+<tr>
+<td>Fixed P2 budgets</td>
+<td>14.00 to 15.00 near the threshold, plus 18.00</td>
+</tr>
+<tr>
+<td>Adaptive targets</td>
+<td>14.00, 14.05, 14.10, 14.15, and 18.00</td>
+</tr>
+<tr>
+<td>P3-U</td>
+<td>Gain 0.60, one-period delay, no damping</td>
+</tr>
+<tr>
+<td>P3-D</td>
+<td>Gain 0.60, one-period delay, damping 0.50</td>
+</tr>
+<tr>
+<td>Replication</td>
+<td>30 common seeds, 120 periods, final 24-period reporting window</td>
+</tr>
+</tbody></table>
+<p>Table 1. Phase E10 experimental design.</p>
+<p>The target is the desired receiver exposure in reference-mission equivalents. It is not a fixed operating budget. P3 changes the following period&#39;s budget when observed exposure differs from the target.</p>
+<h2>Same-target comparison</h2>
+<p>Table 2 compares policies at the declared target or fixed budget of 14.05.</p>
+<table>
+<thead>
+<tr>
+<th align="right">Demand</th>
+<th>Policy</th>
+<th align="right">Completion (%)</th>
+<th align="right">Mean population-weighted exposure</th>
+<th align="right">Final queue</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="right">45</td>
+<td>P2 fixed</td>
+<td align="right">55.31</td>
+<td align="right">13.109</td>
+<td align="right">3,780</td>
+</tr>
+<tr>
+<td align="right">45</td>
+<td>P3-U</td>
+<td align="right">59.71</td>
+<td align="right">14.129</td>
+<td align="right">3,408</td>
+</tr>
+<tr>
+<td align="right">45</td>
+<td>P3-D 0.50</td>
+<td align="right">60.04</td>
+<td align="right">14.207</td>
+<td align="right">3,380</td>
+</tr>
+<tr>
+<td align="right">80</td>
+<td>P2 fixed</td>
+<td align="right">31.25</td>
+<td align="right">13.115</td>
+<td align="right">10,296</td>
+</tr>
+<tr>
+<td align="right">80</td>
+<td>P3-U</td>
+<td align="right">33.72</td>
+<td align="right">14.129</td>
+<td align="right">9,926</td>
+</tr>
+<tr>
+<td align="right">80</td>
+<td>P3-D 0.50</td>
+<td align="right">33.91</td>
+<td align="right">14.207</td>
+<td align="right">9,898</td>
+</tr>
+</tbody></table>
+<p>Table 2. Full-horizon service and exposure at target or fixed budget 14.05.</p>
+<p>At the same numeric setting, P3-D raises completion by 4.73 percentage points under medium demand and 2.66 points under high demand. It also raises mean population-weighted exposure by about 1.10 reference-mission equivalents. The service gain therefore cannot be interpreted independently of the additional exposure permitted by the controller.</p>
+<h2>Nearest-exposure comparison</h2>
+<p>The fixed-budget response has plateaus because whole missions consume multi-receiver exposure vectors. Budgets from 14.15 through 15.00 produce the same aggregate result, so an exact exposure match is unavailable. Table 3 uses the closest fixed result, budget 14.15, for adaptive target 14.05.</p>
+<table>
+<thead>
+<tr>
+<th align="right">Demand</th>
+<th>Adaptive policy</th>
+<th align="right">Adaptive completion (%)</th>
+<th align="right">Fixed completion (%)</th>
+<th>Paired difference, percentage points</th>
+<th align="right">Exposure difference</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="right">45</td>
+<td>P3-U</td>
+<td align="right">59.71</td>
+<td align="right">59.52</td>
+<td>0.19 [0.16, 0.22]</td>
+<td align="right">0.022</td>
+</tr>
+<tr>
+<td align="right">45</td>
+<td>P3-D 0.50</td>
+<td align="right">60.04</td>
+<td align="right">59.52</td>
+<td>0.53 [0.49, 0.56]</td>
+<td align="right">0.101</td>
+</tr>
+<tr>
+<td align="right">80</td>
+<td>P3-U</td>
+<td align="right">33.72</td>
+<td align="right">33.66</td>
+<td>0.06 [0.06, 0.07]</td>
+<td align="right">0.005</td>
+</tr>
+<tr>
+<td align="right">80</td>
+<td>P3-D 0.50</td>
+<td align="right">33.91</td>
+<td align="right">33.66</td>
+<td>0.25 [0.25, 0.26]</td>
+<td align="right">0.083</td>
+</tr>
+</tbody></table>
+<p>Table 3. Matched-seed completion differences against the nearest fixed-exposure configuration. Brackets contain 95 percent Monte Carlo intervals across the 30 paired seeds.</p>
+<p>P3-D retains a small service advantage in the nearest-exposure comparison. P3-U is almost identical to the fixed policy under high demand. The differences are precise within these demand seeds, but they are small and the exposure match is approximate.</p>
+<h2>Controller behavior</h2>
+<p>Table 4 reports late-window behavior at a reachable target and at target 18.</p>
+<table>
+<thead>
+<tr>
+<th align="right">Demand</th>
+<th align="right">Target</th>
+<th>Policy</th>
+<th align="right">Late mean budget</th>
+<th align="right">Mean within-run budget SD</th>
+<th align="right">Late mean exposure</th>
+<th align="right">Completion (%)</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="right">45</td>
+<td align="right">14.05</td>
+<td>P3-U</td>
+<td align="right">14.57</td>
+<td align="right">0.33</td>
+<td align="right">14.056</td>
+<td align="right">59.71</td>
+</tr>
+<tr>
+<td align="right">45</td>
+<td align="right">14.05</td>
+<td>P3-D 0.50</td>
+<td align="right">14.37</td>
+<td align="right">0.16</td>
+<td align="right">14.063</td>
+<td align="right">60.04</td>
+</tr>
+<tr>
+<td align="right">80</td>
+<td align="right">14.05</td>
+<td>P3-U</td>
+<td align="right">14.56</td>
+<td align="right">0.33</td>
+<td align="right">14.055</td>
+<td align="right">33.72</td>
+</tr>
+<tr>
+<td align="right">80</td>
+<td align="right">14.05</td>
+<td>P3-D 0.50</td>
+<td align="right">14.37</td>
+<td align="right">0.16</td>
+<td align="right">14.063</td>
+<td align="right">33.91</td>
+</tr>
+<tr>
+<td align="right">45</td>
+<td align="right">18.00</td>
+<td>P3-U</td>
+<td align="right">40.00</td>
+<td align="right">0.00</td>
+<td align="right">15.537</td>
+<td align="right">64.76</td>
+</tr>
+<tr>
+<td align="right">45</td>
+<td align="right">18.00</td>
+<td>P3-D 0.50</td>
+<td align="right">40.00</td>
+<td align="right">0.00</td>
+<td align="right">15.533</td>
+<td align="right">64.74</td>
+</tr>
+<tr>
+<td align="right">80</td>
+<td align="right">18.00</td>
+<td>P3-U</td>
+<td align="right">40.00</td>
+<td align="right">0.00</td>
+<td align="right">15.526</td>
+<td align="right">36.70</td>
+</tr>
+<tr>
+<td align="right">80</td>
+<td align="right">18.00</td>
+<td>P3-D 0.50</td>
+<td align="right">40.00</td>
+<td align="right">0.00</td>
+<td align="right">15.544</td>
+<td align="right">36.70</td>
+</tr>
+</tbody></table>
+<p>Table 4. Late-window controller budgets and exposure with full-horizon completion.</p>
+<p>Damping reduces late-window budget variation at target 14.05. At target 18, both adaptive controllers reach the maximum budget of 40 while exposure remains near 15.5. The two-drone fleet cannot generate the target exposure, so continued budget increases have no service value. This is a controller saturation condition.</p>
+<p>Destination completion remains balanced. For P3-D at target 14.05, medium-demand completion is 60.09, 60.07, and 59.91 percent for north, central, and south destinations. Under high demand, the corresponding values are 33.85, 33.94, and 33.89 percent.</p>
+<h2>Progression decision</h2>
+<p>Phase E10 passes the implementation gate: Rolling 3 works with fixed and adaptive budgets, the controllers use the correct delayed observations, and all accepted missions remain within their active budgets.</p>
+<p>The policy-ranking gate remains open. P3-D 0.50 is the stronger adaptive candidate near target 14 because it has lower budget variation and a small service advantage in the nearest-exposure comparison. The evidence does not support target 18 because the controller saturates. Both demand scenarios also accumulate large queues after the demand increase.</p>
+<p>The next development step is a capacity-envelope experiment. It should vary demand and fleet size with Rolling 3 and P3-D 0.50, then identify configurations where the late-window queue stops growing. Controller evaluation for a pilot should use those stable operating conditions.</p>
+<h2>Discussion</h2>
+<p>The experiment uses a synthetic demand process, two drones, equal request priority, and one controller gain. Fixed budgets cannot exactly match every adaptive exposure outcome because missions are indivisible. Monte Carlo intervals describe variation across the selected demand seeds and do not include uncertainty in acoustic calibration, demand level, or vehicle performance.</p>
+<p>The practical implication is that adaptive control cannot repair structural overload. Damping improves controller behavior near a reachable target, but fleet capacity must be established before the policy is interpreted. Future research should estimate a stable pilot demand range, repeat the controller comparison with observed operational inputs, and define the policy target with the relevant decision owner.</p>
+<h2>Reproducibility files</h2>
+<ul>
+<li><a href="results/phase_e10_controller_runs.csv">Run-level results</a></li>
+<li><a href="results/phase_e10_controller_summary.csv">Configuration summaries</a></li>
+<li><a href="results/phase_e10_paired_effects.csv">Matched-seed effects</a></li>
+<li><a href="results/phase_e10_period_summary.csv">Period summaries</a></li>
+<li><a href="results/phase_e10_metadata.json">Execution metadata</a></li>
+</ul>
+<p class="download"><a href="notes/phase-e10.md" download>Download this page as Markdown</a></p></main></div><footer><span>Mutlaq Aldajani · Research in development</span><span>Illustrative inputs · Last content update 26 September 2026</span></footer><script src="site.js"></script></body></html>

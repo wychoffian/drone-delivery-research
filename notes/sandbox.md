@@ -275,3 +275,9 @@ The 930-minute limit executes about 99.7 percent of planned missions at budgets 
 Phase E9 implements an online rule that examines the first three arrived requests whenever a drone becomes available. It carries the queue across 120 review periods and uses no future request information. [Review the Phase E9 results](phase-e9.html).
 
 At budget 14.05, Rolling 3 raises completion from 18.4 to 31.3 percent and balances destination completion and corridor use. It matches a ten-request look-ahead with lower computation. The rolling gate is complete for fixed budgets. The controller gate is open until Rolling 3 is tested with adaptive budgets under medium and high demand.
+
+## Phase E rolling-controller result
+
+Phase E10 reconnects Rolling 3 to P2, P3-U, and P3-D over 120 periods under medium and high demand. [Review the Phase E10 results](phase-e10.html).
+
+P3-D 0.50 has lower late-window budget variation than P3-U and retains a small service advantage near target 14 after approximate exposure matching. Both adaptive policies reach the maximum budget at target 18 because the two-drone fleet cannot generate the requested exposure. Both tested demand settings also produce growing queues. The controller implementation gate is complete, but the pilot operating gate remains open until a capacity-envelope experiment identifies stable demand and fleet combinations.

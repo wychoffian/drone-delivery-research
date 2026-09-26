@@ -1,0 +1,68 @@
+{
+  "experiment": "Phase E10 rolling adaptive controller comparison",
+  "generated_at": "2026-09-26T18:11:24.926Z",
+  "total_runs": 1380,
+  "unique_configurations": 46,
+  "period_summaries": 5520,
+  "paired_effects": 40,
+  "seeds": [
+    501,
+    530
+  ],
+  "periods": 120,
+  "late_window_periods": 24,
+  "demands": [
+    45,
+    80
+  ],
+  "adaptive_targets": [
+    14,
+    14.05,
+    14.1,
+    14.15,
+    18
+  ],
+  "fixed_budgets": [
+    14,
+    14.05,
+    14.1,
+    14.15,
+    14.2,
+    14.25,
+    14.3,
+    14.35,
+    14.4,
+    14.5,
+    14.75,
+    15,
+    18
+  ],
+  "policies": [
+    {
+      "id": "p2",
+      "label": "P2 fixed",
+      "delay": 0,
+      "damping": 0
+    },
+    {
+      "id": "p3u",
+      "label": "P3-U",
+      "delay": 1,
+      "damping": 1
+    },
+    {
+      "id": "p3d_05",
+      "label": "P3-D0.50",
+      "delay": 1,
+      "damping": 0.5
+    }
+  ],
+  "gain": 0.6,
+  "rolling_dispatch": {
+    "rollingLookahead": 3,
+    "rollingExposureWeight": 1,
+    "rollingWorkloadWeight": 0.3,
+    "rollingFairnessWeight": 1
+  },
+  "information_rule": "Dispatch considers only arrived requests. Adaptive controllers use a one-period delayed exposure observation."
+}

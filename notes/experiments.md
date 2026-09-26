@@ -82,6 +82,12 @@ Phase E9 tests three online rolling rules against FIFO across 600 runs and 120 r
 
 [Review the Phase E9 online results and download the data](phase-e9.html)
 
+## Phase E10 rolling adaptive controllers
+
+Phase E10 reconnects Rolling 3 to P2, P3-U, and P3-D across medium and high demand. The 1,380 runs show that P3-D 0.50 has lower budget variation and a small service advantage near target 14 after approximate exposure matching. At target 18, both adaptive controllers saturate at the maximum budget because the two-drone fleet cannot reach the target exposure.
+
+[Review the Phase E10 controller results and download the data](phase-e10.html)
+
 ## Discussion
 
-The Phase D results remain useful as proxy-model baselines. Phase E replaces the proxy increments with calibrated physical exposure calculations, but the network, demand, operations, and budgets remain scenarios. Monte Carlo intervals describe variation across the selected seeds. They do not include all empirical parameter uncertainty. Phase E9 provides an online rolling operator rule. Policy ranking now requires reconnecting that rule to adaptive budgets under medium and high demand.
+The Phase D results remain useful as proxy-model baselines. Phase E replaces the proxy increments with calibrated physical exposure calculations, but the network, demand, operations, and budgets remain scenarios. Monte Carlo intervals describe variation across the selected seeds. They do not include all empirical parameter uncertainty. Phase E10 reconnects online dispatch and adaptive control. The next experiment must find demand and fleet combinations that do not produce a growing queue.

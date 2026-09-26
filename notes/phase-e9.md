@@ -96,7 +96,7 @@ Rolling 3 adds modest computation and matches Rolling 10 on the measured service
 
 Phase E9 passes the online rolling-dispatch gate for the synthetic fixed-budget model. Rolling 3 uses only arrived requests, carries queues across periods, removes the allocation discontinuity, preserves destination balance, and has lower computation than the larger windows.
 
-The next development step is to connect Rolling 3 to P3-U and P3-D, repeat the long-horizon controller experiment, and compare adaptive policies with fixed budgets at matched service and exposure. That experiment should include medium demand because the high-demand scenario is structurally overloaded.
+[Phase E10](phase-e10.html) now connects Rolling 3 to P3-U and P3-D under medium and high demand. It compares the adaptive policies with fixed budgets at the same target and at the nearest available exposure level.
 
 ## Discussion
 

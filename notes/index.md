@@ -2,7 +2,7 @@
 
 Adaptive neighborhood exposure regulation for urban drone delivery.
 
-<div class="release"><span>Current stage</span><span>Phase E9 online rolling dispatch published</span><span>Updated 26 September 2026</span></div>
+<div class="release"><span>Current stage</span><span>Phase E10 rolling adaptive controllers published</span><span>Updated 26 September 2026</span></div>
 
 ## Ready to inspect
 
@@ -38,12 +38,17 @@ The milestones below distinguish completed prototypes from research work that re
 | Phase E6 allocation benchmark | Complete | [Review 20,160 allocation results](phase-e6.html) |
 | Phase E7 event-integrated planning | Complete | [Review 13,440 event runs](phase-e7.html) |
 | Phase E8 workload-aware planning | Complete | [Review 13,440 time-aware runs](phase-e8.html) |
-| Phase E9 online rolling dispatch | Complete, controller gate open | [Review 600 long-horizon runs](phase-e9.html) |
-| Rolling adaptive-policy comparison | Next | Connect Rolling 3 to P3-U and P3-D under medium and high demand |
+| Phase E9 online rolling dispatch | Complete | [Review 600 long-horizon runs](phase-e9.html) |
+| Phase E10 rolling adaptive-policy comparison | Complete, pilot operating gate open | [Review 1,380 controller runs](phase-e10.html) |
+| Pilot capacity envelope | Next | Find demand and fleet combinations with stable late-window queues |
 
 Table 1. Development status for the current research prototype. "Demonstrated" means that the stated mechanism runs with illustrative inputs.
 
 ## Development record
+
+### 26 September 2026: Phase E10 rolling adaptive controllers
+
+Executed 1,380 runs over 120 periods under medium and high demand. P3-D 0.50 reduces late-window budget variation and retains a small service advantage near target 14 after approximate exposure matching. Both adaptive controllers saturate at target 18, and both demand scenarios remain overloaded after demand increases. [Review the Phase E10 results](phase-e10.html).
 
 ### 26 September 2026: Phase E9 online rolling dispatch
 
@@ -138,6 +143,6 @@ Implemented the four experimental factors and policy regimes P0 through P3. Veri
 - Which review window and policy-budget definition should govern the physical exposure account?
 - Which fleet interactions are necessary to answer the regulatory question?
 
-The next milestone is adaptive-controller diagnosis. The project should inspect P3-D budget trajectories, queue interactions, damping, and target formulation before adding the Kawai short-term annoyance response. Policy budgets remain scenarios until their basis is agreed.
+The next milestone is the pilot capacity envelope. The project should vary demand and fleet size with Rolling 3 and P3-D 0.50, then identify configurations where late-window queues stop growing. Policy budgets remain scenarios until their basis is agreed.
 
 Progress entries are maintained with the project code. They change when a new version of the website is published.
