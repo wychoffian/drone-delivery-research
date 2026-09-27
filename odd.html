@@ -78,7 +78,7 @@
 <p>The model compares five policy regimes. P0 uses shortest feasible paths without exposure regulation. P1 adds a population-weighted exposure term to route cost. P2 enforces fixed neighborhood exposure budgets. P3-U updates those budgets using delayed exposure observations. P3-D applies damping factor 0.50 to the same update.</p>
 <h2>Entities, state variables, and scales</h2>
 <p>The model contains agents, passive entities, an environment, and an institutional controller. Table 2 defines their minimum state.</p>
-<table>
+<div class="table-scroll" role="region" aria-label="Table 2. Entities, state variables, and actions" tabindex="0"><table class="entity-table">
 <thead>
 <tr>
 <th>Entity</th>
@@ -123,7 +123,7 @@
 <td>Nodes, edges, distances, permitted directions, corridor labels, neighborhood intersections</td>
 <td>Supply candidate paths and movement distances</td>
 </tr>
-</tbody></table>
+</tbody></table></div>
 <p>Table 2. Entities, state variables, and actions in the target model. Residents are represented through neighborhood attributes unless behavioral responses are added later.</p>
 <p>The synthetic environment contains one depot, three delivery zones, three alternative corridors, and nine exposed neighborhoods. Each corridor crosses three neighborhoods. The research version may replace this network with an empirical spatial graph, but the synthetic network remains the verification case.</p>
 <p>The model uses two time scales. Operational time advances through request arrivals, drone movement, delivery, return, and charging events. Regulatory time advances at review boundaries. Operational time is represented in minutes. The duration of a review period, <code>H_review</code>, remains a calibration parameter. The minute 35 boundary in the small-fleet walkthrough is an illustrative test value, not a proposed policy interval.</p>
